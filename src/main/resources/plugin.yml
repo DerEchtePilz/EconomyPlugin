@@ -1,0 +1,6 @@
+name: Placeholder
+version: '${project.version}'
+main: me.derechtepilz.placeholder.Main
+api-version: 1.18
+authors: [ DerEchtePilz ]
+description: This description is a placeholder!
