@@ -1,6 +1,9 @@
-name: Placeholder
+name: Economy
 version: '${project.version}'
 main: me.derechtepilz.placeholder.Main
 api-version: 1.18
 authors: [ DerEchtePilz ]
-description: This description is a placeholder!
+description: This plugin let's you sell and buy items!
+# git remote add origin https://github.com/DerEchtePilz/EconomyPlugin.git
+#  git branch -M main
+#  git push -u origin main
