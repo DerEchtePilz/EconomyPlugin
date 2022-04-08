@@ -1,6 +1,6 @@
 name: Economy
 version: '${project.version}'
-main: me.derechtepilz.placeholder.Main
+main: me.derechtepilz.economy.Main
 api-version: 1.18
 authors: [ DerEchtePilz ]
 description: This plugin let's you sell and buy items!
