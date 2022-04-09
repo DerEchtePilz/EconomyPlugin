@@ -1,4 +1,8 @@
 {
   "main.onEnable.plugin_enable_message": "§aThe Economy plugin has been enabled!",
-  "main.onDisable.plugin_disable_message": "§cThe Economy plugin has been disabled"
+  "main.onDisable.plugin_disable_message": "§cThe Economy plugin has been disabled",
+  "itemCreateOffer.player_executor.missing_item": "§cYou do not have the specified item in your inventory!",
+  "itemCreateOffer.console_executor.console_created_offer": "§aYou created a special offer for item §6%s §7%%sx §a!",
+  "itemCreateOffer.console_executor.special_offer_available": "§aA special offer was created: §6%s §7x%%s §e(Cost: %%%s coins)§a!)",
+  "itemCreateOffer.wrong_executor": "§cYou cannot execute this command!"
 }

@@ -4,8 +4,8 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +38,7 @@ public class ItemCreateOffer {
                                 return;
                             }
                         }
-                        player.sendMessage("§cYou do not have the specified item in your inventory!");
+                        player.sendMessage(TranslatableChatComponent.read("itemCreateOffer.player_executor.missing_item"));
                         return;
                     }
                     if (sender instanceof ConsoleCommandSender console) {
@@ -48,11 +48,13 @@ public class ItemCreateOffer {
                         item.setAmount(amount);
 
                         new ItemConverter(item, price);
-                        console.sendMessage(ChatColor.GREEN + "You created a special offer for item " + ChatColor.GOLD + item.getType().name() + " " + ChatColor.GRAY + amount + "x" + ChatColor.GREEN + "!");
-                        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage("§aA special offer was created: §6" + item.getType().name() + "§7x" + amount + " §e(Cost: " + price + " coins)§a!"));
+                        console.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.console_created_offer").replace("%s", item.getType().name()).replace("%%s", amount + ""));
+                        Bukkit.getOnlinePlayers().forEach(p ->
+                                p.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.special_offer_available").replace("%s", item.getType().name()).replace("%%s", amount + "").replace("%%%s", price + ""))
+                        );
                         return;
                     }
-                    sender.sendMessage(ChatColor.RED + "You cannot execute this command!");
+                    sender.sendMessage(TranslatableChatComponent.read("itemCreateOffer.wrong_executor"));
                 })
                 .register();
     }

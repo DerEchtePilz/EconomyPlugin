@@ -18,7 +18,7 @@ public class TranslatableChatComponent {
     public static String read(String translationKey) {
         try {
             InputStream inputStream = Main.getInstance().getResource("lang.json");
-            if (inputStream == null) return null;
+            if (inputStream == null) return "§cNo lang.json file was found";
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             StringBuilder builder = new StringBuilder();
