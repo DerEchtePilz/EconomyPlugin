@@ -26,7 +26,7 @@ public class ItemBuyMenu implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        
+
     }
 
     public void openBuyMenu(Player player, Material type) {
