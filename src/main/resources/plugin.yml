@@ -1,4 +1,4 @@
-name: Economy
+name: Economy-By-DerEchtePilz
 version: '${project.version}'
 main: me.derechtepilz.economy.Main
 api-version: 1.18
