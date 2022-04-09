@@ -1,4 +1,7 @@
 package me.derechtepilz.economy.itemmanager;
 
-public class ItemBuyMenu {
+import org.bukkit.event.Listener;
+
+public class ItemBuyMenu implements Listener {
+
 }
