@@ -115,4 +115,4 @@ run/
 # Files
 EconomyPlugin.iml
 pom.xml
-plugin.yml
+src/main/resources
