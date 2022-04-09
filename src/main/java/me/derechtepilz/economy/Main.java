@@ -2,10 +2,8 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import me.derechtepilz.economy.itemmanager.ItemBuyMenu;
-import me.derechtepilz.economy.itemmanager.ItemCancelMenu;
-import me.derechtepilz.economy.itemmanager.ItemCancelOffer;
-import me.derechtepilz.economy.itemmanager.ItemCreateOffer;
+import me.derechtepilz.economy.itemmanager.*;
+import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +40,8 @@ public final class Main extends JavaPlugin {
 
         commandRegistration();
         listenerRegistration();
+
+        getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
     }
 
     @Override
@@ -57,6 +57,9 @@ public final class Main extends JavaPlugin {
 
         CommandAPI.unregister("createoffer");
         CommandAPI.unregister("canceloffer");
+        CommandAPI.unregister("buy");
+
+        getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
     }
 
     public static Main getInstance() {
@@ -66,6 +69,7 @@ public final class Main extends JavaPlugin {
     private void commandRegistration() {
         new ItemCreateOffer();
         new ItemCancelOffer();
+        new ItemBuyOffer();
     }
 
     private void listenerRegistration() {
@@ -76,10 +80,6 @@ public final class Main extends JavaPlugin {
 
     public NamespacedKey getCreator() {
         return creator;
-    }
-
-    public NamespacedKey getUuid() {
-        return uuid;
     }
 
     public NamespacedKey getPrice() {
@@ -100,5 +100,24 @@ public final class Main extends JavaPlugin {
 
     public ItemCancelMenu getItemCancelMenu() {
         return itemCancelMenu;
+    }
+
+    public ItemBuyMenu getItemBuyMenu() {
+        return itemBuyMenu;
+    }
+
+    public int findNextMultiple(int input, int multipleToFind) {
+        if (input > multipleToFind) {
+            if (input % multipleToFind == 0) {
+                return input;
+            }
+            int multiple = input;
+            while (multiple % multipleToFind != 0) {
+                multiple++;
+            }
+            return multiple;
+        } else {
+            return multipleToFind;
+        }
     }
 }

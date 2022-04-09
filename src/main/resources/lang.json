@@ -1,0 +1,4 @@
+{
+  "main.onEnable.plugin_enable_message": "§aThe Economy plugin has been enabled!",
+  "main.onDisable.plugin_disable_message": "§cThe Economy plugin has been disabled"
+}

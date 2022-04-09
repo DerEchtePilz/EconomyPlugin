@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.itemmanager;
 
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -58,9 +59,7 @@ public class ItemCancelMenu implements Listener {
             cancelOfferMenuItems[i] = offeredItems[i];
         }
         if (cancelOfferMenuItems.length % 45 != 0) {
-            ItemStack[] updatedCancelOfferMenuItem = (cancelOfferMenuItems.length < 45)
-                    ? new ItemStack[cancelOfferMenuItems.length + (45 % cancelOfferMenuItems.length)]
-                    : new ItemStack[cancelOfferMenuItems.length + (cancelOfferMenuItems.length % 45)];
+            ItemStack[] updatedCancelOfferMenuItem = new ItemStack[Main.getInstance().findNextMultiple(cancelOfferMenuItems.length, 45)];
             for (int i = offeredItems.length; i < updatedCancelOfferMenuItem.length; i++) {
                 updatedCancelOfferMenuItem[i] = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§7").build();
             }
@@ -70,11 +69,11 @@ public class ItemCancelMenu implements Listener {
         for (int i = 0; i < inventoryCount; i++) {
             ItemStack[] inventory = new ItemStack[54];
             for (int j = 0; j < 45; j++) {
-                inventory[i] = cancelOfferMenuItems[i];
+                inventory[j] = cancelOfferMenuItems[j];
             }
             if (i == 0) {
                 for (int j = 45; j < inventory.length; j++) {
-                    inventory[i] = menuGlass;
+                    inventory[j] = menuGlass;
                     inventory[49] = closeItem;
                     if (inventoryCount > 1) {
                         inventory[53] = nextPage;
@@ -82,14 +81,14 @@ public class ItemCancelMenu implements Listener {
                 }
             } else if (i < inventoryCount - 1) {
                 for (int j = 45; j < inventory.length; j++) {
-                    inventory[i] = menuGlass;
+                    inventory[j] = menuGlass;
                     inventory[45] = previousPage;
                     inventory[49] = closeItem;
                     inventory[53] = nextPage;
                 }
             } else if (i == inventoryCount - 1) {
                 for (int j = 45; j < inventory.length; j++) {
-                    inventory[i] = menuGlass;
+                    inventory[j] = menuGlass;
                     inventory[45] = previousPage;
                     inventory[49] = closeItem;
                 }
