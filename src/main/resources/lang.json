@@ -4,5 +4,14 @@
   "itemCreateOffer.player_executor.missing_item": "§cYou do not have the specified item in your inventory!",
   "itemCreateOffer.console_executor.console_created_offer": "§aYou created a special offer for item §6%s §7%%sx §a!",
   "itemCreateOffer.console_executor.special_offer_available": "§aA special offer was created: §6%s §7x%%s §e(Cost: %%%s coins)§a!)",
-  "itemCreateOffer.wrong_executor": "§cYou cannot execute this command!"
+  "itemCreateOffer.wrong_executor": "§cYou cannot execute this command!",
+  "itemCancelOffer.wrong_executor": "§cYou cannot execute this command!",
+  "itemCancelOffer.player_executor.prepare_cancelling": "§aCancel offers in the menu!",
+  "itemCancelMenu.inventory_title": "Cancel offers",
+  "itemCancelMenu.close_item_name": "§cClose",
+  "itemCancelMenu.next_page_name": "§aNext page",
+  "itemCancelMenu.previous_page_name": "§aPrevious page",
+  "itemCancelMenu.menu_glass_name": "§7",
+  "itemBuyOffer.wrong_executor": "§cYou cannot execute this command!",
+  "itemBuyOffer.wrong_argument": "§cThe argument '%s' is not a valid query!"
 }

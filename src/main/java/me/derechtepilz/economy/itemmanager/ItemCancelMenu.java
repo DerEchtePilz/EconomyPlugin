@@ -2,6 +2,7 @@ package me.derechtepilz.economy.itemmanager;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ItemBuilder;
+import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public class ItemCancelMenu implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (event.getView().getTitle().contains("Cancel offers (") && Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
+        if (event.getView().getTitle().contains(TranslatableChatComponent.read("itemCancelMenu.inventory_title")) && Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null) return;
             if (event.getCurrentItem().equals(closeItem)) {
@@ -33,14 +34,14 @@ public class ItemCancelMenu implements Listener {
             }
             if (event.getCurrentItem().equals(nextPage)) {
                 currentInventory += 1;
-                inventory = Bukkit.createInventory(null, 54, "Cancel offers (" + (currentInventory + 1) + ")");
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title")+ (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
                 return;
             }
             if (event.getCurrentItem().equals(previousPage)) {
                 currentInventory -= 1;
-                inventory = Bukkit.createInventory(null, 54, "Cancel offers (" + (currentInventory + 1) + ")");
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read ("itemCancelMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
             }
@@ -96,14 +97,14 @@ public class ItemCancelMenu implements Listener {
             inventories.add(inventory);
         }
         // Create inventory
-        inventory = Bukkit.createInventory(null, 54, "Cancel offers (1)");
+        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title") + " (1)");
         inventory.setContents(inventories.get(0));
         currentInventory = 0;
         player.openInventory(inventory);
     }
 
-    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName("§cClose").build();
-    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName("§aNext page").build();
-    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName("§aPrevious page").build();
-    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§7").build();
+    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("itemCancelMenu.close_item_name")).build();
+    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemCancelMenu.next_page_name")).build();
+    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemCancelMenu.previous_page_name")).build();
+    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(TranslatableChatComponent.read("itemCancelMenu.menu_glass_name")).build();
 }

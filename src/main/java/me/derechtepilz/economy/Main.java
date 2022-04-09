@@ -1,5 +1,8 @@
 package me.derechtepilz.economy;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.itemmanager.*;
@@ -10,6 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +37,19 @@ public final class Main extends JavaPlugin {
     private final ItemCancelMenu itemCancelMenu = new ItemCancelMenu();
     private final ItemBuyMenu itemBuyMenu = new ItemBuyMenu();
 
+    private String languages;
+
     @Override
     public void onEnable() {
         plugin = this;
 
         if (!getConfig().contains("wasEnabled")) {
             saveDefaultConfig();
+        }
+
+        prepareTranslationAccess();
+        if (languages.equals("§cNo lang.json file was found!")) {
+            getLogger().severe(languages + " Messages may not display correctly! Please contact DerEchtePilz#7406 on the discord server found in the README.md on this plugin's Github page!");
         }
 
         commandRegistration();
@@ -106,6 +120,10 @@ public final class Main extends JavaPlugin {
         return itemBuyMenu;
     }
 
+    public String getLanguages() {
+        return languages;
+    }
+
     public int findNextMultiple(int input, int multipleToFind) {
         if (input > multipleToFind) {
             if (input % multipleToFind == 0) {
@@ -118,6 +136,28 @@ public final class Main extends JavaPlugin {
             return multiple;
         } else {
             return multipleToFind;
+        }
+    }
+
+    private void prepareTranslationAccess() {
+        String line;
+        try {
+            InputStream inputStream = Main.getInstance().getResource("lang.json");
+            if (inputStream == null) {
+                languages = "§cNo lang.json file was found!";
+                return;
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            StringBuilder builder = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+
+            languages = builder.toString();
+        } catch (IOException exception) {
+            languages = "§cNo lang.json file was found!";
         }
     }
 }
