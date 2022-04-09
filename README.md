@@ -4,7 +4,7 @@
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
-* [Setup](#setup)
+* [Setup](#setup-for-windows)
 * [Usage](#usage)
 * [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
@@ -64,6 +64,7 @@ Room for improvement:
 To do:
 - Feature to be added 1
 - Feature to be added 2
-- 
+
+
 ## License -->
 This project is open source and available under the MIT License.
