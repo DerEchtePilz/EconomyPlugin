@@ -2,6 +2,7 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import me.derechtepilz.economy.itemmanager.ItemBuyMenu;
 import me.derechtepilz.economy.itemmanager.ItemCancelMenu;
 import me.derechtepilz.economy.itemmanager.ItemCancelOffer;
 import me.derechtepilz.economy.itemmanager.ItemCreateOffer;
@@ -23,17 +24,21 @@ public final class Main extends JavaPlugin {
     private final NamespacedKey uuid = new NamespacedKey(Main.getInstance(), "id");
     private final NamespacedKey price = new NamespacedKey(Main.getInstance(), "price");
 
-    private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
     private final HashMap<String, ItemStack[]> specialOffers = new HashMap<>();
 
     private final List<ItemStack> offeredItemsList = new ArrayList<>();
 
     private final ItemCancelMenu itemCancelMenu = new ItemCancelMenu();
+    private final ItemBuyMenu itemBuyMenu = new ItemBuyMenu();
 
     @Override
     public void onEnable() {
         plugin = this;
+
+        if (!getConfig().contains("wasEnabled")) {
+            saveDefaultConfig();
+        }
 
         commandRegistration();
         listenerRegistration();
@@ -47,11 +52,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!getConfig().contains("wasEnabled")) {
-            saveDefaultConfig();
-        } else {
-            getConfig().set("wasEnabled", true);
-        }
+        getConfig().set("wasEnabled", true);
         saveConfig();
 
         CommandAPI.unregister("createoffer");
@@ -70,6 +71,7 @@ public final class Main extends JavaPlugin {
     private void listenerRegistration() {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(itemCancelMenu, this);
+        manager.registerEvents(itemBuyMenu, this);
     }
 
     public NamespacedKey getCreator() {
@@ -82,10 +84,6 @@ public final class Main extends JavaPlugin {
 
     public NamespacedKey getPrice() {
         return price;
-    }
-
-    public HashMap<UUID, ItemStack> getOfferedItems() {
-        return offeredItems;
     }
 
     public HashMap<UUID, ItemStack[]> getOfferingPlayers() {
