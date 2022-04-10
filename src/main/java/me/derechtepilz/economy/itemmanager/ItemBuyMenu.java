@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,36 +34,43 @@ public class ItemBuyMenu implements Listener {
         if (event.getView().getTitle().contains(TranslatableChatComponent.read("itemBuyMenu.inventory_title")) && Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null) return;
-            if (event.getCurrentItem().equals(closeItem)) {
+            ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem.equals(closeItem)) {
                 player.closeInventory();
                 return;
             }
-            if (event.getCurrentItem().equals(nextPage)) {
+            if (clickedItem.equals(nextPage)) {
                 currentInventory += 1;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
                 return;
             }
-            if (event.getCurrentItem().equals(previousPage)) {
+            if (clickedItem.equals(previousPage)) {
                 currentInventory -= 1;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
                 return;
             }
-            if (event.getCurrentItem().equals(jumpToPlayerOffers)) {
+            if (clickedItem.equals(jumpToPlayerOffers)) {
                 currentInventory = 0;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
                 return;
             }
-            if (event.getCurrentItem().equals(jumpToSpecialOffers)) {
+            if (clickedItem.equals(jumpToSpecialOffers)) {
                 currentInventory = playerOfferPages;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
+            }
+            if (!clickedItem.hasItemMeta() && clickedItem.getItemMeta() == null) return;
+            ItemMeta meta = clickedItem.getItemMeta();
+            if (meta == null) return;
+            if (meta.getPersistentDataContainer().has(Main.getInstance().getUuid(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getPrice(), PersistentDataType.INTEGER)) {
+                // TODO: Write coin checking and item availability checking
             }
         }
     }

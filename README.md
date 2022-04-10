@@ -41,7 +41,7 @@ Then save the file and double-click it.
 How does one go about using it?
 Provide various use cases and code examples here.
 
-`write-your-code-here`
+`public`
 
 ## License
 This project is open source and available under the [MIT License](https://github.com/DerEchtePilz/EconomyPlugin/blob/main/LICENSE).
