@@ -26,6 +26,7 @@ public final class Main extends JavaPlugin {
     private final NamespacedKey uuid = new NamespacedKey(Main.getInstance(), "id");
     private final NamespacedKey price = new NamespacedKey(Main.getInstance(), "price");
 
+    private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
     private final HashMap<String, ItemStack[]> specialOffers = new HashMap<>();
 
@@ -98,8 +99,16 @@ public final class Main extends JavaPlugin {
         return creator;
     }
 
+    public NamespacedKey getUuid() {
+        return uuid;
+    }
+
     public NamespacedKey getPrice() {
         return price;
+    }
+
+    public HashMap<UUID, ItemStack> getOfferedItems() {
+        return offeredItems;
     }
 
     public HashMap<UUID, ItemStack[]> getOfferingPlayers() {
