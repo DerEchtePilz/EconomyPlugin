@@ -2,6 +2,7 @@ package me.derechtepilz.economy.itemmanager;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ItemBuilder;
+import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ItemBuyMenu implements Listener {
 
@@ -26,7 +28,42 @@ public class ItemBuyMenu implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-
+        Player player = (Player) event.getWhoClicked();
+        if (event.getView().getTitle().contains(TranslatableChatComponent.read("itemBuyMenu.inventory_title")) && Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
+            event.setCancelled(true);
+            if (event.getCurrentItem() == null) return;
+            if (event.getCurrentItem().equals(closeItem)) {
+                player.closeInventory();
+                return;
+            }
+            if (event.getCurrentItem().equals(nextPage)) {
+                currentInventory += 1;
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
+                inventory.setContents(inventories.get(currentInventory));
+                player.openInventory(inventory);
+                return;
+            }
+            if (event.getCurrentItem().equals(previousPage)) {
+                currentInventory -= 1;
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
+                inventory.setContents(inventories.get(currentInventory));
+                player.openInventory(inventory);
+                return;
+            }
+            if (event.getCurrentItem().equals(jumpToPlayerOffers)) {
+                currentInventory = 0;
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
+                inventory.setContents(inventories.get(currentInventory));
+                player.openInventory(inventory);
+                return;
+            }
+            if (event.getCurrentItem().equals(jumpToSpecialOffers)) {
+                currentInventory = playerOfferPages;
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + (currentInventory + 1) + ")");
+                inventory.setContents(inventories.get(currentInventory));
+                player.openInventory(inventory);
+            }
+        }
     }
 
     public void openBuyMenu(Player player, Material type) {
@@ -34,7 +71,7 @@ public class ItemBuyMenu implements Listener {
         ItemStack[] allSpecialOffers = Main.getInstance().getSpecialOffers().get("console");
 
         if (allPlayerOffers.length == 0 && allSpecialOffers.length == 0) {
-            player.sendMessage("§cNo offers were found!");
+            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.no_offers"));
             return;
         }
 
@@ -44,7 +81,7 @@ public class ItemBuyMenu implements Listener {
         ItemStack[] playerOffers = new ItemStack[0];
         ItemStack[] specialOffers = new ItemStack[0];
 
-        jumpToPlayerOffers = new ItemBuilder(Material.PLAYER_HEAD).setTexture(player.getName()).setName("§aJump to §bPlayer Offers").build();
+        jumpToPlayerOffers = new ItemBuilder(Material.PLAYER_HEAD).setTexture(player.getName()).setName(TranslatableChatComponent.read("itemBuyMenu.jump_to_player_offers_name")).build();
 
         for (ItemStack item : allPlayerOffers) {
             if (item.getType().equals(type)) {
@@ -77,7 +114,7 @@ public class ItemBuyMenu implements Listener {
             prepareInventoryPages(specialOffers, specialOfferPages, false);
         }
 
-        inventory = Bukkit.createInventory(null, 54, "Buy items (1)");
+        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
         inventory.setContents(inventories.get(0));
         currentInventory = 0;
         player.openInventory(inventory);
@@ -86,7 +123,7 @@ public class ItemBuyMenu implements Listener {
     public void openBuyMenu(Player player, boolean query) {
         ItemStack[] allSpecialOffers = Main.getInstance().getSpecialOffers().get("console");
         if (allSpecialOffers.length == 0) {
-            player.sendMessage("§cNo special offers were found!");
+            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.no_special_offer"));
             return;
         }
         ItemStack[] specialOffers = resizeInventoryContents(allSpecialOffers);
@@ -94,21 +131,53 @@ public class ItemBuyMenu implements Listener {
 
         prepareInventoryPages(specialOffers, specialOfferPages, false);
 
-        inventory = Bukkit.createInventory(null, 54, "Buy items (1)");
+        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
         inventory.setContents(inventories.get(0));
         currentInventory = 0;
         player.openInventory(inventory);
     }
 
     public void openBuyMenu(Player player) {
+        ItemStack[] playerOffers = Main.getInstance().getOfferingPlayers().get(player.getUniqueId());
+        ItemStack[] specialOffers = Main.getInstance().getSpecialOffers().get("console");
 
+        if (playerOffers.length == 0 && specialOffers.length == 0) {
+            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.no_offers"));
+            return;
+        }
+
+        jumpToPlayerOffers = new ItemBuilder(Material.PLAYER_HEAD).setTexture(player.getName()).setName(TranslatableChatComponent.read("itemBuyMenu.jump_to_player_offers_name")).build();
+
+        if (playerOffers.length > 0) {
+            playerOffers = resizeInventoryContents(playerOffers);
+        }
+
+        if (specialOffers.length > 0) {
+            specialOffers = resizeInventoryContents(specialOffers);
+        }
+
+        playerOfferPages = playerOffers.length / 45;
+        specialOfferPages = specialOffers.length / 45;
+
+        if (playerOfferPages >= 1 && specialOfferPages >= 1) {
+            prepareInventoryPages(playerOffers, playerOfferPages, true);
+            prepareInventoryPages(specialOffers, specialOfferPages, true);
+        } else {
+            prepareInventoryPages(playerOffers, playerOfferPages, false);
+            prepareInventoryPages(specialOffers, specialOfferPages, false);
+        }
+
+        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
+        inventory.setContents(inventories.get(0));
+        currentInventory = 0;
+        player.openInventory(inventory);
     }
 
-    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName("§cClose").build();
-    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName("§aNext page").build();
-    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName("§aPrevious page").build();
-    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§7").build();
-    private final ItemStack jumpToSpecialOffers = new ItemBuilder(Material.NETHER_STAR).setName("§aJump to §dSpecial Offers").build();
+    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("itemBuyMenu.close_item_name")).build();
+    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemBuyMenu.next_page_name")).build();
+    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemBuyMenu.previous_page_name")).build();
+    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(TranslatableChatComponent.read("itemBuyMenu.menu_glass_name")).build();
+    private final ItemStack jumpToSpecialOffers = new ItemBuilder(Material.NETHER_STAR).setName(TranslatableChatComponent.read("itemBuyMenu.jump_to_special_offers_name")).build();
     private ItemStack jumpToPlayerOffers;
 
     private ItemStack[] resizeInventoryContents(ItemStack[] offers) {
@@ -123,7 +192,7 @@ public class ItemBuyMenu implements Listener {
             resizedOffers[i] = offers[i];
         }
         for (int i = offers.length; i < resizedOffers.length; i++) {
-            resizedOffers[i] = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§7").build();
+            resizedOffers[i] = menuGlass;
         }
         return resizedOffers;
     }

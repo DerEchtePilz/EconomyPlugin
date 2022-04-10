@@ -34,7 +34,7 @@ public class ItemCancelMenu implements Listener {
             }
             if (event.getCurrentItem().equals(nextPage)) {
                 currentInventory += 1;
-                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title")+ (currentInventory + 1) + ")");
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title") + (currentInventory + 1) + ")");
                 inventory.setContents(inventories.get(currentInventory));
                 player.openInventory(inventory);
                 return;

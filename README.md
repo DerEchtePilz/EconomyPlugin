@@ -19,12 +19,6 @@
 This is my first attempt at writing an economy plugin for Minecraft! <br>
 It is supposed to bring the feeling of marketing and advertisement strategy to Minecraft and tries to get players together!
 
-
-## Technologies Used
-- CommandAPI - version 6.5.3
-- SpigotAPI - version 1.18.1-R0.1-SNAPSHOT
-
-
 ## Features
 List the ready features here:
 - Awesome feature 1
@@ -53,20 +47,5 @@ Provide various use cases and code examples here.
 
 `write-your-code-here`
 
-## Project Status
-I am working actively on this Minecraft plugin! It is my first attempt at writing an economy plugin.
-
-## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
-
-
-## License -->
-This project is open source and available under the MIT License.
+## License
+This project is open source and available under the [MIT License](https://github.com/DerEchtePilz/EconomyPlugin/blob/main/LICENSE).
