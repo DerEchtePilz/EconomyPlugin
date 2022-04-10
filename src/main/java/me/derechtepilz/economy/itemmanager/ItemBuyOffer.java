@@ -8,8 +8,6 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.sql.rowset.spi.TransactionalWriter;
-
 public class ItemBuyOffer {
     public ItemBuyOffer() {
         new CommandAPICommand("buy")

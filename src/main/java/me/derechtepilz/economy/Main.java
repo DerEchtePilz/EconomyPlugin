@@ -49,6 +49,11 @@ public final class Main extends JavaPlugin {
             getLogger().severe(languages + " Messages may not display correctly! Please contact DerEchtePilz#7406 on the discord server found in the README.md on this plugin's Github page!");
         }
 
+        String version = Bukkit.getBukkitVersion().split("-")[0];
+        if (!version.equals("1.18.1")) {
+            getLogger().severe(TranslatableChatComponent.read("main.onEnable.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
+        }
+
         commandRegistration();
         listenerRegistration();
 

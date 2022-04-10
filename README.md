@@ -1,6 +1,8 @@
 # EconomyPlugin
 [![GitHub](https://img.shields.io/github/license/DerEchtePilz/EconomyPlugin)](https://github.com/DerEchtePilz/EconomyPlugin/blob/main/LICENSE)
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
+[![](https://jitpack.io/v/DerEchtePilz/EconomyPlugin.svg)](https://jitpack.io/#DerEchtePilz/EconomyPlugin)
+
 
 ## Table of Contents
 * [General Info](#general-information)

@@ -1,5 +1,6 @@
 {
   "main.onEnable.plugin_enable_message": "§aThe Economy plugin has been enabled!",
+  "main.onEnable.version_info": "This server is running on version %s, the plugin was made for version 1.18.1 but could work on older and newer versions! Unexpected errors could occur nevertheless!",
   "main.onDisable.plugin_disable_message": "§cThe Economy plugin has been disabled",
   "itemCreateOffer.player_executor.missing_item": "§cYou do not have the specified item in your inventory!",
   "itemCreateOffer.console_executor.console_created_offer": "§aYou created a special offer for item §6%s §7%%sx §a!",
