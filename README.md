@@ -1,17 +1,12 @@
 # EconomyPlugin
 [![Github](https://img.shields.io/github/license/DerEchtePilz/EconomyPlugin)](https://github.com/DerEchtePilz/EconomyPlugin/blob/main/LICENSE)
-[![Join us on Discord](https://img.shields.io/discord/828690176170917891.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/ZTSdfzpJ5U)
+[![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
 
 ## Table of Contents
 * [General Info](#general-information)
-* [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Setup](#setup-for-windows)
 * [Usage](#usage)
-* [Project Status](#project-status)
-* [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
 * [License](#license)
 
 
@@ -24,7 +19,6 @@ List the ready features here:
 - Awesome feature 1
 - Awesome feature 2
 - Awesome feature 3
-
 
 ## Setup for Windows
 (I do not have any idea on how to do it in Linux or Mac) <br>
