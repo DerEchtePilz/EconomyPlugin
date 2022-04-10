@@ -20,6 +20,7 @@ List the ready features here:
 - Awesome feature 1
 - Awesome feature 2
 - Awesome feature 3
+- Awesome feature 4
 
 ## Setup for Windows
 (I do not have any idea on how to do it in Linux or Mac) <br>
