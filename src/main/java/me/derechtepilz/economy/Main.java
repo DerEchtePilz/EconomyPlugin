@@ -3,6 +3,7 @@ package me.derechtepilz.economy;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.itemmanager.*;
+import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 public final class Main extends JavaPlugin {
     private static Main plugin;
+    private Language language;
 
     private final NamespacedKey creator = new NamespacedKey(Main.getInstance(), "itemSeller");
     private final NamespacedKey uuid = new NamespacedKey(Main.getInstance(), "id");
@@ -53,6 +55,12 @@ public final class Main extends JavaPlugin {
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (!version.equals("1.18.1")) {
             getLogger().severe(TranslatableChatComponent.read("main.onEnable.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
+        }
+
+        if (getConfig().contains("language")) {
+            language = Language.valueOf(getConfig().getString("language"));
+        } else {
+            language = Language.EN_US;
         }
 
         commandRegistration();
@@ -133,6 +141,10 @@ public final class Main extends JavaPlugin {
 
     public String getLanguages() {
         return languages;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
     public int findNextMultiple(int input, int multipleToFind) {

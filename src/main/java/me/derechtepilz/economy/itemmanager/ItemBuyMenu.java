@@ -28,6 +28,8 @@ public class ItemBuyMenu implements Listener {
 
     private Inventory inventory;
 
+    private final List<Player> buyers = new ArrayList<>();
+
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -70,7 +72,17 @@ public class ItemBuyMenu implements Listener {
             ItemMeta meta = clickedItem.getItemMeta();
             if (meta == null) return;
             if (meta.getPersistentDataContainer().has(Main.getInstance().getUuid(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getPrice(), PersistentDataType.INTEGER)) {
-                // TODO: Write coin checking and item availability checking
+                buyers.add(player);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(),() -> {
+                    if (buyers.size() == 1) {
+                        // TODO: Check player money
+                        // TODO: Process the item, give the item
+                    } else {
+                        for (Player interestedPlayer : buyers) {
+                            interestedPlayer.sendMessage(TranslatableChatComponent.read("itemBuyMenu.onClick.to_many_customers"));
+                        }
+                    }
+                }, 20);
             }
         }
     }
