@@ -27,6 +27,7 @@ package me.derechtepilz.economy;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.itemmanager.*;
+import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
@@ -64,9 +65,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        if (!getConfig().contains("wasEnabled")) {
-            saveDefaultConfig();
-        }
+        Config.loadConfig();
 
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (!version.equals("1.18.1")) {
@@ -95,8 +94,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getConfig().set("wasEnabled", true);
-        saveConfig();
 
         CommandAPI.unregister("createoffer");
         CommandAPI.unregister("canceloffer");
