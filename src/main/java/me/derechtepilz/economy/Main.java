@@ -65,8 +65,6 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        Config.loadConfig();
-
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (!version.equals("1.18.1")) {
             getLogger().severe(TranslatableChatComponent.read("main.onEnable.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
@@ -90,6 +88,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onLoad() {
         CommandAPI.onLoad(new CommandAPIConfig());
+        Config.loadConfig();
     }
 
     @Override

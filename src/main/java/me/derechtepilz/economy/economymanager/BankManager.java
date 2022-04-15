@@ -31,14 +31,14 @@ import org.bukkit.persistence.PersistentDataType;
 public class BankManager extends Bank {
 
     private Player player;
-    private int balance;
+    private double balance;
     private BankManager manager;
 
-    public BankManager(Player player, int balance) {
+    public BankManager(Player player, double balance) {
         this.player = player;
         this.balance = balance;
 
-        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.INTEGER, this.balance);
+        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.DOUBLE, this.balance);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BankManager extends Bank {
     }
 
     @Override
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 

@@ -30,7 +30,7 @@ public abstract class Bank {
 
     public abstract Player getPlayer();
 
-    public abstract int getBalance();
+    public abstract double getBalance();
 
     public abstract void setBalance(int balance);
 
