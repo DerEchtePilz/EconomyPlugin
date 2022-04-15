@@ -1,3 +1,27 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2022 DerEchtePilz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
@@ -6,15 +30,12 @@ import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +45,11 @@ public final class Main extends JavaPlugin {
     private static Main plugin;
     private Language language;
 
-    private final NamespacedKey creator = new NamespacedKey(Main.getInstance(), "itemSeller");
-    private final NamespacedKey uuid = new NamespacedKey(Main.getInstance(), "id");
-    private final NamespacedKey price = new NamespacedKey(Main.getInstance(), "price");
+    private final NamespacedKey creator = new NamespacedKey(this, "itemSeller");
+    private final NamespacedKey uuid = new NamespacedKey(this, "id");
+    private final NamespacedKey price = new NamespacedKey(this, "price");
+
+    private final NamespacedKey balance = new NamespacedKey(this, "balance");
 
     private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
@@ -34,10 +57,8 @@ public final class Main extends JavaPlugin {
 
     private final List<ItemStack> offeredItemsList = new ArrayList<>();
 
-    private final ItemCancelMenu itemCancelMenu = new ItemCancelMenu();
-    private final ItemBuyMenu itemBuyMenu = new ItemBuyMenu();
-
-    private String languages;
+    private ItemCancelMenu itemCancelMenu;
+    private ItemBuyMenu itemBuyMenu;
 
     @Override
     public void onEnable() {
@@ -45,11 +66,6 @@ public final class Main extends JavaPlugin {
 
         if (!getConfig().contains("wasEnabled")) {
             saveDefaultConfig();
-        }
-
-        prepareTranslationAccess();
-        if (languages.equals("§cNo lang.json file was found!")) {
-            getLogger().severe(languages + " Messages may not display correctly! Please contact DerEchtePilz#7406 on the discord server found in the README.md on this plugin's Github page!");
         }
 
         String version = Bukkit.getBukkitVersion().split("-")[0];
@@ -63,6 +79,9 @@ public final class Main extends JavaPlugin {
             language = Language.EN_US;
         }
 
+        itemCancelMenu = new ItemCancelMenu();
+        itemBuyMenu = new ItemBuyMenu();
+
         commandRegistration();
         listenerRegistration();
 
@@ -71,7 +90,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        reloadConfig();
         CommandAPI.onLoad(new CommandAPIConfig());
     }
 
@@ -84,7 +102,7 @@ public final class Main extends JavaPlugin {
         CommandAPI.unregister("canceloffer");
         CommandAPI.unregister("buy");
 
-        getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
+        getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
     }
 
     public static Main getInstance() {
@@ -115,6 +133,10 @@ public final class Main extends JavaPlugin {
         return price;
     }
 
+    public NamespacedKey getBalance() {
+        return balance;
+    }
+
     public HashMap<UUID, ItemStack> getOfferedItems() {
         return offeredItems;
     }
@@ -139,10 +161,6 @@ public final class Main extends JavaPlugin {
         return itemBuyMenu;
     }
 
-    public String getLanguages() {
-        return languages;
-    }
-
     public Language getLanguage() {
         return language;
     }
@@ -159,28 +177,6 @@ public final class Main extends JavaPlugin {
             return multiple;
         } else {
             return multipleToFind;
-        }
-    }
-
-    private void prepareTranslationAccess() {
-        String line;
-        try {
-            InputStream inputStream = Main.getInstance().getResource("lang.json");
-            if (inputStream == null) {
-                languages = "§cNo lang.json file was found!";
-                return;
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            StringBuilder builder = new StringBuilder();
-
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-
-            languages = builder.toString();
-        } catch (IOException exception) {
-            languages = "§cNo lang.json file was found!";
         }
     }
 }

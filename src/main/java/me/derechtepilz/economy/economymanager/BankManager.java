@@ -22,25 +22,50 @@
  * SOFTWARE.
  */
 
-package me.derechtepilz.economy.itemmanager;
+package me.derechtepilz.economy.economymanager;
 
-import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 
-public class ItemCancelOffer {
-    public ItemCancelOffer() {
-        new CommandAPICommand("canceloffer")
-                .executes((sender, args) -> {
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(TranslatableChatComponent.read("itemCancelOffer.wrong_executor"));
-                    }
-                    Player player = (Player) sender;
-                    Main.getInstance().getItemCancelMenu().openOfferCancelMenu(player, Main.getInstance().getOfferingPlayers().get(player.getUniqueId()));
-                    player.sendMessage(TranslatableChatComponent.read("itemCancelOffer.player_executor.prepare_cancelling"));
-                })
-                .register();
+public class BankManager extends Bank {
+
+    private Player player;
+    private int balance;
+    private BankManager manager;
+
+    public BankManager(Player player, int balance) {
+        this.player = player;
+        this.balance = balance;
+
+        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.INTEGER, this.balance);
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public int getBalance() {
+        return balance;
+    }
+
+    public BankManager getBankManager() {
+        return manager;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    @Override
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    @Override
+    public void setBank(BankManager bank) {
+        this.manager = bank;
     }
 }
