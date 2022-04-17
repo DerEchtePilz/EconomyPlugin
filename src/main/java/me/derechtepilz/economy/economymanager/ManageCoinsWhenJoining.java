@@ -31,13 +31,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-public class JoinLeaveEvent implements Listener {
+public class ManageCoinsWhenJoining implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -73,11 +72,6 @@ public class JoinLeaveEvent implements Listener {
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
             player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%s", String.valueOf(missingStartBalance)).replace("%%s", String.valueOf(bankManager.getBalance())));
         }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-
     }
 
     private long betweenDates(Date firstDate, Date secondDate) {

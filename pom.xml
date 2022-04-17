@@ -31,18 +31,23 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0-SNAPSHOT</version>
                 <executions>
                     <execution>
+                        <id>shade</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>dev.jorel.commandapi-shade</pattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
@@ -52,6 +57,13 @@
             </resource>
         </resources>
     </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <repositories>
         <repository>
@@ -76,9 +88,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>dev.jorel.CommandAPI</groupId>
+            <groupId>dev.jorel</groupId>
             <artifactId>commandapi-shade</artifactId>
-            <version>6.5.3</version>
+            <version>7.0.0</version>
         </dependency>
     </dependencies>
 </project>

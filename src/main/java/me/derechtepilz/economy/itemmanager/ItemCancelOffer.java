@@ -34,10 +34,10 @@ public class ItemCancelOffer {
     public ItemCancelOffer() {
         new CommandAPICommand("canceloffer")
                 .executes((sender, args) -> {
-                    if (!(sender instanceof Player)) {
+                    if (!(sender instanceof Player player)) {
                         sender.sendMessage(TranslatableChatComponent.read("itemCancelOffer.wrong_executor"));
+                        return;
                     }
-                    Player player = (Player) sender;
                     Main.getInstance().getItemCancelMenu().openOfferCancelMenu(player, Main.getInstance().getOfferingPlayers().get(player.getUniqueId()));
                     player.sendMessage(TranslatableChatComponent.read("itemCancelOffer.player_executor.prepare_cancelling"));
                 })

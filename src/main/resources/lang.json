@@ -27,7 +27,12 @@
     "itemBuyMenu.menu_glass_name": "\u00A77",
     "itemBuyMenu.jump_to_special_offers_name": "\u00A7aJump to \u00A7dSpecial Offers",
     "itemBuyMenu.jump_to_player_offers_name": "\u00A7aJump to \u00A7bPlayer Offers",
-    "giveMoneyCommand.player_executor.give_coins_to_player": "\u00A7aYou have given yourself \u00A76%s coins\u00A7a! You now have \u00A76%%s coins\u00A7a!",
+    "giveCoinsCommand.player_executor.give_coins_to_player": "\u00A7aYou have given yourself \u00A76%s coins\u00A7a! You now have \u00A76%%s coins\u00A7a!",
+    "giveCoinsCommand.player_executor.give_coins_to_other_player": "\u00A7aYou have given \u00A7b%s \u00A76%%s coins\u00A7a! They now have \u00A76%%%s coins\u00A7a!",
+    "giveCoinsCommand.player_executor.receive_coins_from_player": "\u00A7aYou have been given \u00A76%s coins \u00A7aby \u00A7b%%s\u00A7a! You now have \u00A76%%%s coins\u00A7a!",
+    "giveCoinsCommand.console_executor.give_coins_to_player": "You have given %s %%s coins! They now have %%%s coins!",
+    "giveCoinsCommand.console_executor.receive_coins_from_console": "\u00A7d\u00A7lCONSOLE POWER \u00A7r\u00A7aYou got \u00A76%s coins and now have \u00A76%%s coins\u00A7a",
+    "giveCoinsCommand.wrong_executor": "\u00A7cYou cannot execute this command!",
     "joinLeaveEvent.onJoin.grant_interest": "\u00A7aYou have earned interest! You now have \u00A76%s coins\u00A7a!",
     "joinLeaveEvent.onJoin.join_bonus": "\u00A7eWelcome to the server! To start we have given you \u00A76%s coins\u00A7e as a start bonus!",
     "joinLeaveEvent.onJoin.awarded_missing_start_balance": "\u00A7aThe start balance was increased! To make sure you also benefit from this increment, we have given you \u00A76%s coins\u00A7a, you now have \u00A76%%s coins\u00A7a!"

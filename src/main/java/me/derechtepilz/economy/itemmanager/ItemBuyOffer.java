@@ -25,6 +25,7 @@
 package me.derechtepilz.economy.itemmanager;
 
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import me.derechtepilz.economy.Main;
@@ -57,7 +58,7 @@ public class ItemBuyOffer {
                 .register();
 
         new CommandAPICommand("buy")
-                .withArguments(new StringArgument("query").includeSuggestions(info -> new String[]{"special"}))
+                .withArguments(new StringArgument("query").includeSuggestions(ArgumentSuggestions.strings(info -> new String[]{"special"})))
                 .executes((sender, args) -> {
                     if (!(sender instanceof Player player)) {
                         sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));

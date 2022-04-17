@@ -26,7 +26,8 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import me.derechtepilz.economy.economymanager.JoinLeaveEvent;
+import me.derechtepilz.economy.economymanager.GiveCoinsCommand;
+import me.derechtepilz.economy.economymanager.ManageCoinsWhenJoining;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.Language;
@@ -100,6 +101,7 @@ public final class Main extends JavaPlugin {
         CommandAPI.unregister("createoffer");
         CommandAPI.unregister("canceloffer");
         CommandAPI.unregister("buy");
+        CommandAPI.unregister("givecoins");
 
         getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
     }
@@ -112,13 +114,14 @@ public final class Main extends JavaPlugin {
         new ItemCreateOffer();
         new ItemCancelOffer();
         new ItemBuyOffer();
+        new GiveCoinsCommand();
     }
 
     private void listenerRegistration() {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(itemCancelMenu, this);
         manager.registerEvents(itemBuyMenu, this);
-        manager.registerEvents(new JoinLeaveEvent(), this);
+        manager.registerEvents(new ManageCoinsWhenJoining(), this);
     }
 
     public NamespacedKey getCreator() {
