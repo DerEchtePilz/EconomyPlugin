@@ -28,17 +28,20 @@ import me.derechtepilz.economy.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
-public class BankManager extends Bank {
+public class BankManager implements Bank {
 
     private Player player;
     private double balance;
-    private BankManager manager;
 
     public BankManager(Player player, double balance) {
         this.player = player;
         this.balance = balance;
 
-        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.DOUBLE, this.balance);
+        updateBank();
+    }
+
+    public BankManager() {
+
     }
 
     @Override
@@ -51,21 +54,19 @@ public class BankManager extends Bank {
         return balance;
     }
 
-    public BankManager getBankManager() {
-        return manager;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     @Override
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
+        updateBank();
     }
 
     @Override
-    public void setBank(BankManager bank) {
-        this.manager = bank;
+    public BankManager loadBank(Player player) {
+        return new BankManager(player, player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE));
+    }
+
+    private void updateBank() {
+        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.DOUBLE, balance);
+        Main.getInstance().getBankAccounts().put(player, this);
     }
 }

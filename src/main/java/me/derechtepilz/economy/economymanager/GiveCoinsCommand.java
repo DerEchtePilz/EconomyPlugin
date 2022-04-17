@@ -47,6 +47,11 @@ public class GiveCoinsCommand {
                     if (sender instanceof Player player) {
                         double amount = (double) args[0];
                         double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+
+                        if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                            player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.bank_account_missing"));
+                            return;
+                        }
                         BankManager manager = new BankManager(player, amount + balance);
                         player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
                     } else {
@@ -63,15 +68,25 @@ public class GiveCoinsCommand {
                         Player target = (Player) args[0];
                         double amount = (double) args[1];
                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+
+                        if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                            player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.target_bank_account_missing").replace("%s", target.getName()));
+                            return;
+                        }
                         BankManager manager = new BankManager(target, balance + amount);
                         player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_other_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
-                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", player.getName()).replace("%s", String.valueOf(amount)));
+                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", player.getName()) .replace("%s", String.valueOf(amount)));
                         return;
                     }
                     if (sender instanceof ConsoleCommandSender console) {
                         Player target = (Player) args[0];
                         double amount = (double) args[1];
                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+
+                        if (!Main.getInstance().getBankAccounts().containsKey(target)) {
+                            console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.target_bank_account_missing").replace("%s", target.getName()));
+                            return;
+                        }
                         BankManager manager = new BankManager(target, balance + amount);
                         console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.give_coins_to_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
                         target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.receive_coins_from_console").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));

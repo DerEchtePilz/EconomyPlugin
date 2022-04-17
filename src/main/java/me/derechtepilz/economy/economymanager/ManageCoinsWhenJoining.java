@@ -40,12 +40,15 @@ public class ManageCoinsWhenJoining implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        BankManager bankManager = null;
+        if (player.getPersistentDataContainer().has(Main.getInstance().getBalance(), PersistentDataType.DOUBLE)) {
+            bankManager = new BankManager().loadBank(player);
+        }
         if (player.getPersistentDataContainer().has(Main.getInstance().getLastInterest(), PersistentDataType.LONG)) {
             // Calculate interest if at least 24 hours have passed
             long lastPlayerInterest = player.getPersistentDataContainer().get(Main.getInstance().getLastInterest(), PersistentDataType.LONG);
             long interestDays = betweenDates(new Date(lastPlayerInterest), new Date(System.currentTimeMillis()));
             if (interestDays >= 1) {
-                BankManager bankManager = new BankManager(player, player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE));
                 new CoinManager().calculateInterest(bankManager, interestDays);
 
                 player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
@@ -53,7 +56,7 @@ public class ManageCoinsWhenJoining implements Listener {
             }
         } else {
             // Give start balance
-            BankManager bankManager = new BankManager(player, (Double) Config.get("startBalance"));
+            bankManager = new BankManager(player, (Double) Config.get("startBalance"));
             player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, (Double) Config.get("startBalance"));
 
@@ -67,7 +70,7 @@ public class ManageCoinsWhenJoining implements Listener {
         if (configStartBalance > playerStartBalance) {
             double missingStartBalance = configStartBalance - playerStartBalance;
             double currentPlayerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
-            BankManager bankManager = new BankManager(player, currentPlayerBalance + missingStartBalance);
+            bankManager.setBalance(currentPlayerBalance + missingStartBalance);
 
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
             player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%%s", String.valueOf(bankManager.getBalance())).replace("%s", String.valueOf(missingStartBalance)));

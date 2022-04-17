@@ -38,7 +38,7 @@ import java.util.List;
 public class ItemBuilder {
 
     private final ItemStack item;
-    private ItemMeta meta;
+    private final ItemMeta meta;
 
     private final Material material;
 

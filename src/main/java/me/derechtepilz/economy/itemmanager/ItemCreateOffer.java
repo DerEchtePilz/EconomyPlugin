@@ -27,7 +27,6 @@ package me.derechtepilz.economy.itemmanager;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
-import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;

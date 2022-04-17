@@ -26,14 +26,14 @@ package me.derechtepilz.economy.economymanager;
 
 import org.bukkit.entity.Player;
 
-public abstract class Bank {
+public interface Bank {
 
-    public abstract Player getPlayer();
+    Player getPlayer();
 
-    public abstract double getBalance();
+    double getBalance();
 
-    public abstract void setBalance(int balance);
+    void setBalance(double balance);
 
-    public abstract void setBank(BankManager bank);
+    BankManager loadBank(Player player);
 
 }

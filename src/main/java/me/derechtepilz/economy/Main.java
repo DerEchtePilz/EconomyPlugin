@@ -26,6 +26,7 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.economymanager.GiveCoinsCommand;
 import me.derechtepilz.economy.economymanager.ManageCoinsWhenJoining;
 import me.derechtepilz.economy.itemmanager.*;
@@ -35,6 +36,7 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,6 +61,8 @@ public final class Main extends JavaPlugin {
     private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
     private final HashMap<String, ItemStack[]> specialOffers = new HashMap<>();
+
+    private final HashMap<Player, BankManager> bankAccounts = new HashMap<>();
 
     private final List<ItemStack> offeredItemsList = new ArrayList<>();
 
@@ -158,6 +162,10 @@ public final class Main extends JavaPlugin {
 
     public HashMap<String, ItemStack[]> getSpecialOffers() {
         return specialOffers;
+    }
+
+    public HashMap<Player, BankManager> getBankAccounts() {
+        return bankAccounts;
     }
 
     public List<ItemStack> getOfferedItemsList() {

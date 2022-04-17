@@ -28,7 +28,6 @@ import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
