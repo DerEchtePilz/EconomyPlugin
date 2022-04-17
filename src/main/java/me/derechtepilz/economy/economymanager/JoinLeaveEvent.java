@@ -1,3 +1,27 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2022 DerEchtePilz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package me.derechtepilz.economy.economymanager;
 
 import me.derechtepilz.economy.Main;
@@ -26,7 +50,7 @@ public class JoinLeaveEvent implements Listener {
                 new CoinManager().calculateInterest(bankManager, interestDays);
 
                 player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
-                player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.grant_interest"));
+                player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.grant_interest").replace("%s", String.valueOf(bankManager.getBalance())));
             }
         } else {
             // Give start balance
@@ -34,7 +58,7 @@ public class JoinLeaveEvent implements Listener {
             player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, (Double) Config.get("startBalance"));
 
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.join_bonus"));
+            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.join_bonus").replace("%s", String.valueOf(bankManager.getBalance())));
         }
 
         // Check if start balance has been increased and give player missing start balance
@@ -47,7 +71,7 @@ public class JoinLeaveEvent implements Listener {
             BankManager bankManager = new BankManager(player, currentPlayerBalance + missingStartBalance);
 
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance"));
+            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%s", String.valueOf(missingStartBalance)).replace("%%s", String.valueOf(bankManager.getBalance())));
         }
     }
 
