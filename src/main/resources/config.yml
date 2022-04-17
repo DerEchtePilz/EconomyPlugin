@@ -12,5 +12,20 @@ itemPrice:
   minAmount: 50
   maxAmount: 5000
 
+# Saves the amount of coins new players get when they first log onto the server!
+# When this is increased players who already got this bonus
+# will be given this amount minus their own start bonus amount
+# When this is decreased players who already got the bonus won't lose money though
+startBalance: 50.0
+
+# Value in percentages
+# Players are given interest every 24 hours starting from when they first join the server
+# The formula is as follows: balance * (interestDays + (interest / 100))
+# This value can also be negative or zero.
+# When using a negative value the formula is the same
+# When using a zero the formula is used but obviously doesn't change anything
+# The plugin won't allow a value of -100 though
+interest: 1.0
+
 # Saves the server language
 language: EN_US

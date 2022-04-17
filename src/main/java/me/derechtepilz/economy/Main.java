@@ -26,6 +26,7 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import me.derechtepilz.economy.economymanager.JoinLeaveEvent;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.Language;
@@ -51,6 +52,8 @@ public final class Main extends JavaPlugin {
     private final NamespacedKey price = new NamespacedKey(this, "price");
 
     private final NamespacedKey balance = new NamespacedKey(this, "balance");
+    private final NamespacedKey lastInterest = new NamespacedKey(this, "lastInterest");
+    private final NamespacedKey startBalance = new NamespacedKey(this, "startBalance");
 
     private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
@@ -115,6 +118,7 @@ public final class Main extends JavaPlugin {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(itemCancelMenu, this);
         manager.registerEvents(itemBuyMenu, this);
+        manager.registerEvents(new JoinLeaveEvent(), this);
     }
 
     public NamespacedKey getCreator() {
@@ -131,6 +135,14 @@ public final class Main extends JavaPlugin {
 
     public NamespacedKey getBalance() {
         return balance;
+    }
+
+    public NamespacedKey getLastInterest() {
+        return lastInterest;
+    }
+
+    public NamespacedKey getStartBalance() {
+        return startBalance;
     }
 
     public HashMap<UUID, ItemStack> getOfferedItems() {

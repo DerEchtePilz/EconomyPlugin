@@ -26,6 +26,7 @@
     "itemBuyMenu.previous_page_name": "\u00A7aPrevious page",
     "itemBuyMenu.menu_glass_name": "\u00A77",
     "itemBuyMenu.jump_to_special_offers_name": "\u00A7aJump to \u00A7dSpecial Offers",
-    "itemBuyMenu.jump_to_player_offers_name": "\u00A7aJump to \u00A7bPlayer Offers"
+    "itemBuyMenu.jump_to_player_offers_name": "\u00A7aJump to \u00A7bPlayer Offers",
+    "giveMoneyCommand.player_executor.give_coins_to_player": "\u00A7aYou have given yourself \u00A76%s coins\u00A7a! You now have \u00A76%%s coins\u00A7a!"
   }
 }

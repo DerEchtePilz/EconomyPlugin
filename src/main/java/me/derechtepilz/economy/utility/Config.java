@@ -27,7 +27,6 @@ package me.derechtepilz.economy.utility;
 import me.derechtepilz.economy.Main;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Config {
 
@@ -35,8 +34,9 @@ public class Config {
     private static int itemQuantitiesMaxAmount = 10;
     private static int itemPriceMinAmount = 50;
     private static int itemPriceMaxAmount = 5000;
+    private static int startBalance = 50;
+    private static int interest = 1;
     private static String language = "EN_US";
-    private static int totalPlayerLogins = 0;
 
     private static boolean isLoaded = false;
 
@@ -55,8 +55,9 @@ public class Config {
             itemQuantitiesMaxAmount = Main.getInstance().getConfig().getInt("itemQuantities.maxAmount");
             itemPriceMinAmount = Main.getInstance().getConfig().getInt("itemPrice.minAmount");
             itemPriceMaxAmount = Main.getInstance().getConfig().getInt("itemPrice.maxAmount");
+            startBalance = Main.getInstance().getConfig().getInt("startBalance");
+            interest = Main.getInstance().getConfig().getInt("interest");
             language = Main.getInstance().getConfig().getString("language");
-            totalPlayerLogins = Main.getInstance().getConfig().getInt("totalPlayerLogins");
         } else {
             writeConfig(true);
         }
@@ -70,9 +71,10 @@ public class Config {
             set("itemPrice.minAmount", itemPriceMinAmount);
             set("itemPrice.maxAmount", itemPriceMaxAmount);
 
-            set("language", language);
+            set("startBalance", startBalance);
+            set("interest", interest);
 
-            set("totalPlayerLogins", totalPlayerLogins);
+            set("language", language);
 
             Main.getInstance().getConfig().setComments("itemQuantities", Arrays.asList(
                     "---------- CONFIG ----------",
@@ -81,14 +83,30 @@ public class Config {
                     null,
                     "Saves the amounts of items that can be sold at once"
             ));
-            Main.getInstance().getConfig().setComments("itemPrice", List.of(
+            Main.getInstance().getConfig().setComments("itemPrice", Arrays.asList(
+                    null,
                     "Saves the minimum and maximum amount items can be sold for"
             ));
-            Main.getInstance().getConfig().setComments("language", List.of(
-                    "Saves the server language"
+            Main.getInstance().getConfig().setComments("startBalance", Arrays.asList(
+                    null,
+                    "Saves the amount of coins new players get when they first log onto the server!",
+                    "When this is increased players who already got this bonus",
+                    "will be given this amount minus their own start bonus amount",
+                    "When this is decreased players who already got the bonus won't lose money though"
             ));
-            Main.getInstance().getConfig().setComments("totalPlayerLogins", List.of(
-                    "Keeps track of the amount of player logins"
+            Main.getInstance().getConfig().setComments("interest", Arrays.asList(
+                    null,
+                    "Value in percentages",
+                    "Players are given interest every 24 hours starting from when they first join the server",
+                    "The formula is as follows: balance * (1 + (interest / 100))",
+                    "This value can also be negative or zero.",
+                    "When using a negative value the formula is the same",
+                    "When using a zero the formula is used but obviously doesn't change anything",
+                    "The plugin won't allow a value of -100 though"
+            ));
+            Main.getInstance().getConfig().setComments("language", Arrays.asList(
+                    null,
+                    "Saves the server language"
             ));
             saveConfig();
         } else {
@@ -100,6 +118,10 @@ public class Config {
 
     public static void set(String path, Object value) {
         Main.getInstance().getConfig().set(path, value);
+    }
+
+    public static Object get(String path) {
+        return Main.getInstance().getConfig().get(path);
     }
 
     public static void saveConfig() {
