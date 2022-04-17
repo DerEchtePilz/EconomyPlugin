@@ -70,7 +70,7 @@ public class ManageCoinsWhenJoining implements Listener {
             BankManager bankManager = new BankManager(player, currentPlayerBalance + missingStartBalance);
 
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%s", String.valueOf(missingStartBalance)).replace("%%s", String.valueOf(bankManager.getBalance())));
+            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%%s", String.valueOf(bankManager.getBalance())).replace("%s", String.valueOf(missingStartBalance)));
         }
     }
 

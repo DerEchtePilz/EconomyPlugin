@@ -48,7 +48,7 @@ public class GiveCoinsCommand {
                         double amount = (double) args[0];
                         double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
                         BankManager manager = new BankManager(player, amount + balance);
-                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%s", String.valueOf(amount)).replace("%%s", String.valueOf(manager.getBalance())));
+                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
                     } else {
                         sender.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
                     }
@@ -64,8 +64,8 @@ public class GiveCoinsCommand {
                         double amount = (double) args[1];
                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
                         BankManager manager = new BankManager(target, balance + amount);
-                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_other_player").replace("%s", target.getName()).replace("%%s", String.valueOf(amount)).replace("%%%s", String.valueOf(manager.getBalance())));
-                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%s", String.valueOf(amount)).replace("%%s", player.getName()).replace("%%%s", String.valueOf(manager.getBalance())));
+                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_other_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
+                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", player.getName()).replace("%s", String.valueOf(amount)));
                         return;
                     }
                     if (sender instanceof ConsoleCommandSender console) {

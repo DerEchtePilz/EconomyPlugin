@@ -28,6 +28,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -38,8 +39,8 @@ public class ItemCreateOffer {
     public ItemCreateOffer() {
         new CommandAPICommand("createoffer")
                 .withArguments(new ItemStackArgument("item"))
-                .withArguments(new IntegerArgument("count", (Integer) Main.getInstance().getConfig().get("itemQuantities.minAmount"), (Integer) Main.getInstance().getConfig().get("itemQuantities.maxAmount")))
-                .withArguments(new IntegerArgument("price", (Integer) Main.getInstance().getConfig().get("itemPrice.minAmount"), (Integer) Main.getInstance().getConfig().get("itemPrice.maxAmount")))
+                .withArguments(new IntegerArgument("count", (Integer) Config.get("itemQuantities.minAmount"), (Integer) Config.get("itemQuantities.maxAmount")))
+                .withArguments(new IntegerArgument("price", (Integer) Config.get("itemPrice.minAmount"), (Integer) Config.get("itemPrice.maxAmount")))
                 .executes((sender, args) -> {
                     if (sender instanceof Player player) {
                         ItemStack item = (ItemStack) args[0];
@@ -72,9 +73,9 @@ public class ItemCreateOffer {
                         item.setAmount(amount);
 
                         new ItemConverter(item, price);
-                        console.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.console_created_offer").replace("%s", item.getType().name()).replace("%%s", amount + ""));
+                        console.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.console_created_offer").replace("%%s", amount + "").replace("%s", item.getType().name()));
                         Bukkit.getOnlinePlayers().forEach(p ->
-                                p.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.special_offer_available").replace("%s", item.getType().name()).replace("%%s", amount + "").replace("%%%s", price + ""))
+                                p.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.special_offer_available").replace("%%%s", price + "").replace("%%s", amount + "").replace("%s", item.getType().name()))
                         );
                         return;
                     }
