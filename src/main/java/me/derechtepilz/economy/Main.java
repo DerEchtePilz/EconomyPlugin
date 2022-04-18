@@ -69,14 +69,11 @@ public final class Main extends JavaPlugin {
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
 
+    private boolean wasCommandAPILoaded;
+
     @Override
     public void onEnable() {
         plugin = this;
-
-        String version = Bukkit.getBukkitVersion().split("-")[0];
-        if (!version.equals("1.18.1")) {
-            getLogger().severe(TranslatableChatComponent.read("main.onEnable.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
-        }
 
         if (getConfig().contains("language")) {
             language = Language.valueOf(getConfig().getString("language"));
@@ -95,17 +92,27 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIConfig());
+        String version = Bukkit.getBukkitVersion().split("-")[0];
+        if (VersionHandler.isVersionSupported(version)) {
+            CommandAPI.onLoad(new CommandAPIConfig());
+            wasCommandAPILoaded = true;
+        } else {
+            getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
+            wasCommandAPILoaded = false;
+        }
+
         Config.loadConfig();
     }
 
     @Override
     public void onDisable() {
 
-        CommandAPI.unregister("createoffer");
-        CommandAPI.unregister("canceloffer");
-        CommandAPI.unregister("buy");
-        CommandAPI.unregister("givecoins");
+        if (wasCommandAPILoaded) {
+            CommandAPI.unregister("createoffer");
+            CommandAPI.unregister("canceloffer");
+            CommandAPI.unregister("buy");
+            CommandAPI.unregister("givecoins");
+        }
 
         getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
     }
@@ -115,10 +122,12 @@ public final class Main extends JavaPlugin {
     }
 
     private void commandRegistration() {
-        new ItemCreateOffer();
-        new ItemCancelOffer();
-        new ItemBuyOffer();
-        new GiveCoinsCommand();
+        if (wasCommandAPILoaded) {
+            new ItemCreateOffer();
+            new ItemCancelOffer();
+            new ItemBuyOffer();
+            new GiveCoinsCommand();
+        }
     }
 
     private void listenerRegistration() {
