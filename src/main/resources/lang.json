@@ -4,6 +4,7 @@
     "main.onLoad.version_info": "This server is running on version %s, but because of the CommandAPI commands depend on versions 1.16.5 - 1.18.2! Please switch to version 1.16.5 to be able to use all functionalities including commands!",
     "main.onDisable.plugin_disable_message": "\u00A7cThe Economy plugin has been disabled",
     "config.loadConfig.is_loaded": "You called the loadConfig method more than once! Continuing without processing the second call.",
+    "fallbackCommand.too_many_arguments": "\u00A7cYou provided too many arguments. Provided: %s, allowed: %%s",
     "itemCreateOffer.player_executor.missing_item": "\u00A7cYou do not have the specified item in your inventory!",
     "itemCreateOffer.console_executor.console_created_offer": "\u00A7aYou created a special offer for item \u00A76%s \u00A77%%sx \u00A7a!",
     "itemCreateOffer.console_executor.special_offer_available": "\u00A7aA special offer was created: \u00A76%s \u00A77x%%s \u00A7e(Cost: %%%s coins)\u00A7a!)",
