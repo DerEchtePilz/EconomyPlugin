@@ -54,11 +54,10 @@ public class ItemCreateOffer {
                                     playerInventoryItem.setAmount(playerInventoryItem.getAmount() - amount);
                                     player.getInventory().setItem(i, playerInventoryItem);
 
-                                    new ItemConverter(playerInventoryItem, player, price);
                                 } else {
                                     player.getInventory().remove(playerInventoryItem);
-                                    new ItemConverter(playerInventoryItem, player, price);
                                 }
+                                new ItemConverter(playerInventoryItem, player, price);
                                 return;
                             }
                         }
