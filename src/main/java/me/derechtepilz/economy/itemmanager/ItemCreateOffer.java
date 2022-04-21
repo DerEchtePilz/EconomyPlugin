@@ -50,14 +50,13 @@ public class ItemCreateOffer {
                             ItemStack playerInventoryItem = player.getInventory().getItem(i);
                             if (playerInventoryItem == null) continue;
                             if (playerInventoryItem.isSimilar(item)) {
-                                if (playerInventoryItem.getAmount() > amount) {
+                                if (playerInventoryItem.getAmount() >= amount) {
                                     playerInventoryItem.setAmount(playerInventoryItem.getAmount() - amount);
                                     player.getInventory().setItem(i, playerInventoryItem);
-
+                                    new ItemConverter(playerInventoryItem, player, price);
                                 } else {
-                                    player.getInventory().remove(playerInventoryItem);
+                                    player.sendMessage(TranslatableChatComponent.read("itemCreateOffer. player_executor.too_few_items").replace("%%s", String.valueOf(amount)).replace("%s", "minecraft:" + item.getType().name().toLowerCase()));
                                 }
-                                new ItemConverter(playerInventoryItem, player, price);
                                 return;
                             }
                         }

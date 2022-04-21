@@ -1,9 +1,9 @@
-name: EconomyPlugin
+name: Economy
 version: '${project.version}'
 main: me.derechtepilz.economy.Main
 api-version: 1.18
 authors: [ DerEchtePilz ]
-description: This plugin let's you sell and buy items!
+description: This plugin lets you sell and buy items!
 commands:
   fallback:
     description:

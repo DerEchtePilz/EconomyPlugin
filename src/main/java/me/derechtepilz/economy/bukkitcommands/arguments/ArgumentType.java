@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-package me.derechtepilz.economy.bukkitcommands;
+package me.derechtepilz.economy.bukkitcommands.arguments;
 
-public enum SuggestType {
+public enum ArgumentType {
     BLOCK,
-    ITEM
+    ITEM,
+    PLAYER
 }

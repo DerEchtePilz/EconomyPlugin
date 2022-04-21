@@ -31,7 +31,7 @@ import me.derechtepilz.economy.economymanager.GiveCoinsCommand;
 import me.derechtepilz.economy.economymanager.ManageCoinsWhenJoining;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.utility.Config;
-import me.derechtepilz.economy.bukkitcommands.FallbackCommand;
+import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
@@ -69,6 +69,8 @@ public final class Main extends JavaPlugin {
 
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
+
+    private final FallbackCommand fallbackCommand = new FallbackCommand();
 
     private boolean wasCommandAPILoaded;
 
@@ -129,7 +131,8 @@ public final class Main extends JavaPlugin {
             new ItemBuyOffer();
             new GiveCoinsCommand();
         }
-        getCommand("fallback").setExecutor(new FallbackCommand());
+        getCommand("fallback").setExecutor(fallbackCommand);
+        getCommand("fallback").setTabCompleter(fallbackCommand);
     }
 
     private void listenerRegistration() {

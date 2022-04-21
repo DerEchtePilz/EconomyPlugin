@@ -1,10 +1,16 @@
 {
   "en_us": {
     "main.onEnable.plugin_enable_message": "\u00A7aThe Economy plugin has been enabled!",
-    "main.onLoad.version_info": "This server is running on version %s, but because of the CommandAPI commands depend on versions 1.16.5 - 1.18.2! Please switch to version 1.16.5 to be able to use all functionalities including commands!",
+    "main.onLoad.version_info": "This server is running on version %s, but because of the CommandAPI commands depend on versions 1.16.5 - 1.18.2! Command '/economyplugin:fallback' was enabled instead!",
     "main.onDisable.plugin_disable_message": "\u00A7cThe Economy plugin has been disabled",
     "config.loadConfig.is_loaded": "You called the loadConfig method more than once! Continuing without processing the second call.",
-    "fallbackCommand.too_many_arguments": "\u00A7cYou provided too many arguments. Provided: %s, allowed: %%s",
+    "fallbackCommand.too_many_arguments": "\u00A7cYou provided too many arguments. Provided: %s, maximum allowed: %%s",
+    "fallbackCommand.too_few_arguments": "\u00A7cYou provided too few arguments. Provided: %s, at least required: %%s",
+    "fallbackCommand.wrong_item_id_provided": "\u00A7cFailed to execute command! Unknown item: '%s' not found!",
+    "fallbackCommand.integer_required": "\u00A7cFailed to execute command! Please provide a number as argument %s! \u00A77(Examples: 3, 6, 89)",
+    "fallbackCommand.double_required": "\u00A7cFailed to execute command! Please provide a decimal as argument %s! \u00A77(Examples: 3.5, 10.0, 11.7)",
+    "fallbackCommand.player_not_recognized": "\u00A7cFailed to execute command! Unknown player: '%s' not found!",
+    "itemCreateOffer.player_executor.too_few_items": "\u00A7cYou do not have enough items of type '%s' to sell %%s items!",
     "itemCreateOffer.player_executor.missing_item": "\u00A7cYou do not have the specified item in your inventory!",
     "itemCreateOffer.console_executor.console_created_offer": "\u00A7aYou created a special offer for item \u00A76%s \u00A77%%sx \u00A7a!",
     "itemCreateOffer.console_executor.special_offer_available": "\u00A7aA special offer was created: \u00A76%s \u00A77x%%s \u00A7e(Cost: %%%s coins)\u00A7a!)",
