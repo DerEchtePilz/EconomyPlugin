@@ -113,9 +113,7 @@ public class ItemStackArgument implements Argument<ItemStack> {
                     }
                 }
             }
-            case PLAYER -> {
-                throw new IllegalArgumentTypeException();
-            }
+            case PLAYER, STRING -> throw new IllegalArgumentTypeException();
         }
         return minecraftSuggestions;
     }

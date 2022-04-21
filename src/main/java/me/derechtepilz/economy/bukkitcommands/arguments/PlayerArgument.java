@@ -52,7 +52,7 @@ public class PlayerArgument implements Argument<Player> {
             }
         }
         switch (type) {
-            case BLOCK, ITEM -> throw new IllegalArgumentTypeException();
+            case BLOCK, ITEM, STRING -> throw new IllegalArgumentTypeException();
             case PLAYER -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (argument.equals("")) {

@@ -28,6 +28,7 @@ import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.bukkitcommands.arguments.ArgumentType;
 import me.derechtepilz.economy.bukkitcommands.arguments.ItemStackArgument;
 import me.derechtepilz.economy.bukkitcommands.arguments.PlayerArgument;
+import me.derechtepilz.economy.bukkitcommands.arguments.StringArgument;
 import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.itemmanager.ItemConverter;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -40,6 +41,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class FallbackCommand implements TabExecutor {
@@ -362,7 +364,7 @@ public class FallbackCommand implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         switch (args.length) {
             case 1 -> {
-
+                return new StringArgument().suggests(ArgumentType.STRING, args[0], Arrays.asList("canceloffer", "createoffer", "buy", "givecoins"));
             }
             case 2 -> {
                 if (args[0].equalsIgnoreCase("createoffer")) {
@@ -370,6 +372,9 @@ public class FallbackCommand implements TabExecutor {
                 }
                 if (args[0].equalsIgnoreCase("buy")) {
                     return new ItemStackArgument().suggests(ArgumentType.ITEM, args[1], List.of("special"));
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    return new PlayerArgument().suggests(ArgumentType.PLAYER, args[1], null);
                 }
             }
         }
