@@ -1,18 +1,18 @@
 /**
  * MIT License
- *
+ * <p>
  * Copyright (c) 2022 DerEchtePilz
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,6 +31,7 @@ import me.derechtepilz.economy.bukkitcommands.arguments.PlayerArgument;
 import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.itemmanager.ItemConverter;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -135,6 +136,10 @@ public class FallbackCommand implements TabExecutor {
                     }
                     BankManager manager = new BankManager(player, amount + balance);
                     player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
+                    if (player != sender) {
+                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", player.getName()).replace("%s", String.valueOf(amount)));
+                    }
+                    return false;
                 }
             }
             if (args.length == 4) {
@@ -189,18 +194,162 @@ public class FallbackCommand implements TabExecutor {
                     player.sendMessage(TranslatableChatComponent.read("itemCreateOffer.player_executor.missing_item"));
                     return false;
                 }
+                return false;
+            }
+            if (args.length >= 5) {
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    player.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "1").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("buy")) {
+                    player.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "2").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    player.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "3").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    player.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "4").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                return false;
             }
             return false;
         }
         if (sender instanceof ConsoleCommandSender console) {
-            switch (args.length) {
-                case 1 -> {
-                    switch (args[0].toLowerCase()) {
-                        case "canceloffer" -> {
-                            sender.sendMessage(TranslatableChatComponent.read("itemCancelOffer.wrong_executor"));
-                            return false;
-                        }
+            if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_few_arguments").replace("%%s", "3").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("buy")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_few_arguments").replace("%%s", "4").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+            }
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("buy")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_few_arguments").replace("%%s", "4").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_few_arguments").replace("%%s", "3").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+            }
+            if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("buy")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_few_arguments").replace("%%s", "4").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    Player target = new PlayerArgument().parse(args[1]);
+                    if (target == null) {
+                        console.sendMessage(TranslatableChatComponent.read("fallbackCommand.player_not_recognized").replace("%s", args[1]));
+                        return false;
                     }
+                    if (isNotDouble(args[2])) {
+                        console.sendMessage(TranslatableChatComponent.read("fallbackCommand.double_required").replace("%s", "3"));
+                        return false;
+                    }
+                    double amount = Double.parseDouble(args[2]);
+                    double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+
+                    if (!Main.getInstance().getBankAccounts().containsKey(target)) {
+                        console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.target_bank_account_missing").replace("%s", target.getName()));
+                        return false;
+                    }
+                    BankManager manager = new BankManager(target, balance + amount);
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.give_coins_to_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
+                    target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.receive_coins_from_console").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
+                    return false;
+                }
+            }
+            if (args.length == 4) {
+                if (args[0].equalsIgnoreCase("buy")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    sender.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "3").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    ItemStack item = new ItemStackArgument().parse(args[1]);
+                    if (item == null) {
+                        String itemId = args[1];
+                        if (itemId.startsWith("minecraft:")) {
+                            console.sendMessage(TranslatableChatComponent.read("fallbackCommand.wrong_item_id_provided").replace("%s", args[1]));
+                        } else {
+                            console.sendMessage(TranslatableChatComponent.read("fallbackCommand.wrong_item_id_provided").replace("%s", "minecraft:" + args[1]));
+                        }
+                        return false;
+                    }
+                    if (isNotInt(args[2])) {
+                        console.sendMessage(TranslatableChatComponent.read("fallbackCommand.integer_required").replace("%s", "3"));
+                        return false;
+                    }
+                    if (isNotInt(args[3])) {
+                        console.sendMessage(TranslatableChatComponent.read("fallbackCommand.integer_required").replace("%s", "4"));
+                        return false;
+                    }
+                    int amount = Integer.parseInt(args[2]);
+                    int price = Integer.parseInt(args[3]);
+                    item.setAmount(amount);
+
+                    new ItemConverter(item, price);
+                    console.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.console_created_offer").replace("%%s", amount + "").replace("%s", item.getType().name()));
+                    Bukkit.getOnlinePlayers().forEach(p ->
+                            p.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.special_offer_available").replace("%%%s", price + "").replace("%%s", amount + "").replace("%s", item.getType().name()))
+                    );
+                    return false;
+                }
+                return false;
+            }
+            if (args.length >= 5) {
+                if (args[0].equalsIgnoreCase("buy")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("givecoins")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "3").replace("%s", String.valueOf(args.length)));
+                    return false;
+                }
+                if (args[0].equalsIgnoreCase("createoffer")) {
+                    console.sendMessage(TranslatableChatComponent.read("fallbackCommand.too_many_arguments").replace("%%s", "4").replace("%s", String.valueOf(args.length)));
                     return false;
                 }
             }
