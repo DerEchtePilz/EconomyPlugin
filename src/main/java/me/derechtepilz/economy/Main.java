@@ -76,8 +76,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin = this;
-
         if (getConfig().contains("language")) {
             language = Language.valueOf(getConfig().getString("language"));
         } else {
@@ -95,6 +93,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        plugin = this;
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (VersionHandler.isVersionSupported(version)) {
             CommandAPI.onLoad(new CommandAPIConfig());

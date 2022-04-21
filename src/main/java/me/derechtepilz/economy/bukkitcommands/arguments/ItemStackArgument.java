@@ -86,6 +86,7 @@ public class ItemStackArgument implements Argument<ItemStack> {
                 List<String> updatedSuggestions = new ArrayList<>();
                 if (startsWithAny(argument, MINECRAFT_PREFIX)) {
                     if (argument.length() >= 11) {
+                        // Argument contains at least one character more than "minecraft:"
                         argumentItemId = argument.substring(10);
                         for (String suggestion : minecraftSuggestions) {
                             String itemId = suggestion.substring(10);
@@ -93,6 +94,9 @@ public class ItemStackArgument implements Argument<ItemStack> {
                                 updatedSuggestions.add(suggestion);
                             }
                         }
+                    } else {
+                        // Argument is at maximum equal to "minecraft:"
+                        updatedSuggestions.addAll(minecraftSuggestions);
                     }
                 } else {
                     argumentItemId = argument;
