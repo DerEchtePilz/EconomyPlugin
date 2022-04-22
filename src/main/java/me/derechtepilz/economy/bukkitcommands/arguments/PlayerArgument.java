@@ -56,11 +56,11 @@ public class PlayerArgument implements Argument<Player> {
             case PLAYER -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (argument.equals("")) {
+                        suggestions.add(player.getName());
+                    } else {
                         if (player.getName().startsWith(argument)) {
                             suggestions.add(player.getName());
                         }
-                    } else {
-                        suggestions.add(player.getName());
                     }
                 }
                 return suggestions;
