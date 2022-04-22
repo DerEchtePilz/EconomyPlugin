@@ -104,6 +104,7 @@ public final class Main extends JavaPlugin {
         }
 
         Config.loadConfig();
+        saveDefaultConfig();
     }
 
     @Override
