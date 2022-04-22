@@ -25,6 +25,7 @@
 package me.derechtepilz.economy.economymanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class ManageCoinsWhenJoining implements Listener {
                 new CoinManager().calculateInterest(bankManager, interestDays);
 
                 player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
-                player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.grant_interest").replace("%s", String.valueOf(bankManager.getBalance())));
+                player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.grant_interest").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
             }
         } else {
             // Give start balance
@@ -60,7 +61,7 @@ public class ManageCoinsWhenJoining implements Listener {
             player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, (Double) Config.get("startBalance"));
 
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.join_bonus").replace("%s", String.valueOf(bankManager.getBalance())));
+            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.join_bonus").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
         }
 
         // Check if start balance has been increased and give player missing start balance
@@ -73,7 +74,7 @@ public class ManageCoinsWhenJoining implements Listener {
             bankManager.setBalance(currentPlayerBalance + missingStartBalance);
 
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%%s", String.valueOf(bankManager.getBalance())).replace("%s", String.valueOf(missingStartBalance)));
+            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%%s", ChatFormatter.valueOf(bankManager.getBalance())).replace("%s", ChatFormatter.valueOf(missingStartBalance)));
         }
     }
 

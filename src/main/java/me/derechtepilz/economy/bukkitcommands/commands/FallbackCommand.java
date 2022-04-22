@@ -41,6 +41,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -376,6 +377,12 @@ public class FallbackCommand implements TabExecutor {
                 if (args[0].equalsIgnoreCase("givecoins")) {
                     return new PlayerArgument().suggests(ArgumentType.PLAYER, args[1], null);
                 }
+                if (args[0].equalsIgnoreCase("canceloffer")) {
+                    return new ArrayList<>();
+                }
+            }
+            default -> {
+                return new ArrayList<>();
             }
         }
         return null;

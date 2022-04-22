@@ -30,6 +30,7 @@ import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -53,7 +54,7 @@ public class GiveCoinsCommand {
                             return;
                         }
                         BankManager manager = new BankManager(player, amount + balance);
-                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
+                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                     } else {
                         sender.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.wrong_executor"));
                     }
@@ -61,12 +62,12 @@ public class GiveCoinsCommand {
                 .register();
 
         new CommandAPICommand("givecoins")
-                .withArguments(playerArgument)
                 .withArguments(new DoubleArgument("amount", 0))
+                .withArguments(playerArgument)
                 .executes((sender, args) -> {
                     if (sender instanceof Player player) {
-                        Player target = (Player) args[0];
-                        double amount = (double) args[1];
+                        double amount = (double) args[0];
+                        Player target = (Player) args[1];
                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
                         if (!Main.getInstance().getBankAccounts().containsKey(player)) {
@@ -74,8 +75,8 @@ public class GiveCoinsCommand {
                             return;
                         }
                         BankManager manager = new BankManager(target, balance + amount);
-                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_other_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
-                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", player.getName()) .replace("%s", String.valueOf(amount)));
+                        player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_other_player").replace("%%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%%s", ChatFormatter.valueOf(amount)).replace("%s", target.getName()));
+                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.receive_coins_from_player").replace("%%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%%s", player.getName()) .replace("%s", ChatFormatter.valueOf(amount)));
                         return;
                     }
                     if (sender instanceof ConsoleCommandSender console) {
@@ -88,18 +89,24 @@ public class GiveCoinsCommand {
                             return;
                         }
                         BankManager manager = new BankManager(target, balance + amount);
-                        console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.give_coins_to_player").replace("%%%s", String.valueOf(manager.getBalance())).replace("%%s", String.valueOf(amount)).replace("%s", target.getName()));
-                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.receive_coins_from_console").replace("%%s", String.valueOf(manager.getBalance())).replace("%s", String.valueOf(amount)));
+                        console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.give_coins_to_player").replace("%%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%%s", ChatFormatter.valueOf(amount)).replace("%s", target.getName()));
+                        target.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.receive_coins_from_console").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                     }
                 })
                 .register();
     }
 
-    private final Argument playerArgument = new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings((args) -> {
+    private final Argument playerArgument = new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()));
+
+    private String[] getPlayers() {
         List<String> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             players.add(player.getName());
         }
-        return (String[]) players.toArray();
-    }));
+        String[] suggestions = new String[players.size()];
+        for (int i = 0; i < players.size(); i++) {
+            suggestions[i] = players.get(i);
+        }
+        return suggestions;
+    }
 }
