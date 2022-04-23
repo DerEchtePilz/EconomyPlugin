@@ -30,7 +30,7 @@ import me.derechtepilz.economy.bukkitcommands.arguments.ItemStackArgument;
 import me.derechtepilz.economy.bukkitcommands.arguments.PlayerArgument;
 import me.derechtepilz.economy.bukkitcommands.arguments.StringArgument;
 import me.derechtepilz.economy.economymanager.BankManager;
-import me.derechtepilz.economy.itemmanager.ItemConverter;
+import me.derechtepilz.economy.itemmanager.ItemUtils;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -187,7 +187,7 @@ public class FallbackCommand implements TabExecutor {
                             if (playerInventoryItem.getAmount() >= amount) {
                                 playerInventoryItem.setAmount(playerInventoryItem.getAmount() - amount);
                                 player.getInventory().setItem(i, playerInventoryItem);
-                                new ItemConverter(playerInventoryItem, player, price);
+                                ItemUtils.createSalableItem(player.getName(), playerInventoryItem, price);
                             } else {
                                 player.sendMessage(TranslatableChatComponent.read("itemCreateOffer.player_executor.too_few_items").replace("%%s", String.valueOf(amount)).replace("%s", "minecraft:" + item.getType().name().toLowerCase()));
                             }
@@ -329,7 +329,7 @@ public class FallbackCommand implements TabExecutor {
                     int price = Integer.parseInt(args[3]);
                     item.setAmount(amount);
 
-                    new ItemConverter(item, price);
+                    ItemUtils.createSalableItem("console", item, price);
                     console.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.console_created_offer").replace("%%s", amount + "").replace("%s", item.getType().name()));
                     Bukkit.getOnlinePlayers().forEach(p ->
                             p.sendMessage(TranslatableChatComponent.read("itemCreateOffer.console_executor.special_offer_available").replace("%%%s", price + "").replace("%%s", amount + "").replace("%s", item.getType().name()))
