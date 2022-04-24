@@ -33,9 +33,14 @@ public class BankManager implements Bank {
     private Player player;
     private double balance;
 
-    public BankManager(Player player, double balance) {
+    /**
+     *
+     * @param player The player who is the holder of the account
+     * @param newBalance The new balance that should be set for the player
+     */
+    public BankManager(Player player, double newBalance) {
         this.player = player;
-        this.balance = balance;
+        this.balance = newBalance;
 
         updateBank();
     }

@@ -1,8 +1,10 @@
 package me.derechtepilz.economy.itemmanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,10 +18,11 @@ public class ItemUtils {
     }
 
     public static void createSalableItem(String sellerName, ItemStack item, int price) {
+        UUIDDataType uuidDataType = new UUIDDataType();
         ItemMeta salableItemMeta = item.getItemMeta();
 
         UUID itemUuid = UUID.randomUUID();
-        salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getUuid(), new UUIDDataType(), itemUuid);
+        salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
         salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
 
         Player player = Bukkit.getPlayer(sellerName);
@@ -31,7 +34,7 @@ public class ItemUtils {
             offers = constructSalableItems(sellerName, item);
             Main.getInstance().getSpecialOffers().put("console", offers);
         } else {
-            salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getCreator(), new UUIDDataType(), player.getUniqueId());
+            salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(player.getUniqueId()));
 
             item.setItemMeta(salableItemMeta);
             offers = constructSalableItems(sellerName, item);
@@ -41,8 +44,15 @@ public class ItemUtils {
         Main.getInstance().getOfferedItems().put(itemUuid, item);
     }
 
-    public static void createBoughtItem(ItemStack item) {
-
+    public static ItemStack createBoughtItem(Player customer, ItemStack item) {
+        UUID creatorUuid;
+        UUIDDataType uuidDataType = new UUIDDataType();
+        int itemPrice = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+        if (item.getItemMeta().getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
+            creatorUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+            awardCoins(creatorUuid, itemPrice);
+            payCoins(customer.getUniqueId(), itemPrice);
+        }
     }
 
     private static ItemStack[] constructSalableItems(String sellerName, ItemStack salableItem) {
@@ -72,5 +82,24 @@ public class ItemUtils {
         }
         items[offers.length] = salableItem;
         return items;
+    }
+
+    private static void awardCoins(UUID playerUuid, int amount) {
+        Player player = Bukkit.getPlayer(playerUuid);
+        double playerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+        new BankManager(player, amount + playerBalance);
+    }
+
+    private static void payCoins(UUID playerUuid, int amount) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUuid);
+        Player player;
+        if (offlinePlayer.isOnline()) {
+            player = Bukkit.getPlayer(playerUuid);
+            double playerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+            new BankManager(player, playerBalance - amount);
+        } else {
+            double playerBalance = offlinePlayer.getPlayer().getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+            new BankManager(offlinePlayer.getPlayer(), playerBalance - amount);
+        }
     }
 }

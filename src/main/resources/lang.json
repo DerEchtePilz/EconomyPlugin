@@ -43,8 +43,9 @@
     "giveCoinsCommand.console_executor.receive_coins_from_console": "\u00A7d\u00A7lCONSOLE POWER \u00A7r\u00A7aYou got \u00A76%s coins and now have \u00A76%%s coins\u00A7a",
     "giveCoinsCommand.console_executor.target_bank_account_missing": "%s does not have a bank account! Please tell them to join the server!",
     "giveCoinsCommand.wrong_executor": "\u00A7cYou cannot execute this command!",
-    "joinLeaveEvent.onJoin.grant_interest": "\u00A7aYou have earned interest! You now have \u00A76%s coins\u00A7a!",
-    "joinLeaveEvent.onJoin.join_bonus": "\u00A7eWelcome to the server! To start we have given you \u00A76%s coins\u00A7e as a start bonus!",
-    "joinLeaveEvent.onJoin.awarded_missing_start_balance": "\u00A7aThe start balance was increased! To make sure you also benefit from this increment, we have given you \u00A76%s coins\u00A7a, you now have \u00A76%%s coins\u00A7a!"
+    "manageCoinsWhenJoining.onJoin.grant_interest": "\u00A7aYou have earned interest! You now have \u00A76%s coins\u00A7a!",
+    "manageCoinsWhenJoining.onJoin.join_bonus": "\u00A7eWelcome to the server! To start we have given you \u00A76%s coins\u00A7e as a start bonus!",
+    "manageCoinsWhenJoining.onJoin.awarded_missing_start_balance": "\u00A7aThe start balance was increased! To make sure you also benefit from this increment, we have given you the missing \u00A76%s coins\u00A7a, you now have \u00A76%%s coins\u00A7a!",
+    "manageCoinsWhenJoining.display_coins": "\u00A7aYour balance: \u00A76%s coins"
   }
 }

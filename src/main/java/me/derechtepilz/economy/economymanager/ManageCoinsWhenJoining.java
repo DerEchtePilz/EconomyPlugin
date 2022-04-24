@@ -28,6 +28,9 @@ import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,6 +41,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class ManageCoinsWhenJoining implements Listener {
+
+    int taskID;
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -53,7 +59,7 @@ public class ManageCoinsWhenJoining implements Listener {
                 new CoinManager().calculateInterest(bankManager, interestDays);
 
                 player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
-                player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.grant_interest").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
+                player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.grant_interest").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
             }
         } else {
             // Give start balance
@@ -61,7 +67,7 @@ public class ManageCoinsWhenJoining implements Listener {
             player.getPersistentDataContainer().set(Main.getInstance().getLastInterest(), PersistentDataType.LONG, System.currentTimeMillis());
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, (Double) Config.get("startBalance"));
 
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.join_bonus").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
+            player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.join_bonus").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
         }
 
         // Check if start balance has been increased and give player missing start balance
@@ -74,11 +80,20 @@ public class ManageCoinsWhenJoining implements Listener {
             bankManager.setBalance(currentPlayerBalance + missingStartBalance);
 
             player.getPersistentDataContainer().set(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE, configStartBalance);
-            player.sendMessage(TranslatableChatComponent.read("joinLeaveEvent.onJoin.awarded_missing_start_balance").replace("%%s", ChatFormatter.valueOf(bankManager.getBalance())).replace("%s", ChatFormatter.valueOf(missingStartBalance)));
+            player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.awarded_missing_start_balance").replace("%%s", ChatFormatter.valueOf(bankManager.getBalance())).replace("%s", ChatFormatter.valueOf(missingStartBalance)));
         }
+
+        displayCoins(player);
     }
 
     private long betweenDates(Date firstDate, Date secondDate) {
         return ChronoUnit.DAYS.between(firstDate.toInstant(), secondDate.toInstant());
+    }
+
+    private void displayCoins(Player player) {
+        BankManager bankManager = Main.getInstance().getBankAccounts().get(player);
+        taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), () -> {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TranslatableChatComponent.read("manageCoinsWhenJoining.display_coins").replace("%s", ChatFormatter.valueOf(bankManager.getBalance()))));
+        }, 0, 1);
     }
 }
