@@ -1,8 +1,5 @@
 package me.derechtepilz.economy.utility.datatypes;
 
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-
 import java.nio.ByteBuffer;
 import java.util.UUID;
 

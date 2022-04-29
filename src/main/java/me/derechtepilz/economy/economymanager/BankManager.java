@@ -25,6 +25,7 @@
 package me.derechtepilz.economy.economymanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.ChatFormatter;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -41,6 +42,8 @@ public class BankManager implements Bank {
     public BankManager(Player player, double newBalance) {
         this.player = player;
         this.balance = newBalance;
+
+        player.sendMessage("§d" + ChatFormatter.valueOf(newBalance));
 
         updateBank();
     }

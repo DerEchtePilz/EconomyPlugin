@@ -53,6 +53,7 @@ public class ItemUtils {
             awardCoins(creatorUuid, itemPrice);
             payCoins(customer.getUniqueId(), itemPrice);
         }
+        return null;
     }
 
     private static ItemStack[] constructSalableItems(String sellerName, ItemStack salableItem) {

@@ -29,9 +29,11 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.economymanager.GiveCoinsCommand;
 import me.derechtepilz.economy.economymanager.ManageCoinsWhenJoining;
+import me.derechtepilz.economy.economymanager.TakeCoinsCommand;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
+import me.derechtepilz.economy.utility.ItemSaving;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
@@ -115,7 +117,10 @@ public final class Main extends JavaPlugin {
             CommandAPI.unregister("canceloffer");
             CommandAPI.unregister("buy");
             CommandAPI.unregister("givecoins");
+            CommandAPI.unregister("takecoins");
         }
+
+        ItemSaving.save();
 
         getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
     }
@@ -130,6 +135,7 @@ public final class Main extends JavaPlugin {
             new ItemCancelOffer();
             new ItemBuyOffer();
             new GiveCoinsCommand();
+            new TakeCoinsCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);
         getCommand("fallback").setTabCompleter(fallbackCommand);
