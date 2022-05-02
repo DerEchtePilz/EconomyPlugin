@@ -1,6 +1,6 @@
 package me.derechtepilz.economy.bukkitcommands.exceptions;
 
-public class IllegalArgumentTypeException extends RuntimeException {
+public class IllegalArgumentTypeException extends Exception {
     public IllegalArgumentTypeException() {
         super();
     }

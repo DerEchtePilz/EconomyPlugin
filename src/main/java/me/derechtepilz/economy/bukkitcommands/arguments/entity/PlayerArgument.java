@@ -1,7 +1,8 @@
-package me.derechtepilz.economy.bukkitcommands.arguments;
+package me.derechtepilz.economy.bukkitcommands.arguments.entity;
 
-import me.derechtepilz.economy.bukkitcommands.exceptions.IllegalArgumentTypeException;
+import me.derechtepilz.economy.bukkitcommands.arguments.Argument;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -13,8 +14,7 @@ public class PlayerArgument implements Argument<Player> {
         return Bukkit.getPlayer(input);
     }
 
-    @Override
-    public List<String> suggests(ArgumentType type, String argument, List<String> additionalArguments) {
+    public List<String> suggests(EntityType type, String argument, List<String> additionalArguments) {
         List<String> suggestions = new ArrayList<>();
         if (additionalArguments != null) {
             if (argument.equals("")) {
@@ -27,22 +27,15 @@ public class PlayerArgument implements Argument<Player> {
                 }
             }
         }
-        switch (type) {
-            case BLOCK, ITEM, STRING -> throw new IllegalArgumentTypeException();
-            case PLAYER -> {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (argument.equals("")) {
-                        suggestions.add(player.getName());
-                    } else {
-                        if (player.getName().startsWith(argument)) {
-                            suggestions.add(player.getName());
-                        }
-                    }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (argument.equals("")) {
+                suggestions.add(player.getName());
+            } else {
+                if (player.getName().startsWith(argument)) {
+                    suggestions.add(player.getName());
                 }
-                return suggestions;
             }
         }
         return suggestions;
     }
-
 }
