@@ -81,6 +81,7 @@ public final class Main extends JavaPlugin {
             wasCommandAPILoaded = false;
         }
 
+        ItemSaving.load();
         Config.loadConfig();
         saveDefaultConfig();
     }

@@ -1,18 +1,17 @@
 package me.derechtepilz.economy.utility;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 public class ItemSaving {
@@ -20,11 +19,16 @@ public class ItemSaving {
 
     }
 
+    private static List<ItemStack> playerOffers = new ArrayList<>();
+    private static List<ItemStack> specialOffers = new ArrayList<>();
+
     private static JsonObject buildSellingItems() {
         JsonObject offers = new JsonObject();
         JsonObject allOffers = new JsonObject();
 
         JsonObject playerOffers = new JsonObject();
+        JsonObject specialOffers = new JsonObject();
+
         for (UUID uuid : Main.getInstance().getOfferingPlayers().keySet()) {
             JsonArray sellingPlayer = new JsonArray();
             for (ItemStack item : Main.getInstance().getOfferingPlayers().get(uuid)) {
@@ -47,38 +51,140 @@ public class ItemSaving {
         }
         allOffers.add("playerOffers", playerOffers);
 
-        JsonObject specialOffers = new JsonObject();
-        JsonArray sellingConsole = new JsonArray();
-        for (ItemStack item : Main.getInstance().getSpecialOffers().get("console")) {
-            JsonObject sellingItem = new JsonObject();
+        if (Main.getInstance().getSpecialOffers().get("console") != null) {
+            JsonArray sellingConsole = new JsonArray();
+            for (ItemStack item : Main.getInstance().getSpecialOffers().get("console")) {
+                JsonObject sellingItem = new JsonObject();
+                UUIDDataType uuidDataType = new UUIDDataType();
 
-            String id = "minecraft:" + item.getType().name().toLowerCase();
-            int price = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
-            int amount = item.getAmount();
-            String itemUuid = "console";
+                String id = "minecraft:" + item.getType().name().toLowerCase();
+                int price = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+                int amount = item.getAmount();
+                UUID itemUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY));
 
-            sellingItem.addProperty("id", id);
-            sellingItem.addProperty("price", price);
-            sellingItem.addProperty("amount", amount);
-            sellingItem.addProperty("itemUuid", itemUuid);
+                sellingItem.addProperty("id", id);
+                sellingItem.addProperty("price", price);
+                sellingItem.addProperty("amount", amount);
+                sellingItem.addProperty("itemUuid", String.valueOf(itemUuid));
 
-            sellingConsole.add(sellingItem);
+                sellingConsole.add(sellingItem);
+            }
+            specialOffers.add("specialOffers", sellingConsole);
         }
-        specialOffers.add("specialOffers", sellingConsole);
         allOffers.add("specialOffers", specialOffers);
 
         offers.add("offers", allOffers);
-
         return offers;
     }
 
+    private static void saveSellingItems(String json) {
+        JsonElement element = JsonParser.parseString(json);
+        JsonObject offers = element.getAsJsonObject();
+
+        // Save player offers
+        JsonObject playerOffers = offers.getAsJsonObject("offers").getAsJsonObject("playerOffers");
+        for (String uuid : playerOffers.keySet()) {
+            JsonArray items = playerOffers.getAsJsonArray(uuid);
+            for (int i = 0; i < items.size(); i++) {
+                JsonObject item = items.get(i).getAsJsonObject();
+
+                String id = item.getAsJsonPrimitive("id").getAsString();
+                int price = item.getAsJsonPrimitive("price").getAsInt();
+                int amount = item.getAsJsonPrimitive("amount").getAsInt();
+                String itemUuidString = item.getAsJsonPrimitive("itemUuid").getAsString();
+
+                UUID itemUuid = UUID.fromString(itemUuidString);
+                String itemId = id.substring(10).toUpperCase();
+
+                savePlayerItem(itemId, price, amount, itemUuid, UUID.fromString(uuid));
+            }
+            Main.getInstance().getOfferingPlayers().put(UUID.fromString(uuid), buildOffersArray(ItemSaving.playerOffers));
+            ItemSaving.playerOffers = new ArrayList<>();
+        }
+
+        // Save special offers
+        JsonObject specialOffers = offers.getAsJsonObject("offers").getAsJsonObject("specialOffers");
+        if (specialOffers.has("specialOffers")) {
+            JsonArray array = specialOffers.getAsJsonArray("specialOffers");
+            for (int i = 0; i < array.size(); i++) {
+                JsonObject item = array.get(i).getAsJsonObject();
+
+                String id = item.getAsJsonPrimitive("id").getAsString();
+                int price = item.getAsJsonPrimitive("price").getAsInt();
+                int amount = item.getAsJsonPrimitive("amount").getAsInt();
+                String itemUuidString = item.getAsJsonPrimitive("itemUuid").getAsString();
+
+                UUID itemUuid = UUID.fromString(itemUuidString);
+                String itemId = id.substring(10).toUpperCase();
+
+                saveConsoleItem(itemId, price, amount, itemUuid);
+            }
+            Main.getInstance().getSpecialOffers().put("console", buildOffersArray(ItemSaving.specialOffers));
+            ItemSaving.specialOffers = new ArrayList<>();
+        }
+    }
+
+    private static void savePlayerItem(String itemId, int price, int amount, UUID itemUuid, UUID creatorUuid) {
+        ItemStack item = new ItemStack(Material.valueOf(itemId), amount);
+        ItemMeta meta = item.getItemMeta();
+
+        UUIDDataType uuidDataType = new UUIDDataType();
+        meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+        meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
+        meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(creatorUuid));
+
+        item.setItemMeta(meta);
+        playerOffers.add(item);
+    }
+
+    private static void saveConsoleItem(String itemId, int price, int amount, UUID itemUuid) {
+        ItemStack item = new ItemStack(Material.valueOf(itemId), amount);
+         ItemMeta meta = item.getItemMeta();
+
+         UUIDDataType uuidDataType = new UUIDDataType();
+         meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+         meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
+         meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.STRING, "console");
+
+         item.setItemMeta(meta);
+         specialOffers.add(item);
+    }
+
+    private static ItemStack[] buildOffersArray(List<ItemStack> offers) {
+        ItemStack[] items = new ItemStack[offers.size()];
+        for (int i = 0; i < offers.size(); i++) {
+            items[i] = offers.get(i);
+        }
+        return items;
+    }
+
+    public static void load() {
+        try {
+            File file = new File(new File("./plugins/Economy"), "SALES_DO_NOT_EDIT");
+            if (file.exists()) {
+                FileReader fileReader = new FileReader(file);
+                BufferedReader reader = new BufferedReader(fileReader);
+                String fileContent;
+                StringBuilder builder = new StringBuilder();
+                while ((fileContent = reader.readLine()) != null) {
+                    builder.append(fileContent);
+                }
+
+                String json = decodeBase64(builder.toString());
+                saveSellingItems(json);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void save() {
-        File dir = new File("./plugins/AdvancedItems");
+        File dir = new File("./plugins/Economy");
         if (!dir.exists()) {
             dir.mkdir();
         }
 
-        File file = new File(dir, "sales.json");
+        File file = new File(dir, "SALES_DO_NOT_EDIT");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -92,10 +198,18 @@ public class ItemSaving {
 
         try {
             Writer writer = new FileWriter(file);
-            gson.toJson(object, writer);
+            writer.write(encodeBase64(gson.toJson(object)));
             writer.close();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private static String encodeBase64(String toEncode) {
+        return Base64.getEncoder().encodeToString(toEncode.getBytes());
+    }
+
+    private static String decodeBase64(String toDecode) {
+        return new String(Base64.getDecoder().decode(toDecode));
     }
 }

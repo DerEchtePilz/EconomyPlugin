@@ -32,7 +32,9 @@ public class ItemUtils {
 
             item.setItemMeta(salableItemMeta);
             offers = constructSalableItems(sellerName, item);
+            Bukkit.broadcastMessage("" + Main.getInstance().getSpecialOffers().get("console").length);
             Main.getInstance().getSpecialOffers().put("console", offers);
+            Bukkit.broadcastMessage("" + Main.getInstance().getSpecialOffers().get("console").length);
         } else {
             salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(player.getUniqueId()));
 
