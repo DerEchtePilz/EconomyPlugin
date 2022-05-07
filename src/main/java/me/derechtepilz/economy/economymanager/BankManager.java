@@ -19,8 +19,6 @@ public class BankManager implements Bank {
         this.player = player;
         this.balance = newBalance;
 
-        player.sendMessage("§d" + ChatFormatter.valueOf(newBalance));
-
         updateBank();
     }
 

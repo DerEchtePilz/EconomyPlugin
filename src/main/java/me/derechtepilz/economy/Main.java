@@ -2,11 +2,9 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import me.derechtepilz.economy.economymanager.BankManager;
-import me.derechtepilz.economy.economymanager.GiveCoinsCommand;
-import me.derechtepilz.economy.economymanager.ManageCoinsWhenJoining;
-import me.derechtepilz.economy.economymanager.TakeCoinsCommand;
+import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
+import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.utility.ItemSaving;
@@ -36,6 +34,8 @@ public final class Main extends JavaPlugin {
     private final NamespacedKey balance = new NamespacedKey(this, "balance");
     private final NamespacedKey lastInterest = new NamespacedKey(this, "lastInterest");
     private final NamespacedKey startBalance = new NamespacedKey(this, "startBalance");
+
+    private final NamespacedKey permission = new NamespacedKey(this, "permissions");
 
     private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
@@ -95,6 +95,8 @@ public final class Main extends JavaPlugin {
             CommandAPI.unregister("buy");
             CommandAPI.unregister("givecoins");
             CommandAPI.unregister("takecoins");
+            CommandAPI.unregister("setcoins");
+            CommandAPI.unregister("permission");
         }
 
         ItemSaving.save();
@@ -113,6 +115,8 @@ public final class Main extends JavaPlugin {
             new ItemBuyOffer();
             new GiveCoinsCommand();
             new TakeCoinsCommand();
+            new SetCoinsCommand();
+            new PermissionCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);
         getCommand("fallback").setTabCompleter(fallbackCommand);
@@ -147,6 +151,10 @@ public final class Main extends JavaPlugin {
 
     public NamespacedKey getStartBalance() {
         return startBalance;
+    }
+
+    public NamespacedKey getPermission() {
+        return permission;
     }
 
     public HashMap<UUID, ItemStack> getOfferedItems() {

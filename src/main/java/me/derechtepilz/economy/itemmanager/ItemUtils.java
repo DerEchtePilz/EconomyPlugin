@@ -44,18 +44,6 @@ public class ItemUtils {
         Main.getInstance().getOfferedItems().put(itemUuid, item);
     }
 
-    public static ItemStack createBoughtItem(Player customer, ItemStack item) {
-        UUID creatorUuid;
-        UUIDDataType uuidDataType = new UUIDDataType();
-        int itemPrice = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
-        if (item.getItemMeta().getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
-            creatorUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
-            awardCoins(creatorUuid, itemPrice);
-            payCoins(customer.getUniqueId(), itemPrice);
-        }
-        return null;
-    }
-
     private static ItemStack[] constructSalableItems(String sellerName, ItemStack salableItem) {
         Player player = Bukkit.getPlayer(sellerName);
         int offeredItems;
@@ -83,24 +71,5 @@ public class ItemUtils {
         }
         items[offers.length] = salableItem;
         return items;
-    }
-
-    private static void awardCoins(UUID playerUuid, int amount) {
-        Player player = Bukkit.getPlayer(playerUuid);
-        double playerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
-        new BankManager(player, amount + playerBalance);
-    }
-
-    private static void payCoins(UUID playerUuid, int amount) {
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUuid);
-        Player player;
-        if (offlinePlayer.isOnline()) {
-            player = Bukkit.getPlayer(playerUuid);
-            double playerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
-            new BankManager(player, playerBalance - amount);
-        } else {
-            double playerBalance = offlinePlayer.getPlayer().getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
-            new BankManager(offlinePlayer.getPlayer(), playerBalance - amount);
-        }
     }
 }

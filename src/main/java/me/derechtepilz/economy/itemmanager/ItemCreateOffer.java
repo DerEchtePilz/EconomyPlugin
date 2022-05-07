@@ -3,6 +3,7 @@ package me.derechtepilz.economy.itemmanager;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
+import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
@@ -18,6 +19,10 @@ public class ItemCreateOffer {
                 .withArguments(new IntegerArgument("price", (Integer) Config.get("itemPrice.minAmount"), (Integer) Config.get("itemPrice.maxAmount")))
                 .executes((sender, args) -> {
                     if (sender instanceof Player player) {
+                        if (!Permission.hasPermission(player, Permission.CREATE_OFFER)) {
+                            player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                            return;
+                        }
                         ItemStack item = (ItemStack) args[0];
                         int amount = (int) args[1];
                         int price = (int) args[2];

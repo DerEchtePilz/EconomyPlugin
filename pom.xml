@@ -90,7 +90,7 @@
         <dependency>
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-shade</artifactId>
-            <version>7.0.0</version>
+            <version>8.1.0</version>
         </dependency>
     </dependencies>
 </project>

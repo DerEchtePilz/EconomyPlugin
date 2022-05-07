@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,10 @@ public class ItemBuyOffer {
                 .executes((sender, args) -> {
                     if (!(sender instanceof Player player)) {
                         sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
+                        return;
+                    }
+                    if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
+                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                         return;
                     }
                     Main.getInstance().getItemBuyMenu().openBuyMenu(player);
@@ -28,6 +33,10 @@ public class ItemBuyOffer {
                         sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
                         return;
                     }
+                    if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
+                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                        return;
+                    }
                     ItemStack item = (ItemStack) args[0];
                     Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
                 })
@@ -38,6 +47,10 @@ public class ItemBuyOffer {
                 .executes((sender, args) -> {
                     if (!(sender instanceof Player player)) {
                         sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
+                        return;
+                    }
+                    if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
+                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                         return;
                     }
                     String item = (String) args[0];

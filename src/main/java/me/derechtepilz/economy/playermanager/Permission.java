@@ -1,0 +1,93 @@
+package me.derechtepilz.economy.playermanager;
+
+import me.derechtepilz.economy.Main;
+import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public enum Permission {
+    GIVE_COINS("give_coins", 0),
+    SET_COINS("set_coins", 1),
+    TAKE_COINS("take_coins", 2),
+    BUY_OFFER("buy_offer", 3),
+    CANCEL_OFFER("cancel_offer", 4),
+    CREATE_OFFER("create_offer", 5);
+
+    private final String name;
+    private final int id;
+    Permission(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static boolean hasPermission(Player player, Permission permission) {
+        if (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) {
+            int[] permissions = player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY);
+            for (int permissionCode : permissions) {
+                if (permissionCode == permission.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void addPermission(Player player, Permission permission) {
+        List<Integer> permissions = new ArrayList<>();
+        int[] existingPermissions = (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY) : new int[0];
+        for (int permissionCode : existingPermissions) {
+            permissions.add(permissionCode);
+        }
+        if (!permissions.contains(permission.getId())) {
+            permissions.add(permission.getId());
+        }
+        int[] updatedPermissions = new int[permissions.size()];
+        for (int i = 0; i < permissions.size(); i++) {
+            updatedPermissions[i] = permissions.get(i);
+        }
+        player.getPersistentDataContainer().set(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
+    }
+
+    public static void removePermission(Player player, Permission permission) {
+        List<Integer> permissions = new ArrayList<>();
+        int[] existingPermissions = (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY) : new int[0];
+        for (int permissionCode : existingPermissions) {
+            permissions.add(permissionCode);
+        }
+        if (permissions.contains(permission.getId())) {
+            permissions.remove(permission.getId());
+        }
+        int[] updatedPermissions = new int[permissions.size()];
+        for (int i = 0; i < permissions.size(); i++) {
+            updatedPermissions[i] = permissions.get(i);
+        }
+        player.getPersistentDataContainer().set(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
+    }
+
+    public static String[] getPermissions(Player player) {
+        if (!player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) {
+            return new String[0];
+        }
+        int[] permissions = player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY);
+        String[] permissionList = new String[permissions.length];
+        for (int i = 0; i < permissions.length; i++) {
+            int permissionId = permissions[i];
+            for (Permission permission : Permission.values()) {
+                if (permission.getId() == permissionId) {
+                    permissionList[i] = permission.getName();
+                }
+            }
+        }
+        return permissionList;
+    }
+}
