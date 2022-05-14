@@ -29,9 +29,9 @@ public class ItemSaving {
         JsonObject playerOffers = new JsonObject();
         JsonObject specialOffers = new JsonObject();
 
-        for (UUID uuid : Main.getInstance().getOfferingPlayers().keySet()) {
+        for (UUID uuid : Main.getInstance().getPlayerOffers().keySet()) {
             JsonArray sellingPlayer = new JsonArray();
-            for (ItemStack item : Main.getInstance().getOfferingPlayers().get(uuid)) {
+            for (ItemStack item : Main.getInstance().getPlayerOffers().get(uuid)) {
                 JsonObject sellingItem = new JsonObject();
                 UUIDDataType uuidDataType = new UUIDDataType();
 
@@ -98,7 +98,7 @@ public class ItemSaving {
 
                 savePlayerItem(itemId, price, amount, itemUuid, UUID.fromString(uuid));
             }
-            Main.getInstance().getOfferingPlayers().put(UUID.fromString(uuid), buildOffersArray(ItemSaving.playerOffers));
+            Main.getInstance().getPlayerOffers().put(UUID.fromString(uuid), buildOffersArray(ItemSaving.playerOffers));
             ItemSaving.playerOffers = new ArrayList<>();
         }
 
@@ -134,20 +134,22 @@ public class ItemSaving {
         meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(creatorUuid));
 
         item.setItemMeta(meta);
+        Main.getInstance().getOfferedItemsList().add(item);
         playerOffers.add(item);
     }
 
     private static void saveConsoleItem(String itemId, int price, int amount, UUID itemUuid) {
         ItemStack item = new ItemStack(Material.valueOf(itemId), amount);
-         ItemMeta meta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
 
-         UUIDDataType uuidDataType = new UUIDDataType();
-         meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
-         meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
-         meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.STRING, "console");
+        UUIDDataType uuidDataType = new UUIDDataType();
+        meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+        meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
+        meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.STRING, "console");
 
-         item.setItemMeta(meta);
-         specialOffers.add(item);
+        item.setItemMeta(meta);
+        Main.getInstance().getOfferedItemsList().add(item);
+        specialOffers.add(item);
     }
 
     private static ItemStack[] buildOffersArray(List<ItemStack> offers) {
@@ -169,9 +171,7 @@ public class ItemSaving {
                 while ((fileContent = reader.readLine()) != null) {
                     builder.append(fileContent);
                 }
-
-                String json = decodeBase64(builder.toString());
-                saveSellingItems(json);
+                saveSellingItems(decodeBase64(builder.toString()));
             }
         } catch (IOException e) {
             e.printStackTrace();

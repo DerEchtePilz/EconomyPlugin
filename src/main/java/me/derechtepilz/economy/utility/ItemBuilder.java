@@ -1,13 +1,20 @@
 package me.derechtepilz.economy.utility;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.profile.PlayerProfile;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +24,8 @@ public class ItemBuilder {
     private final ItemMeta meta;
 
     private final Material material;
+    private String playerHeadTexture;
+    private String playerHeadSignature;
 
     public ItemBuilder(Material material) {
         item = new ItemStack(material);
@@ -39,18 +48,34 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setTexture(String playerName) {
-        if (material.equals(Material.PLAYER_HEAD)) {
-            SkullMeta meta = (SkullMeta) this.meta;
-            Player player = Bukkit.getPlayer(playerName);
-            if (player == null) return null;
-            PlayerProfile profile = player.getPlayerProfile();
-            meta.setOwnerProfile(profile);
-        }
+        try {
+            if (material.equals(Material.PLAYER_HEAD)) {
+                SkullMeta skullMeta = (SkullMeta) this.meta;
+                Player player = Bukkit.getPlayer(playerName);
+                GameProfile profile = new GameProfile(player.getUniqueId(), playerName);
+                getProfile(String.valueOf(player.getUniqueId()));
+                profile.getProperties().put("textures", new Property("textures", playerHeadTexture, playerHeadSignature));
+
+                Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+                profileField.set(skullMeta, profile);
+                return this;
+            }
+        } catch (IOException | NoSuchFieldException | IllegalAccessException ignored) {}
         return this;
     }
 
     public ItemStack build() {
         item.setItemMeta(meta);
         return item;
+    }
+
+    private void getProfile(String uuid) throws IOException {
+        APIRequest profileRequest = new APIRequest();
+        JsonElement profileElement = JsonParser.parseString(profileRequest.request("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false"));
+        JsonObject profileObject = profileElement.getAsJsonObject();
+        JsonArray properties = profileObject.getAsJsonArray("properties");
+        playerHeadTexture = properties.get(0).getAsJsonObject().getAsJsonPrimitive("value").getAsString();
+        playerHeadSignature = properties.get(0).getAsJsonObject().getAsJsonPrimitive("signature").getAsString();
     }
 }

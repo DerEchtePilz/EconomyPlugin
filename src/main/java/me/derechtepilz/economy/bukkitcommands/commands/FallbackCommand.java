@@ -31,7 +31,7 @@ public class FallbackCommand implements TabExecutor {
             if (args.length == 1) {
                 switch (args[0].toLowerCase()) {
                     case "canceloffer" -> {
-                        Main.getInstance().getItemCancelMenu().openOfferCancelMenu(player, Main.getInstance().getOfferingPlayers().get(player.getUniqueId()));
+                        Main.getInstance().getItemCancelMenu().openOfferCancelMenu(player, Main.getInstance().getPlayerOffers().get(player.getUniqueId()));
                         player.sendMessage(TranslatableChatComponent.read("itemCancelOffer.player_executor.prepare_cancelling"));
                         return false;
                     }
@@ -57,7 +57,7 @@ public class FallbackCommand implements TabExecutor {
                 }
                 if (args[0].equalsIgnoreCase("buy")) {
                     if (args[1].equalsIgnoreCase("special")) {
-                        Main.getInstance().getItemBuyMenu().openBuyMenu(player, true);
+                        // Main.getInstance().getItemBuyMenu().openBuyMenu(player, true);
                         return false;
                     }
                     ItemStack item = new ItemStackArgument().parse(args[1]);
@@ -70,7 +70,7 @@ public class FallbackCommand implements TabExecutor {
                         }
                         return false;
                     }
-                    Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
+                    // Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
                     return false;
                 }
                 if (args[0].equalsIgnoreCase("createoffer")) {

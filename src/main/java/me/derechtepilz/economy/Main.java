@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
+import me.derechtepilz.economy.tests.PlayerHeadTestCommand;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.utility.ItemSaving;
@@ -37,7 +38,6 @@ public final class Main extends JavaPlugin {
 
     private final NamespacedKey permission = new NamespacedKey(this, "permissions");
 
-    private final HashMap<UUID, ItemStack> offeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
     private final HashMap<String, ItemStack[]> specialOffers = new HashMap<>();
 
@@ -54,12 +54,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (getConfig().contains("language")) {
-            language = Language.valueOf(getConfig().getString("language"));
-        } else {
-            language = Language.EN_US;
-        }
-
         itemCancelMenu = new ItemCancelMenu();
         itemBuyMenu = new ItemBuyMenu();
 
@@ -72,9 +66,19 @@ public final class Main extends JavaPlugin {
     @Override
     public void onLoad() {
         plugin = this;
+        Config.loadConfig();
+        saveDefaultConfig();
+
+
+        if (Config.contains("language")) {
+            language = Language.valueOf((String) Config.get("language"));
+        } else {
+            language = Language.EN_US;
+        }
+
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (VersionHandler.isVersionSupported(version)) {
-            CommandAPI.onLoad(new CommandAPIConfig());
+            CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage(TranslatableChatComponent.read("command.wrong_executor")));
             wasCommandAPILoaded = true;
         } else {
             getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
@@ -82,8 +86,6 @@ public final class Main extends JavaPlugin {
         }
 
         ItemSaving.load();
-        Config.loadConfig();
-        saveDefaultConfig();
     }
 
     @Override
@@ -97,6 +99,7 @@ public final class Main extends JavaPlugin {
             CommandAPI.unregister("takecoins");
             CommandAPI.unregister("setcoins");
             CommandAPI.unregister("permission");
+            CommandAPI.unregister("test");
         }
 
         ItemSaving.save();
@@ -117,6 +120,7 @@ public final class Main extends JavaPlugin {
             new TakeCoinsCommand();
             new SetCoinsCommand();
             new PermissionCommand();
+            new PlayerHeadTestCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);
         getCommand("fallback").setTabCompleter(fallbackCommand);
@@ -157,11 +161,7 @@ public final class Main extends JavaPlugin {
         return permission;
     }
 
-    public HashMap<UUID, ItemStack> getOfferedItems() {
-        return offeredItems;
-    }
-
-    public HashMap<UUID, ItemStack[]> getOfferingPlayers() {
+    public HashMap<UUID, ItemStack[]> getPlayerOffers() {
         return offeringPlayers;
     }
 

@@ -104,6 +104,10 @@ public class Config {
         Main.getInstance().saveConfig();
     }
 
+    public static boolean contains(String path) {
+        return Main.getInstance().getConfig().contains(path);
+    }
+
     public static void reloadConfig() {
         Main.getInstance().reloadConfig();
     }

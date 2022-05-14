@@ -12,13 +12,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ItemCancelMenu implements Listener {
 
-    private final List<ItemStack[]> inventories = new ArrayList<>();
+    private final HashMap<UUID, List<ItemStack[]>> inventories = new HashMap<>();
     private int currentInventory;
     private Inventory inventory;
 
@@ -35,15 +33,23 @@ public class ItemCancelMenu implements Listener {
             if (event.getCurrentItem().equals(nextPage)) {
                 currentInventory += 1;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title") + (currentInventory + 1) + ")");
-                inventory.setContents(inventories.get(currentInventory));
+                inventory.setContents(inventories.get(player.getUniqueId()).get(currentInventory));
                 player.openInventory(inventory);
                 return;
             }
             if (event.getCurrentItem().equals(previousPage)) {
                 currentInventory -= 1;
                 inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read ("itemCancelMenu.inventory_title") + (currentInventory + 1) + ")");
-                inventory.setContents(inventories.get(currentInventory));
+                inventory.setContents(inventories.get(player.getUniqueId()).get(currentInventory));
                 player.openInventory(inventory);
+                return;
+            }
+            if (Main.getInstance().getOfferedItemsList().contains(event.getCurrentItem())) {
+                ItemStack cancelledItem = new ItemStack(event.getCurrentItem().getType(), event.getCurrentItem().getAmount());
+                player.getInventory().addItem(cancelledItem);
+
+                ItemUtils.cancelSalableItem(event.getCurrentItem());
+                player.sendMessage(TranslatableChatComponent.read("itemCancelMenu.cancelled_item"));
             }
         }
     }
@@ -54,6 +60,7 @@ public class ItemCancelMenu implements Listener {
      * @param offeredItems The offers the player has made
      */
     public void openOfferCancelMenu(Player player, ItemStack[] offeredItems) {
+        List<ItemStack[]> offers = new ArrayList<>();
         // Prepare inventory pages
         ItemStack[] cancelOfferMenuItems = new ItemStack[offeredItems.length];
         for (int i = 0; i < offeredItems.length; i++) {
@@ -61,6 +68,9 @@ public class ItemCancelMenu implements Listener {
         }
         if (cancelOfferMenuItems.length % 45 != 0) {
             ItemStack[] updatedCancelOfferMenuItem = new ItemStack[Main.getInstance().findNextMultiple(cancelOfferMenuItems.length, 45)];
+            for (int i = 0; i < offeredItems.length; i++) {
+                updatedCancelOfferMenuItem[i] = offeredItems[i];
+            }
             for (int i = offeredItems.length; i < updatedCancelOfferMenuItem.length; i++) {
                 updatedCancelOfferMenuItem[i] = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§7").build();
             }
@@ -94,17 +104,18 @@ public class ItemCancelMenu implements Listener {
                     inventory[49] = closeItem;
                 }
             }
-            inventories.add(inventory);
+            offers.add(inventory);
         }
+        inventories.put(player.getUniqueId(), offers);
         // Create inventory
-        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title") + " (1)");
-        inventory.setContents(inventories.get(0));
+        inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemCancelMenu.inventory_title") + "1)");
+        inventory.setContents(inventories.get(player.getUniqueId()).get(0));
         currentInventory = 0;
         player.openInventory(inventory);
     }
 
-    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("itemCancelMenu.close_item_name")).build();
-    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemCancelMenu.next_page_name")).build();
-    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("itemCancelMenu.previous_page_name")).build();
-    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(TranslatableChatComponent.read("itemCancelMenu.menu_glass_name")).build();
+    private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("items.title.close")).build();
+    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("items.title.next_page")).build();
+    private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("items.title.previous_page")).build();
+    private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(TranslatableChatComponent.read("items.title.menu_glass")).build();
 }

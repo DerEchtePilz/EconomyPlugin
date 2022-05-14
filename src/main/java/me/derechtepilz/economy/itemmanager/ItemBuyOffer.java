@@ -13,11 +13,7 @@ import org.bukkit.inventory.ItemStack;
 public class ItemBuyOffer {
     public ItemBuyOffer() {
         new CommandAPICommand("buy")
-                .executes((sender, args) -> {
-                    if (!(sender instanceof Player player)) {
-                        sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
-                        return;
-                    }
+                .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                         return;
@@ -28,37 +24,29 @@ public class ItemBuyOffer {
 
         new CommandAPICommand("buy")
                 .withArguments(new ItemStackArgument("item"))
-                .executes((sender, args) -> {
-                    if (!(sender instanceof Player player)) {
-                        sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
-                        return;
-                    }
+                .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                         return;
                     }
                     ItemStack item = (ItemStack) args[0];
-                    Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
+                    // Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
                 })
                 .register();
 
         new CommandAPICommand("buy")
-                .withArguments(new StringArgument("query").includeSuggestions(ArgumentSuggestions.strings(info -> new String[]{"special"})))
-                .executes((sender, args) -> {
-                    if (!(sender instanceof Player player)) {
-                        sender.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_executor"));
-                        return;
-                    }
+                .withArguments(new StringArgument("query").includeSuggestions(ArgumentSuggestions.strings(info -> new String[]{"special", "player"})))
+                .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                         return;
                     }
                     String item = (String) args[0];
-                    if (!item.equals("special")) {
+                    if (!item.equals("special") && !item.equals("player")) {
                         player.sendMessage(TranslatableChatComponent.read("itemBuyOffer.wrong_argument").replace("%s", item));
                         return;
                     }
-                    Main.getInstance().getItemBuyMenu().openBuyMenu(player, true);
+                    // Main.getInstance().getItemBuyMenu().openBuyMenu(player, item);
                 })
                 .register();
 

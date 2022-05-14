@@ -75,17 +75,13 @@ public class PermissionCommand {
                 )
                 .withSubcommand(new CommandAPICommand("get")
                         .withArguments(playerArgument)
-                        .executes((sender, args) -> {
-                            if (sender instanceof Player player) {
+                        .executes((player, args) -> {
                                 Player target = (Player) args[0];
                                 String[] permissions = Permission.getPermissions(target);
                                 player.sendMessage(TranslatableChatComponent.read("permissionCommand.player_permissions").replace("%s", target.getName()));
                                 for (String permission : permissions) {
                                     player.sendMessage("\u00A76- \u00A7a" + permission);
                                 }
-                                return;
-                            }
-                            sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
                         })
                 )
                 .withSubcommand(new CommandAPICommand("remove")
