@@ -1,10 +1,18 @@
 package me.derechtepilz.economy.itemmanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.economymanager.Bank;
+import me.derechtepilz.economy.economymanager.BankManager;
+import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -67,23 +75,102 @@ public class ItemBuyMenu implements Listener {
                 inventory.setContents(inventories.get(player.getUniqueId()).get(currentInventory));
                 player.openInventory(inventory);
             }
-            if (!clickedItem.hasItemMeta() && clickedItem.getItemMeta() == null) return;
-            ItemMeta meta = clickedItem.getItemMeta();
-            if (meta == null) return;
-            if (meta.getPersistentDataContainer().has(Main.getInstance().getUuid(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.STRING) && meta.getPersistentDataContainer().has(Main.getInstance().getPrice(), PersistentDataType.INTEGER)) {
-                /*
-                 * buyers.put(clickedItem, player);
-                 * Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(),() -> {
-                 * if (buyers.size() == 1) {
-                 * // TODO: Check player money
-                 * // TODO: Process the item, give the item
-                 * } else {
-                 * for (Player interestedPlayer : buyers) {
-                 * interestedPlayer.sendMessage(TranslatableChatComponent.read("itemBuyMenu.onClick.to_many_customers"));
-                 * }
-                 * }
-                 * }, 20);
-                 */
+            if (Main.getInstance().getOfferedItemsList().contains(clickedItem)) {
+                UUIDDataType uuidDataType = new UUIDDataType();
+                ItemMeta meta = clickedItem.getItemMeta();
+                switch (event.getClick()) {
+                    case RIGHT -> {
+                        String sellerName;
+                        if (meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
+                            UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+                            sellerName = Bukkit.getOfflinePlayer(sellerUuid).getName();
+                        } else {
+                            sellerName = "Console";
+                        }
+                        int price = meta.getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+                        player.sendMessage(ChatColor.BLACK + "" + ChatColor.STRIKETHROUGH + "-----------------------");
+                        player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.item_information").replace("%%s", ChatFormatter.valueOf(clickedItem.getAmount())).replace("%s", buildItemName(clickedItem.getType())));
+                        player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.seller_information").replace("%s", sellerName));
+                        player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.price_information").replace("%s", ChatFormatter.valueOf(price)));
+                        player.sendMessage(ChatColor.BLACK + "" + ChatColor.STRIKETHROUGH + "-----------------------");
+                    }
+                    case LEFT -> {
+                        if (buyers.containsKey(clickedItem)) {
+                            List<Player> customers = buyers.get(clickedItem);
+                            customers.add(player);
+                            buyers.put(clickedItem, customers);
+                        } else {
+                            buyers.put(clickedItem, new ArrayList<>(List.of(player)));
+                        }
+                        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                            if (buyers.get(clickedItem).size() > 1) {
+                                buyers.get(clickedItem).forEach(customer -> customer.sendMessage(TranslatableChatComponent.read("itemBuyMenu.onClick.to_many_customers")));
+                                buyers.remove(clickedItem);
+                                return;
+                            }
+                            String sellerName;
+                            UUID sellerUuid;
+
+                            // Check if seller was a player or the console
+                            if (meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
+                                sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+                                sellerName = Bukkit.getOfflinePlayer(sellerUuid).getName();
+                            } else {
+                                sellerUuid = null;
+                                sellerName = "Console";
+                            }
+                            int price = meta.getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+                            if (sellerName.equals(player.getName())) {
+                                player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.cannot_buy_own_item"));
+                                return;
+                            }
+                            double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                            if (price > balance) {
+                                player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.not_enough_coins"));
+                                return;
+                            }
+                            if (Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
+                                player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.bank_account_not_found"));
+                                return;
+                            }
+
+                            // Give coins to seller
+                            if (!sellerName.equals("console")) {
+                                OfflinePlayer seller = Bukkit.getOfflinePlayer(sellerUuid);
+                                if (!seller.isOnline()) {
+                                    int coinsEarned = (seller.getPlayer().getPersistentDataContainer().has(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER))
+                                            ? seller.getPlayer().getPersistentDataContainer().get(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER)
+                                            : 0;
+                                    coinsEarned += price;
+                                    seller.getPlayer().getPersistentDataContainer().set(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER, coinsEarned);
+                                } else {
+                                    if (Main.getInstance().getBankAccounts().containsKey(seller.getUniqueId())) {
+                                        seller.getPlayer().sendMessage(TranslatableChatComponent.read("itemBuyMenu.coins_earned").replace("%s", ChatFormatter.valueOf(price)));
+                                        BankManager bankManager = Main.getInstance().getBankAccounts().get(seller.getUniqueId());
+                                        bankManager.setBalance(bankManager.getBalance() + price);
+                                    } else {
+                                        int coinsEarned = (seller.getPlayer().getPersistentDataContainer().has(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER))
+                                                ? seller.getPlayer().getPersistentDataContainer().get(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER)
+                                                : 0;
+                                        coinsEarned += price;
+                                        seller.getPlayer().getPersistentDataContainer().set(Main.getInstance().getEarnedCoins(), PersistentDataType.INTEGER, coinsEarned);
+                                        seller.getPlayer().sendMessage(TranslatableChatComponent.read("itemBuyMenu.coins_earned_bank_account_not_found"));
+                                    }
+                                }
+                            }
+
+                            // Take coins from customer
+                            BankManager bankManager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
+                            bankManager.setBalance(balance - price);
+                            ItemUtils.processBoughtItem(clickedItem);
+
+                            // Give item to customer
+                            player.getInventory().addItem(new ItemBuilder(clickedItem.getType(), clickedItem.getAmount()).build());
+
+                            buyers.remove(clickedItem);
+                        }, 20);
+                    }
+                }
             }
         }
     }
@@ -158,11 +245,9 @@ public class ItemBuyMenu implements Listener {
         playerOffers.removeIf(material -> (material.getType() != type));
         specialOffers.removeIf(material -> (material.getType() != type));
 
-        for (ItemStack item : playerOffers) {
-            Main.getInstance().getLogger().info(item.getType().name());
-        }
-        for (ItemStack item : specialOffers) {
-            Main.getInstance().getLogger().info(item.getType().name());
+        if (playerOffers.size() == 0 && specialOffers.size() == 0) {
+            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.type_not_found").replace("%s", "minecraft:" + type.name().toLowerCase()));
+            return;
         }
 
         ItemStack[] playerOffersArray = playerOffers.toArray(new ItemStack[0]);
@@ -179,17 +264,22 @@ public class ItemBuyMenu implements Listener {
             formattedSpecialOffers = resizeInventoryContents(specialOffersArray);
         }
 
+        List<ItemStack> allOffers = new ArrayList<>();
+        allOffers.addAll(List.of(formattedPlayerOffers));
+        allOffers.addAll(List.of(formattedSpecialOffers));
+
         // Prepare inventory pages
         playerOfferPages = formattedPlayerOffers.length != 0 ? formattedPlayerOffers.length / 45 : 0;
         specialOfferPages = formattedSpecialOffers.length != 0 ? formattedSpecialOffers.length / 45 : 0;
 
-        if (playerOfferPages >= 1 && specialOfferPages >= 1) {
-            // prepareInventoryPages(formattedPlayerOffers, player, playerOfferPages, true);
-            // prepareInventoryPages(formattedSpecialOffers, player, specialOfferPages, true);
-        } else {
-            // prepareInventoryPages(formattedPlayerOffers, player, playerOfferPages, false);
-            // prepareInventoryPages(formattedSpecialOffers, player, specialOfferPages, false);
+        prepareInventoryPages(allOffers, playerOfferPages, specialOfferPages, player);
+
+        // Sort ItermStack[] into the right list
+        List<ItemStack[]> invPages = new ArrayList<>();
+        for (List<ItemStack[]> pages : prepareInventories.get(player.getUniqueId())) {
+            invPages.addAll(pages);
         }
+        inventories.put(player.getUniqueId(), invPages);
 
         // Open inventory
         inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
@@ -319,5 +409,17 @@ public class ItemBuyMenu implements Listener {
             inventories.add(invContents);
             prepareInventories.put(customer.getUniqueId(), inventories);
         }
+    }
+
+    private String buildItemName(Material material) {
+        StringBuilder buildName = new StringBuilder();
+        String[] words = material.name().split("_");
+        for (int i = 0; i < words.length; i++) {
+            buildName.append(words[i].charAt(0)).append(words[i].substring(1).toLowerCase());
+            if (i != words.length - 1) {
+                buildName.append(" ");
+            }
+        }
+        return buildName.toString();
     }
 }

@@ -28,7 +28,7 @@ public class GiveCoinsCommand {
                             double amount = (double) args[0];
                             double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
-                            if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                            if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                 player.sendMessage(TranslatableChatComponent.read("command.player_executor.target.bank_account_missing"));
                                 return;
                             }
@@ -46,7 +46,7 @@ public class GiveCoinsCommand {
                                         Player target = (Player) args[1];
                                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
-                                        if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                                        if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                             player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.target_bank_account_missing").replace("%s", target.getName()));
                                             return;
                                         }
@@ -60,7 +60,7 @@ public class GiveCoinsCommand {
                                         Player target = (Player) args[1];
                                         double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
-                                        if (!Main.getInstance().getBankAccounts().containsKey(target)) {
+                                        if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                                             console.sendMessage(TranslatableChatComponent.read("command.console_executor.target_bank_account_missing").replace("%s", target.getName()));
                                             return;
                                         }

@@ -49,6 +49,6 @@ public class BankManager implements Bank {
 
     private void updateBank() {
         player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.DOUBLE, balance);
-        Main.getInstance().getBankAccounts().put(player, this);
+        Main.getInstance().getBankAccounts().put(player.getUniqueId(), this);
     }
 }

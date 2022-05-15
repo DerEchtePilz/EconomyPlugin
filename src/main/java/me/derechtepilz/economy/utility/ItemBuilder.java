@@ -33,6 +33,12 @@ public class ItemBuilder {
         meta = item.getItemMeta();
     }
 
+    public ItemBuilder(Material material, int amount) {
+        item = new ItemStack(material, amount);
+        this.material = material;
+        this.meta = item.getItemMeta();
+    }
+
     public ItemBuilder setName(String name) {
         meta.setDisplayName(name);
         return this;

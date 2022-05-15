@@ -30,7 +30,7 @@ public class TakeCoinsCommand {
                         return;
                     }
 
-                    BankManager manager = Main.getInstance().getBankAccounts().get(player);
+                    BankManager manager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
                     manager.setBalance(playerBalance - amount);
                     player.sendMessage(TranslatableChatComponent.read("takeCoinsCommand.player_executor.take_coins").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                 })

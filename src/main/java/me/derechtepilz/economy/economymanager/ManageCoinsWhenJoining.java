@@ -68,7 +68,7 @@ public class ManageCoinsWhenJoining implements Listener {
 
     private void displayCoins(Player player) {
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), () -> {
-            BankManager bankManager = Main.getInstance().getBankAccounts().get(player);
+            BankManager bankManager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TranslatableChatComponent.read("manageCoinsWhenJoining.display_coins").replace("%s", ChatFormatter.valueOf(bankManager.getBalance()))));
         }, 0, 1);
     }

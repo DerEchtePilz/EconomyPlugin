@@ -75,7 +75,7 @@ public class PermissionCommand {
                 )
                 .withSubcommand(new CommandAPICommand("get")
                         .withArguments(playerArgument)
-                        .executes((player, args) -> {
+                        .executesPlayer((player, args) -> {
                                 Player target = (Player) args[0];
                                 String[] permissions = Permission.getPermissions(target);
                                 player.sendMessage(TranslatableChatComponent.read("permissionCommand.player_permissions").replace("%s", target.getName()));

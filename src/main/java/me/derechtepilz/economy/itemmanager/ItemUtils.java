@@ -3,6 +3,7 @@ package me.derechtepilz.economy.itemmanager;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,6 +43,7 @@ public class ItemUtils {
             offers = constructSalableItems(sellerName, salableItem, true);
             Main.getInstance().getPlayerOffers().put(player.getUniqueId(), offers);
         }
+        Main.getInstance().getOfferedItemsList().add(salableItem);
     }
 
     public static void cancelSalableItem(ItemStack offerToCancel) {
@@ -55,8 +57,31 @@ public class ItemUtils {
         Main.getInstance().getOfferedItemsList().remove(offerToCancel);
     }
 
+    public static void processBoughtItem(ItemStack boughtItem) {
+        UUIDDataType uuidDataType = new UUIDDataType();
+        ItemMeta meta = boughtItem.getItemMeta();
+
+        if (meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
+            // Player offer
+            UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+            ItemStack[] offers = constructSalableItems(Bukkit.getOfflinePlayer(sellerUuid).getName(), boughtItem, false);
+            Main.getInstance().getPlayerOffers().put(sellerUuid, offers);
+        } else {
+            // Special offer
+            ItemStack[] offers = constructSalableItems("console", boughtItem, false);
+            Main.getInstance().getSpecialOffers().put("console", offers);
+        }
+
+        Main.getInstance().getOfferedItemsList().remove(boughtItem);
+    }
+
     private static ItemStack[] constructSalableItems(String sellerName, ItemStack salableItem, boolean addOffer) {
-        Player player = Bukkit.getPlayer(sellerName);
+        OfflinePlayer player = null;
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (offlinePlayer.getName().equals(sellerName)) {
+                player = offlinePlayer;
+            }
+        }
         int offeredItems;
         ItemStack[] offers;
         if (player == null) {

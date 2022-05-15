@@ -12,7 +12,7 @@ public class APIRequest {
     private HttpURLConnection connection;
     private String line;
     private BufferedReader reader;
-    private StringBuffer responseContent = new StringBuffer();
+    private final StringBuffer responseContent = new StringBuffer();
 
     public String request(String url) throws IOException {
         URL requestUrl = new URL(url);

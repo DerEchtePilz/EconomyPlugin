@@ -50,6 +50,11 @@ public class ItemCancelMenu implements Listener {
 
                 ItemUtils.cancelSalableItem(event.getCurrentItem());
                 player.sendMessage(TranslatableChatComponent.read("itemCancelMenu.cancelled_item"));
+
+                ItemStack[] shownInventory = inventories.get(player.getUniqueId()).get(currentInventory);
+                shownInventory[event.getSlot()] = itemCancelled;
+                inventories.get(player.getUniqueId()).set(currentInventory, shownInventory);
+                inventory.setContents(inventories.get(player.getUniqueId()).get(currentInventory));
             }
         }
     }
@@ -118,4 +123,5 @@ public class ItemCancelMenu implements Listener {
     private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("items.title.next_page")).build();
     private final ItemStack previousPage = new ItemBuilder(Material.ARROW).setName(TranslatableChatComponent.read("items.title.previous_page")).build();
     private final ItemStack menuGlass = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(TranslatableChatComponent.read("items.title.menu_glass")).build();
+    private final ItemStack itemCancelled = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("itemCancelMenu_item_cancelled")).build();
 }

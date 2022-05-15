@@ -30,7 +30,7 @@ public class ItemBuyOffer {
                         return;
                     }
                     ItemStack item = (ItemStack) args[0];
-                    // Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
+                    Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
                 })
                 .register();
 

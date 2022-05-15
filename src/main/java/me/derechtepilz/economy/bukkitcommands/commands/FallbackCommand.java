@@ -109,7 +109,7 @@ public class FallbackCommand implements TabExecutor {
                     double amount = Double.parseDouble(args[2]);
                     double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
-                    if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                    if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                         player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.bank_account_missing"));
                         return false;
                     }
@@ -259,7 +259,7 @@ public class FallbackCommand implements TabExecutor {
                     double amount = Double.parseDouble(args[2]);
                     double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
 
-                    if (!Main.getInstance().getBankAccounts().containsKey(target)) {
+                    if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                         console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.target_bank_account_missing").replace("%s", target.getName()));
                         return false;
                     }

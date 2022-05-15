@@ -31,7 +31,7 @@ public class SetCoinsCommand {
                         Player target = (Player) args[0];
                         double amount = (double) args[1];
                         if (target.equals(player)) {
-                            if (!Main.getInstance().getBankAccounts().containsKey(player)) {
+                            if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                 player.sendMessage(TranslatableChatComponent.read("command.self.bank_account_missing"));
                                 return;
                             }
@@ -39,7 +39,7 @@ public class SetCoinsCommand {
                             player.sendMessage(TranslatableChatComponent.read("command.player_executor.target.bank_account_missing").replace("%s", target.getName()));
                             return;
                         }
-                        BankManager manager = Main.getInstance().getBankAccounts().get(player);
+                        BankManager manager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
                         manager.setBalance(amount);
 
                         if (target.equals(player)) {
@@ -53,11 +53,11 @@ public class SetCoinsCommand {
                     if (sender instanceof ConsoleCommandSender console) {
                         Player target = (Player) args[0];
                         double amount = (double) args[1];
-                        if (!Main.getInstance().getBankAccounts().containsKey(target)) {
+                        if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                             console.sendMessage(TranslatableChatComponent.read("command.console_executor.target.bank_account_missing").replace("%s", target.getName()));
                             return;
                         }
-                        BankManager manager = Main.getInstance().getBankAccounts().get(target);
+                        BankManager manager = Main.getInstance().getBankAccounts().get(target.getUniqueId());
                         manager.setBalance(amount);
 
                         console.sendMessage(TranslatableChatComponent.read("setCoinsCommand.player_balance_set").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", target.getName()));
