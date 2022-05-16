@@ -2,6 +2,7 @@ package me.derechtepilz.economy.economymanager;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ChatFormatter;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -44,11 +45,11 @@ public class BankManager implements Bank {
 
     @Override
     public BankManager loadBank(Player player) {
-        return new BankManager(player, player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE));
+        return new BankManager(player, player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE));
     }
 
     private void updateBank() {
-        player.getPersistentDataContainer().set(Main.getInstance().getBalance(), PersistentDataType.DOUBLE, balance);
+        player.getPersistentDataContainer().set(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE, balance);
         Main.getInstance().getBankAccounts().put(player.getUniqueId(), this);
     }
 }

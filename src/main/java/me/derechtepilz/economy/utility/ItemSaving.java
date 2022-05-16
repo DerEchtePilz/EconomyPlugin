@@ -28,7 +28,9 @@ public class ItemSaving {
 
         JsonObject playerOffers = new JsonObject();
         JsonObject specialOffers = new JsonObject();
+        JsonObject earnedCoins = new JsonObject();
 
+        // Build player offers
         for (UUID uuid : Main.getInstance().getPlayerOffers().keySet()) {
             JsonArray sellingPlayer = new JsonArray();
             for (ItemStack item : Main.getInstance().getPlayerOffers().get(uuid)) {
@@ -36,9 +38,9 @@ public class ItemSaving {
                 UUIDDataType uuidDataType = new UUIDDataType();
 
                 String id = "minecraft:" + item.getType().name().toLowerCase();
-                int price = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+                int price = item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER);
                 int amount = item.getAmount();
-                UUID itemUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY));
+                UUID itemUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.UUID.getKey(), PersistentDataType.BYTE_ARRAY));
 
                 sellingItem.addProperty("id", id);
                 sellingItem.addProperty("price", price);
@@ -51,6 +53,7 @@ public class ItemSaving {
         }
         allOffers.add("playerOffers", playerOffers);
 
+        // Build special offers
         if (Main.getInstance().getSpecialOffers().get("console") != null) {
             JsonArray sellingConsole = new JsonArray();
             for (ItemStack item : Main.getInstance().getSpecialOffers().get("console")) {
@@ -58,9 +61,9 @@ public class ItemSaving {
                 UUIDDataType uuidDataType = new UUIDDataType();
 
                 String id = "minecraft:" + item.getType().name().toLowerCase();
-                int price = item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getPrice(), PersistentDataType.INTEGER);
+                int price = item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER);
                 int amount = item.getAmount();
-                UUID itemUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY));
+                UUID itemUuid = uuidDataType.fromPrimitive(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.UUID.getKey(), PersistentDataType.BYTE_ARRAY));
 
                 sellingItem.addProperty("id", id);
                 sellingItem.addProperty("price", price);
@@ -73,7 +76,12 @@ public class ItemSaving {
         }
         allOffers.add("specialOffers", specialOffers);
 
+        // Build earned coins
+        for (UUID uuid : Main.getInstance().getEarnedCoins().keySet()) {
+            earnedCoins.addProperty(String.valueOf(uuid), Main.getInstance().getEarnedCoins().get(uuid));
+        }
         offers.add("offers", allOffers);
+        offers.add("earnedCoins", earnedCoins);
         return offers;
     }
 
@@ -122,6 +130,15 @@ public class ItemSaving {
             Main.getInstance().getSpecialOffers().put("console", buildOffersArray(ItemSaving.specialOffers));
             ItemSaving.specialOffers = new ArrayList<>();
         }
+
+        // Save earned coins
+        if (offers.has("earnedCoins")) {
+            JsonObject earnedCoins = offers.getAsJsonObject("earnedCoins");
+            for (String uuid : earnedCoins.keySet()) {
+                int playerEarnedCoins = earnedCoins.getAsJsonPrimitive(uuid).getAsInt();
+                Main.getInstance().getEarnedCoins().put(UUID.fromString(uuid), playerEarnedCoins);
+            }
+        }
     }
 
     private static void savePlayerItem(String itemId, int price, int amount, UUID itemUuid, UUID creatorUuid) {
@@ -129,9 +146,9 @@ public class ItemSaving {
         ItemMeta meta = item.getItemMeta();
 
         UUIDDataType uuidDataType = new UUIDDataType();
-        meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
-        meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
-        meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(creatorUuid));
+        meta.getPersistentDataContainer().set(NamespacedKeys.UUID.getKey(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+        meta.getPersistentDataContainer().set(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER, price);
+        meta.getPersistentDataContainer().set(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(creatorUuid));
 
         item.setItemMeta(meta);
         Main.getInstance().getOfferedItemsList().add(item);
@@ -143,9 +160,9 @@ public class ItemSaving {
         ItemMeta meta = item.getItemMeta();
 
         UUIDDataType uuidDataType = new UUIDDataType();
-        meta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
-        meta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
-        meta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.STRING, "console");
+        meta.getPersistentDataContainer().set(NamespacedKeys.UUID.getKey(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+        meta.getPersistentDataContainer().set(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER, price);
+        meta.getPersistentDataContainer().set(NamespacedKeys.CREATOR.getKey(), PersistentDataType.STRING, "console");
 
         item.setItemMeta(meta);
         Main.getInstance().getOfferedItemsList().add(item);

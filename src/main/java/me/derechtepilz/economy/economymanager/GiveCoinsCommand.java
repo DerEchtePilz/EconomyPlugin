@@ -7,6 +7,7 @@ import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -26,7 +27,7 @@ public class GiveCoinsCommand {
                                 return;
                             }
                             double amount = (double) args[0];
-                            double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                            double balance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
 
                             if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                 player.sendMessage(TranslatableChatComponent.read("command.player_executor.target.bank_account_missing"));
@@ -44,7 +45,7 @@ public class GiveCoinsCommand {
                                         }
                                         double amount = (double) args[0];
                                         Player target = (Player) args[1];
-                                        double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                                        double balance = target.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
 
                                         if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                             player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.target_bank_account_missing").replace("%s", target.getName()));
@@ -58,7 +59,7 @@ public class GiveCoinsCommand {
                                     if (sender instanceof ConsoleCommandSender console) {
                                         double amount = (double) args[0];
                                         Player target = (Player) args[1];
-                                        double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                                        double balance = target.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
 
                                         if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                                             console.sendMessage(TranslatableChatComponent.read("command.console_executor.target_bank_account_missing").replace("%s", target.getName()));

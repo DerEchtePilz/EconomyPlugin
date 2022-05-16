@@ -13,7 +13,6 @@ import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,19 +26,9 @@ public final class Main extends JavaPlugin {
     private static Main plugin;
     private Language language;
 
-    private final NamespacedKey creator = new NamespacedKey(this, "itemSeller");
-    private final NamespacedKey uuid = new NamespacedKey(this, "id");
-    private final NamespacedKey price = new NamespacedKey(this, "price");
-
-    private final NamespacedKey balance = new NamespacedKey(this, "balance");
-    private final NamespacedKey lastInterest = new NamespacedKey(this, "lastInterest");
-    private final NamespacedKey startBalance = new NamespacedKey(this, "startBalance");
-    private final NamespacedKey earnedCoins = new NamespacedKey(this, "coinsEarned");
-
-    private final NamespacedKey permission = new NamespacedKey(this, "permissions");
-
     private final HashMap<UUID, ItemStack[]> offeringPlayers = new HashMap<>();
     private final HashMap<String, ItemStack[]> specialOffers = new HashMap<>();
+    private final HashMap<UUID, Integer> earnedCoins = new HashMap<>();
 
     private final HashMap<UUID, BankManager> bankAccounts = new HashMap<>();
 
@@ -135,44 +124,16 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new ManageCoinsWhenJoining(), this);
     }
 
-    public NamespacedKey getCreator() {
-        return creator;
-    }
-
-    public NamespacedKey getUuid() {
-        return uuid;
-    }
-
-    public NamespacedKey getPrice() {
-        return price;
-    }
-
-    public NamespacedKey getBalance() {
-        return balance;
-    }
-
-    public NamespacedKey getLastInterest() {
-        return lastInterest;
-    }
-
-    public NamespacedKey getStartBalance() {
-        return startBalance;
-    }
-
-    public NamespacedKey getEarnedCoins() {
-        return earnedCoins;
-    }
-
-    public NamespacedKey getPermission() {
-        return permission;
-    }
-
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {
         return offeringPlayers;
     }
 
     public HashMap<String, ItemStack[]> getSpecialOffers() {
         return specialOffers;
+    }
+
+    public HashMap<UUID, Integer> getEarnedCoins() {
+        return earnedCoins;
     }
 
     public HashMap<UUID, BankManager> getBankAccounts() {

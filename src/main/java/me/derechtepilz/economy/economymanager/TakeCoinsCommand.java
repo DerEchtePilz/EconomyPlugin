@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
@@ -19,8 +20,8 @@ public class TakeCoinsCommand {
                         return;
                     }
                     double amount = (double) args[0];
-                    double playerBalance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
-                    double startBalance = player.getPersistentDataContainer().get(Main.getInstance().getStartBalance(), PersistentDataType.DOUBLE);
+                    double playerBalance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
+                    double startBalance = player.getPersistentDataContainer().get(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE);
                     if (amount > playerBalance) {
                         player.sendMessage(TranslatableChatComponent.read("takeCoinsCommand.player_executor.not_enough_coins").replace("%s", ChatFormatter.valueOf(amount)));
                         return;

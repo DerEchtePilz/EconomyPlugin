@@ -7,6 +7,7 @@ import me.derechtepilz.economy.bukkitcommands.arguments.PlayerArgument;
 import me.derechtepilz.economy.bukkitcommands.arguments.StringArgument;
 import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.itemmanager.ItemUtils;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -107,7 +108,7 @@ public class FallbackCommand implements TabExecutor {
                         return false;
                     }
                     double amount = Double.parseDouble(args[2]);
-                    double balance = player.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                    double balance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
 
                     if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                         player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.bank_account_missing"));
@@ -257,7 +258,7 @@ public class FallbackCommand implements TabExecutor {
                         return false;
                     }
                     double amount = Double.parseDouble(args[2]);
-                    double balance = target.getPersistentDataContainer().get(Main.getInstance().getBalance(), PersistentDataType.DOUBLE);
+                    double balance = target.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
 
                     if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                         console.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.console_executor.target_bank_account_missing").replace("%s", target.getName()));

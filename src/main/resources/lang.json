@@ -58,6 +58,7 @@
     "manageCoinsWhenJoining.onJoin.join_bonus": "\u00A7eWelcome to the server! To start we have given you \u00A76%s coins\u00A7e as a start bonus!",
     "manageCoinsWhenJoining.onJoin.awarded_missing_start_balance": "\u00A7aThe start balance was increased! To make sure you also benefit from this increment, we have given you the missing \u00A76%s coins\u00A7a, you now have \u00A76%%s coins\u00A7a!",
     "manageCoinsWhenJoining.display_coins": "\u00A7aYour balance: \u00A76%s coins",
+    "manageCoinsWhenJoining.give_earned_coins": "\u00A7aOne of your offers has been bought while you were offline! You have earned \u00A76%s coins\u00A7a!",
     "takeCoinsCommand.player_executor.not_enough_coins": "\u00A7cYou do not have enough coins to deduct \u00A76%s coins\u00A7c!",
     "takeCoinsCommand.player_executor.start_balance_safe": "\u00A7cYou cannot deduct this many coins! This would bring you under the amount of your start balance. If you really want to do this ask a server administrator to execute the command in the console!",
     "takeCoinsCommand.player_executor.take_coins": "\u00A7cYou have been deducted \u00A76%s coins\u00A7c! You now have \u00A76%%s coins\u00A7c!",

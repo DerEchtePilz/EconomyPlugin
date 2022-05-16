@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.itemmanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -25,19 +26,19 @@ public class ItemUtils {
         ItemMeta salableItemMeta = salableItem.getItemMeta();
 
         UUID itemUuid = UUID.randomUUID();
-        salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getUuid(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
-        salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getPrice(), PersistentDataType.INTEGER, price);
+        salableItemMeta.getPersistentDataContainer().set(NamespacedKeys.UUID.getKey(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(itemUuid));
+        salableItemMeta.getPersistentDataContainer().set(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER, price);
 
         Player player = Bukkit.getPlayer(sellerName);
         ItemStack[] offers;
         if (player == null) {
-            salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.STRING, "console");
+            salableItemMeta.getPersistentDataContainer().set(NamespacedKeys.CREATOR.getKey(), PersistentDataType.STRING, "console");
 
             salableItem.setItemMeta(salableItemMeta);
             offers = constructSalableItems(sellerName, salableItem, true);
             Main.getInstance().getSpecialOffers().put("console", offers);
         } else {
-            salableItemMeta.getPersistentDataContainer().set(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(player.getUniqueId()));
+            salableItemMeta.getPersistentDataContainer().set(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY, uuidDataType.toPrimitive(player.getUniqueId()));
 
             salableItem.setItemMeta(salableItemMeta);
             offers = constructSalableItems(sellerName, salableItem, true);
@@ -50,7 +51,7 @@ public class ItemUtils {
         UUIDDataType uuidDataType = new UUIDDataType();
         ItemMeta meta = offerToCancel.getItemMeta();
 
-        UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+        UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY));
 
         ItemStack[] offers = constructSalableItems(Bukkit.getPlayer(sellerUuid).getName(), offerToCancel, false);
         Main.getInstance().getPlayerOffers().put(sellerUuid, offers);
@@ -61,9 +62,9 @@ public class ItemUtils {
         UUIDDataType uuidDataType = new UUIDDataType();
         ItemMeta meta = boughtItem.getItemMeta();
 
-        if (meta.getPersistentDataContainer().has(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY)) {
+        if (meta.getPersistentDataContainer().has(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY)) {
             // Player offer
-            UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(Main.getInstance().getCreator(), PersistentDataType.BYTE_ARRAY));
+            UUID sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY));
             ItemStack[] offers = constructSalableItems(Bukkit.getOfflinePlayer(sellerUuid).getName(), boughtItem, false);
             Main.getInstance().getPlayerOffers().put(sellerUuid, offers);
         } else {

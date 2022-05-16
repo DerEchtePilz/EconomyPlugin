@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.playermanager;
 
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -31,8 +32,8 @@ public enum Permission {
     }
 
     public static boolean hasPermission(Player player, Permission permission) {
-        if (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) {
-            int[] permissions = player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY);
+        if (player.getPersistentDataContainer().has(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY)) {
+            int[] permissions = player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY);
             for (int permissionCode : permissions) {
                 if (permissionCode == permission.getId()) {
                     return true;
@@ -44,7 +45,7 @@ public enum Permission {
 
     public static void addPermission(Player player, Permission permission) {
         List<Integer> permissions = new ArrayList<>();
-        int[] existingPermissions = (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY) : new int[0];
+        int[] existingPermissions = (player.getPersistentDataContainer().has(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY) : new int[0];
         for (int permissionCode : existingPermissions) {
             permissions.add(permissionCode);
         }
@@ -55,12 +56,12 @@ public enum Permission {
         for (int i = 0; i < permissions.size(); i++) {
             updatedPermissions[i] = permissions.get(i);
         }
-        player.getPersistentDataContainer().set(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
+        player.getPersistentDataContainer().set(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
     }
 
     public static void removePermission(Player player, Permission permission) {
         List<Integer> permissions = new ArrayList<>();
-        int[] existingPermissions = (player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY) : new int[0];
+        int[] existingPermissions = (player.getPersistentDataContainer().has(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY)) ? player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY) : new int[0];
         for (int permissionCode : existingPermissions) {
             permissions.add(permissionCode);
         }
@@ -71,14 +72,14 @@ public enum Permission {
         for (int i = 0; i < permissions.size(); i++) {
             updatedPermissions[i] = permissions.get(i);
         }
-        player.getPersistentDataContainer().set(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
+        player.getPersistentDataContainer().set(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
     }
 
     public static String[] getPermissions(Player player) {
-        if (!player.getPersistentDataContainer().has(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY)) {
+        if (!player.getPersistentDataContainer().has(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY)) {
             return new String[0];
         }
-        int[] permissions = player.getPersistentDataContainer().get(Main.getInstance().getPermission(), PersistentDataType.INTEGER_ARRAY);
+        int[] permissions = player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY);
         String[] permissionList = new String[permissions.length];
         for (int i = 0; i < permissions.length; i++) {
             int permissionId = permissions[i];
