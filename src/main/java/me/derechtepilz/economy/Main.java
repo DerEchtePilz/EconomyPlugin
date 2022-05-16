@@ -5,10 +5,11 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
+import me.derechtepilz.economy.itemmanager.save.LoadItems;
+import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.tests.PlayerHeadTestCommand;
 import me.derechtepilz.economy.utility.Config;
-import me.derechtepilz.economy.utility.ItemSaving;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
@@ -76,7 +77,7 @@ public final class Main extends JavaPlugin {
             wasCommandAPILoaded = false;
         }
 
-        ItemSaving.load();
+        new LoadItems();
     }
 
     @Override
@@ -93,7 +94,7 @@ public final class Main extends JavaPlugin {
             CommandAPI.unregister("test");
         }
 
-        ItemSaving.save();
+        new SaveItems();
 
         getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
     }
