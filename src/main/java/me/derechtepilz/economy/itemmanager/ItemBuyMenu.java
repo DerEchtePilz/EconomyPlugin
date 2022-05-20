@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -173,6 +174,15 @@ public class ItemBuyMenu implements Listener {
         }
     }
 
+    @EventHandler
+    public void onMenuClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (event.getView().getTitle().contains(TranslatableChatComponent.read("itemBuyMenu.inventory_title")) && Objects.equals(event.getInventory(), event.getView().getTopInventory())) {
+            prepareInventories.remove(player.getUniqueId());
+            inventories.remove(player.getUniqueId());
+        }
+    }
+
     public void openBuyMenu(Player player) {
         List<ItemStack> playerOffers = new ArrayList<>();
         List<ItemStack> specialOffers = new ArrayList<>();
@@ -204,6 +214,10 @@ public class ItemBuyMenu implements Listener {
         List<ItemStack> allOffers = new ArrayList<>();
         allOffers.addAll(List.of(formattedPlayerOffers));
         allOffers.addAll(List.of(formattedSpecialOffers));
+        if (allOffers.size() == 0) {
+            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.no_offers"));
+            return;
+        }
 
         // Prepare inventory pages
         playerOfferPages = formattedPlayerOffers.length != 0 ? formattedPlayerOffers.length / 45 : 0;
@@ -284,6 +298,85 @@ public class ItemBuyMenu implements Listener {
         inventory.setContents(inventories.get(player.getUniqueId()).get(0));
         currentInventory = 0;
         player.openInventory(inventory);
+    }
+
+    public void openBuyMenu(Player player, String query) {
+        switch (query) {
+            case "player" -> {
+                List<ItemStack> playerOffers = new ArrayList<>();
+
+                // Load player offers
+                for (UUID uuid : Main.getInstance().getPlayerOffers().keySet()) {
+                    playerOffers.addAll(Arrays.asList(Main.getInstance().getPlayerOffers().get(uuid)));
+                }
+
+                if (playerOffers.size() == 0) {
+                    player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.suggest_query_special"));
+                    return;
+                }
+
+                ItemStack[] playerOffersArray = playerOffers.toArray(new ItemStack[0]);
+
+                // Resize arrays to fit inventory size
+                ItemStack[] formattedPlayerOffers = resizeInventoryContents(playerOffersArray);
+
+                // Prepare inventory pages
+                playerOfferPages = formattedPlayerOffers.length != 0 ? formattedPlayerOffers.length / 45 : 0;
+
+                List<ItemStack> allOffers = new ArrayList<>(List.of(formattedPlayerOffers));
+                prepareInventoryPages(allOffers, playerOfferPages, specialOfferPages, player);
+
+                // Sort ItemStack[] into the right list
+                List<ItemStack[]> invPages = new ArrayList<>();
+                for (List<ItemStack[]> pages : prepareInventories.get(player.getUniqueId())) {
+                    invPages.addAll(pages);
+                }
+                inventories.put(player.getUniqueId(), invPages);
+
+                // Open inventory
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
+                inventory.setContents(inventories.get(player.getUniqueId()).get(0));
+                currentInventory = 0;
+                player.openInventory(inventory);
+            }
+            case "special" -> {
+                List<ItemStack> specialOffers = new ArrayList<>();
+
+                // Load special offer
+                if (Main.getInstance().getSpecialOffers().get("console") != null) {
+                    specialOffers.addAll(Arrays.asList(Main.getInstance().getSpecialOffers().get("console")));
+                }
+
+                if (specialOffers.size() == 0) {
+                    player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.suggest_query_player"));
+                    return;
+                }
+
+                ItemStack[] specialOffersArray = specialOffers.toArray(new ItemStack[0]);
+
+                // Resize arrays to fit inventory size
+                ItemStack[] formattedSpecialOffers = resizeInventoryContents(specialOffersArray);
+
+                // Prepare inventory pages
+                specialOfferPages = formattedSpecialOffers.length != 0 ? formattedSpecialOffers.length / 45 : 0;
+
+                List<ItemStack> allOffers = new ArrayList<>(List.of(formattedSpecialOffers));
+                prepareInventoryPages(allOffers, playerOfferPages, specialOfferPages, player);
+
+                // Sort ItemStack[] into the right list
+                List<ItemStack[]> invPages = new ArrayList<>();
+                for (List<ItemStack[]> pages : prepareInventories.get(player.getUniqueId())) {
+                    invPages.addAll(pages);
+                }
+                inventories.put(player.getUniqueId(), invPages);
+
+                // Open inventory
+                inventory = Bukkit.createInventory(null, 54, TranslatableChatComponent.read("itemBuyMenu.inventory_title") + "1)");
+                inventory.setContents(inventories.get(player.getUniqueId()).get(0));
+                currentInventory = 0;
+                player.openInventory(inventory);
+            }
+        }
     }
 
     private final ItemStack closeItem = new ItemBuilder(Material.BARRIER).setName(TranslatableChatComponent.read("items.title.close")).build();
