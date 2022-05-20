@@ -1,6 +1,6 @@
-package me.derechtepilz.economy.bukkitcommands.arguments.type;
+package me.derechtepilz.economy.bukkitcommands.arguments;
 
-import me.derechtepilz.economy.bukkitcommands.arguments.Argument;
+import me.derechtepilz.economy.bukkitcommands.api.Argument;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,6 +19,11 @@ public class ItemStackArgument implements Argument<ItemStack> {
             minecraftItemStackId = input.substring(10);
         }
         return (Material.getMaterial(minecraftItemStackId.toUpperCase()) != null) ? new ItemStack(Material.getMaterial(minecraftItemStackId.toUpperCase())) : null;
+    }
+
+    @Override
+    public String getType() {
+        return ArgumentTypes.ITEMSTACK_ARGUMENT.getType();
     }
 
     /**

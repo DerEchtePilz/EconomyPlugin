@@ -12,10 +12,10 @@ class CommandTree {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     JsonArray commandTree = new JsonArray();
 
-    public CommandTree(List<ArgumentTypes> argumentTypesList, String[] args) {
+    public CommandTree(List<Argument<?>> argumentTypesList, String[] args) {
         for (int i = 0; i < args.length; i++) {
             JsonObject argument = new JsonObject();
-            argument.addProperty("type", argumentTypesList.get(i).name());
+            argument.addProperty("type", argumentTypesList.get(i).getType());
             commandTree.add(argument);
         }
     }

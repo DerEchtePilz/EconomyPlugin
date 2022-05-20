@@ -1,6 +1,6 @@
-package me.derechtepilz.economy.bukkitcommands.arguments.general;
+package me.derechtepilz.economy.bukkitcommands.arguments;
 
-import me.derechtepilz.economy.bukkitcommands.arguments.Argument;
+import me.derechtepilz.economy.bukkitcommands.api.Argument;
 import me.derechtepilz.economy.bukkitcommands.exceptions.IntegerOutOfRangeException;
 
 import java.util.List;
@@ -39,6 +39,11 @@ public class IntegerArgument implements Argument<Integer> {
         } catch (NumberFormatException exception) {
             return null;
         }
+    }
+
+    @Override
+    public String getType() {
+        return ArgumentTypes.INTEGER_ARGUMENT.getType();
     }
 
     public List<String> suggests(String argument, List<String> additionalSuggestions) {

@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.bukkitcommands.arguments.entity;
+package me.derechtepilz.economy.bukkitcommands.arguments;
 
 import org.bukkit.entity.EntityType;
 

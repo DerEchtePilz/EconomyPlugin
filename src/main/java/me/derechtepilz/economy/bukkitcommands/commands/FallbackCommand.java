@@ -1,9 +1,14 @@
 package me.derechtepilz.economy.bukkitcommands.commands;
 
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.bukkitcommands.arguments.entity.PlayerArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.general.StringArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.type.ItemStackArgument;
+import me.derechtepilz.economy.bukkitcommands.api.CommandBase;
+import me.derechtepilz.economy.bukkitcommands.arguments.IntegerArgument;
+import me.derechtepilz.economy.bukkitcommands.arguments.ItemStackArgument;
+import me.derechtepilz.economy.bukkitcommands.arguments.PlayerArgument;
+import me.derechtepilz.economy.bukkitcommands.arguments.StringArgument;
+import me.derechtepilz.economy.bukkitcommands.exceptions.IllegalArgumentLengthException;
+import me.derechtepilz.economy.bukkitcommands.exceptions.IllegalArgumentTypeException;
+import me.derechtepilz.economy.bukkitcommands.exceptions.IllegalExecutorException;
 import me.derechtepilz.economy.economymanager.BankManager;
 import me.derechtepilz.economy.itemmanager.ItemUtils;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -24,6 +29,17 @@ import java.util.List;
 public class FallbackCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        try {
+            new CommandBase(sender, command, label, args)
+                    .withArguments(new ItemStackArgument())
+                    .withArguments(new IntegerArgument())
+                    .executesPlayer((player, arguments) -> {
+                        ItemStack item = (ItemStack) arguments[0];
+                        int amount = (int) arguments[1];
+                    });
+        } catch (IllegalArgumentTypeException | IllegalExecutorException | IllegalArgumentLengthException e) {
+            sender.sendMessage(e.getMessage());
+        }
         if (Main.getInstance().isWasCommandAPILoaded()) {
             return false;
         }

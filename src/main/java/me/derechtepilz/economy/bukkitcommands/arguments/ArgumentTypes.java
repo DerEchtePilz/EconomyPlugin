@@ -1,10 +1,6 @@
 package me.derechtepilz.economy.bukkitcommands.arguments;
 
-import me.derechtepilz.economy.bukkitcommands.arguments.entity.PlayerArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.general.IntegerArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.type.AdvancementArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.general.StringArgument;
-import me.derechtepilz.economy.bukkitcommands.arguments.type.ItemStackArgument;
+import me.derechtepilz.economy.bukkitcommands.api.Argument;
 
 public enum ArgumentTypes {
     STRING_ARGUMENT(new StringArgument(), "a string"),

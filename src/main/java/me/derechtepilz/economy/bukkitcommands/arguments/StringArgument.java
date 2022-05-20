@@ -1,6 +1,6 @@
-package me.derechtepilz.economy.bukkitcommands.arguments.general;
+package me.derechtepilz.economy.bukkitcommands.arguments;
 
-import me.derechtepilz.economy.bukkitcommands.arguments.Argument;
+import me.derechtepilz.economy.bukkitcommands.api.Argument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,11 @@ public class StringArgument implements Argument<String> {
     @Override
     public String parse(String input) {
         return input;
+    }
+
+    @Override
+    public String getType() {
+        return ArgumentTypes.STRING_ARGUMENT.getType();
     }
 
     /**
