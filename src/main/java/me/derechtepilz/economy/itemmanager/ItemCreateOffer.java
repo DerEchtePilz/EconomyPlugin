@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.itemmanager;
 
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 public class ItemCreateOffer {
     public ItemCreateOffer() {
         new CommandTree("createoffer")
+                .withPermission(CommandPermission.NONE)
                 .then(new ItemStackArgument("item")
                         .then(new IntegerArgument("count")
                                 .then(new IntegerArgument("price")
@@ -68,6 +70,20 @@ public class ItemCreateOffer {
                                                 ItemStack item = (ItemStack) args[0];
                                                 int amount = (int) args[1];
                                                 int price = (int) args[2];
+
+                                                try {
+                                                    int itemQuantitiesMinAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT);
+                                                    int itemQuantitiesMaxAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT);
+                                                    new RangeValidator(itemQuantitiesMinAmount, itemQuantitiesMaxAmount, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(itemQuantitiesMinAmount) + " to " + ChatFormatter.valueOf(itemQuantitiesMaxAmount) + "!");
+
+                                                    int itemPriceMinAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT);
+                                                    int itemPriceMaxAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT);
+                                                    new RangeValidator(itemPriceMinAmount, itemPriceMaxAmount, price, "Could not process command because " + ChatFormatter.valueOf(price) + " was not in the range from " + ChatFormatter.valueOf(itemPriceMinAmount) + " to " + ChatFormatter.valueOf(itemPriceMaxAmount) + "!");
+                                                } catch (InvalidRangeException e) {
+                                                    console.sendMessage(ChatColor.RED + e.getMessage());
+                                                    return;
+                                                }
+
                                                 item.setAmount(amount);
 
                                                 ItemUtils.createSalableItem("console", item, price);

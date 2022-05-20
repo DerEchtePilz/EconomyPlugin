@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.economymanager;
 
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SetCoinsCommand {
     public SetCoinsCommand() {
         new CommandTree("setcoins")
+                .withPermission(CommandPermission.NONE)
                 .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
                         .then(new DoubleArgument("amount")
                                 .executes((sender, args) -> {
@@ -66,6 +68,14 @@ public class SetCoinsCommand {
                                     if (sender instanceof ConsoleCommandSender console) {
                                         Player target = (Player) args[0];
                                         double amount = (double) args[1];
+
+                                        try {
+                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                                            new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
+                                        } catch (InvalidRangeException e) {
+                                            sender.sendMessage(ChatColor.RED + e.getMessage());
+                                        }
+
                                         if (!Main.getInstance().getBankAccounts().containsKey(target.getUniqueId())) {
                                             console.sendMessage(TranslatableChatComponent.read("command.console_executor.target.bank_account_missing").replace("%s", target.getName()));
                                             return;

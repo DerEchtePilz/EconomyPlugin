@@ -2,24 +2,24 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import dev.jorel.commandapi.CommandAPIHandler;
 import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
-import me.derechtepilz.economy.tests.PlayerHeadTestCommand;
 import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.ConfigCommand;
 import me.derechtepilz.economy.utility.config.ConfigFields;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,20 +85,31 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
 
         if (wasCommandAPILoaded) {
-            CommandAPI.unregister("createoffer");
-            CommandAPI.unregister("canceloffer");
-            CommandAPI.unregister("buy");
-            CommandAPI.unregister("givecoins");
-            CommandAPI.unregister("takecoins");
-            CommandAPI.unregister("setcoins");
-            CommandAPI.unregister("permission");
-            CommandAPI.unregister("test");
-            CommandAPI.unregister("config");
+            List<String> commandNames = new ArrayList<>();
+            try {
+                Field field = Class.forName(CommandAPIHandler.class.getName()).getDeclaredField("registeredCommands");
+                field.setAccessible(true);
+
+                List list = (List) field.get(CommandAPIHandler.getInstance());
+                for (Object object : list) {
+                    String[] firstSplit = object.toString().split("=");
+                    String commandName = firstSplit[1].split(",")[0];
+                    if (!commandNames.contains(commandName)) {
+                        commandNames.add(commandName);
+                    }
+                }
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            for (String commandName : commandNames) {
+                CommandAPI.unregister(commandName);
+            }
         }
 
         new SaveItems();
 
-        getLogger().info(ChatColor.translateAlternateColorCodes('&', TranslatableChatComponent.read("main.onDisable.plugin_disable_message")));
+        getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
     }
 
     public static Main getInstance() {
@@ -114,7 +125,6 @@ public final class Main extends JavaPlugin {
             new TakeCoinsCommand();
             new SetCoinsCommand();
             new PermissionCommand();
-            new PlayerHeadTestCommand();
             new ConfigCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);

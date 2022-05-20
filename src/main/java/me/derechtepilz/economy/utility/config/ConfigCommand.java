@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.utility.config;
 
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
@@ -12,6 +13,7 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 public class ConfigCommand {
     public ConfigCommand() {
         new CommandTree("config")
+                .withPermission(CommandPermission.NONE)
                 .then(new LiteralArgument("itemQuantities")
                         .then(new LiteralArgument("maxAmount")
                                 .then(new IntegerArgument("maxAmount", 0)
@@ -101,6 +103,15 @@ public class ConfigCommand {
                             }
                             Config.resetConfig();
                             player.sendMessage(TranslatableChatComponent.read("configCommand.reset_config"));
+                        }))
+                .then(new LiteralArgument("reload")
+                        .executesPlayer((player, args) -> {
+                            if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
+                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                return;
+                            }
+                            Config.reloadConfig();
+                            player.sendMessage(TranslatableChatComponent.read("configCommand.reload_config"));
                         }))
                 .register();
     }

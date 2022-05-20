@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.economymanager;
 
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.DoubleArgument;
@@ -20,6 +21,7 @@ import java.util.List;
 public class GiveCoinsCommand {
     public GiveCoinsCommand() {
         new CommandTree("givecoins")
+                .withPermission(CommandPermission.NONE)
                 .then(new DoubleArgument("amount", 0)
                         .executesPlayer((player, args) -> {
                             if (!Permission.hasPermission(player, Permission.GIVE_COINS)) {

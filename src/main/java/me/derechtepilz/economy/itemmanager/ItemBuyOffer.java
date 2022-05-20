@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.itemmanager;
 
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
@@ -11,6 +12,7 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 public class ItemBuyOffer {
     public ItemBuyOffer() {
         new CommandTree("buy")
+                .withPermission(CommandPermission.NONE)
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));

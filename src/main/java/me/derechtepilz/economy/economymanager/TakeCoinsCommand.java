@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.economymanager;
 
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
@@ -12,6 +13,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class TakeCoinsCommand {
     public TakeCoinsCommand() {
         new CommandTree("takecoins")
+                .withPermission(CommandPermission.NONE)
                 .then(new DoubleArgument("amount", 0)
                         .executesPlayer((player, args) -> {
                             if (!Permission.hasPermission(player, Permission.TAKE_COINS)) {
@@ -19,7 +21,6 @@ public class TakeCoinsCommand {
                                 return;
                             }
                             double amount = (double) args[0];
-
                             double playerBalance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
                             double startBalance = player.getPersistentDataContainer().get(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE);
                             if (amount > playerBalance) {

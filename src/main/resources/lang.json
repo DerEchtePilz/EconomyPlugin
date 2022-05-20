@@ -80,6 +80,7 @@
     "configCommand.start_balance": "\u00A7aYou set the config value \u00A76startBalance \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.interest": "\u00A7aYou set the config value \u00A76interest \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.language": "\u00A7aYou set the config value \u00A76language \u00A7ato \u00A76%s\u00A7a!",
-    "configCommand.reset_config": "\u00A7cThe config has been reset!"
+    "configCommand.reset_config": "\u00A7cThe config has been reset!",
+    "configCommand.reload_config": "\u00A7aThe config was reloaded!"
   }
 }
