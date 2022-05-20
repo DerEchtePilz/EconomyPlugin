@@ -9,9 +9,11 @@ import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.tests.PlayerHeadTestCommand;
-import me.derechtepilz.economy.utility.Config;
+import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.config.ConfigCommand;
+import me.derechtepilz.economy.utility.config.ConfigFields;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -59,11 +61,10 @@ public final class Main extends JavaPlugin {
     public void onLoad() {
         plugin = this;
         Config.loadConfig();
-        saveDefaultConfig();
 
 
-        if (Config.contains("language")) {
-            language = Language.valueOf((String) Config.get("language"));
+        if (Config.contains(ConfigFields.LANGUAGE)) {
+            language = Language.valueOf((String) Config.get(ConfigFields.LANGUAGE));
         } else {
             language = Language.EN_US;
         }
@@ -92,6 +93,7 @@ public final class Main extends JavaPlugin {
             CommandAPI.unregister("setcoins");
             CommandAPI.unregister("permission");
             CommandAPI.unregister("test");
+            CommandAPI.unregister("config");
         }
 
         new SaveItems();
@@ -113,6 +115,7 @@ public final class Main extends JavaPlugin {
             new SetCoinsCommand();
             new PermissionCommand();
             new PlayerHeadTestCommand();
+            new ConfigCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);
         getCommand("fallback").setTabCompleter(fallbackCommand);

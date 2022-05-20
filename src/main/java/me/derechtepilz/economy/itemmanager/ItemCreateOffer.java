@@ -3,24 +3,25 @@ package me.derechtepilz.economy.itemmanager;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
-import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
-import me.derechtepilz.economy.utility.Config;
+import me.derechtepilz.economy.utility.RangeValidator;
+import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.config.ConfigFields;
+import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class ItemCreateOffer {
     public ItemCreateOffer() {
         new CommandAPICommand("createoffer")
                 .withArguments(new ItemStackArgument("item"))
-                .withArguments(new IntegerArgument("count", (Integer) Config.get("itemQuantities.minAmount"), (Integer) Config.get("itemQuantities.maxAmount")))
-                .withArguments(new IntegerArgument("price", (Integer) Config.get("itemPrice.minAmount"), (Integer) Config.get("itemPrice.maxAmount")))
+                .withArguments(new IntegerArgument("count"))
+                .withArguments(new IntegerArgument("price"))
                 .executes((sender, args) -> {
                     if (sender instanceof Player player) {
                         if (!Permission.hasPermission(player, Permission.CREATE_OFFER)) {
@@ -30,6 +31,20 @@ public class ItemCreateOffer {
                         ItemStack item = (ItemStack) args[0];
                         int amount = (int) args[1];
                         int price = (int) args[2];
+
+                        try {
+                            int itemQuantitiesMinAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT);
+                            int itemQuantitiesMaxAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT);
+                            new RangeValidator(itemQuantitiesMinAmount, itemQuantitiesMaxAmount, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(itemQuantitiesMinAmount) + " to " + ChatFormatter.valueOf(itemQuantitiesMaxAmount) + "!");
+
+                            int itemPriceMinAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT);
+                            int itemPriceMaxAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT);
+                            new RangeValidator(itemPriceMinAmount, itemPriceMaxAmount, price, "Could not process command because " + ChatFormatter.valueOf(price) + " was not in the range from " + ChatFormatter.valueOf(itemPriceMinAmount) + " to " + ChatFormatter.valueOf(itemPriceMaxAmount) + "!");
+                        } catch (InvalidRangeException e) {
+                            player.sendMessage(ChatColor.RED + e.getMessage());
+                            return;
+                        }
+
                         item.setAmount(amount);
 
                         for (int i = 0; i < player.getInventory().getSize(); i++) {

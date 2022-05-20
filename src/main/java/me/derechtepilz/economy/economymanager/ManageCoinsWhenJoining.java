@@ -2,9 +2,10 @@ package me.derechtepilz.economy.economymanager;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.ChatFormatter;
-import me.derechtepilz.economy.utility.Config;
+import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.config.ConfigFields;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -40,16 +41,16 @@ public class ManageCoinsWhenJoining implements Listener {
             }
         } else {
             // Give start balance
-            bankManager = new BankManager(player, (Double) Config.get("startBalance"));
+            bankManager = new BankManager(player, (Double) Config.get(ConfigFields.START_BALANCE));
             player.getPersistentDataContainer().set(NamespacedKeys.LAST_INTEREST.getKey(), PersistentDataType.LONG, System.currentTimeMillis());
-            player.getPersistentDataContainer().set(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE, (Double) Config.get("startBalance"));
+            player.getPersistentDataContainer().set(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE, (Double) Config.get(ConfigFields.START_BALANCE));
 
             player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.join_bonus").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
         }
 
         // Check if start balance has been increased and give player missing start balance
         double playerStartBalance = player.getPersistentDataContainer().get(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE);
-        double configStartBalance = (Double) Config.get("startBalance");
+        double configStartBalance = (Double) Config.get(ConfigFields.START_BALANCE);
 
         if (configStartBalance > playerStartBalance) {
             double missingStartBalance = configStartBalance - playerStartBalance;

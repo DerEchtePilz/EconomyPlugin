@@ -95,6 +95,21 @@ public class ItemBuyMenu implements Listener {
                         player.sendMessage(ChatColor.BLACK + "" + ChatColor.STRIKETHROUGH + "-----------------------");
                     }
                     case LEFT -> {
+                        String sellerName;
+                        UUID sellerUuid;
+
+                        // Check if seller was a player or the console
+                        if (meta.getPersistentDataContainer().has(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY)) {
+                            sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY));
+                            sellerName = Bukkit.getOfflinePlayer(sellerUuid).getName();
+                        } else {
+                            sellerUuid = null;
+                            sellerName = "console";
+                        }
+                        if (sellerName.equals(player.getName())) {
+                            player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.cannot_buy_own_item"));
+                            return;
+                        }
                         if (buyers.containsKey(clickedItem)) {
                             List<Player> customers = buyers.get(clickedItem);
                             if (!customers.contains(player)) {
@@ -110,23 +125,8 @@ public class ItemBuyMenu implements Listener {
                                 buyers.remove(clickedItem);
                                 return;
                             }
-                            String sellerName;
-                            UUID sellerUuid;
-
-                            // Check if seller was a player or the console
-                            if (meta.getPersistentDataContainer().has(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY)) {
-                                sellerUuid = uuidDataType.fromPrimitive(meta.getPersistentDataContainer().get(NamespacedKeys.CREATOR.getKey(), PersistentDataType.BYTE_ARRAY));
-                                sellerName = Bukkit.getOfflinePlayer(sellerUuid).getName();
-                            } else {
-                                sellerUuid = null;
-                                sellerName = "console";
-                            }
-                            int price = meta.getPersistentDataContainer().get(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER);
-                            if (sellerName.equals(player.getName())) {
-                                player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.cannot_buy_own_item"));
-                                return;
-                            }
                             double balance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
+                            int price = meta.getPersistentDataContainer().get(NamespacedKeys.PRICE.getKey(), PersistentDataType.INTEGER);
                             if (price > balance) {
                                 player.sendMessage(TranslatableChatComponent.read("itemBuyMenu.not_enough_coins"));
                                 return;

@@ -5,12 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.utility.NamespacedKeys;
-import me.derechtepilz.economy.utility.datatypes.UUIDDataType;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -14,7 +14,9 @@ public enum Permission {
     TAKE_COINS("take_coins", 2),
     BUY_OFFER("buy_offer", 3),
     CANCEL_OFFER("cancel_offer", 4),
-    CREATE_OFFER("create_offer", 5);
+    CREATE_OFFER("create_offer", 5),
+    MODIFY_CONFIG("modify_config", 6),
+    RESET_CONFIG("reset_config", 7);
 
     private final String name;
     private final int id;

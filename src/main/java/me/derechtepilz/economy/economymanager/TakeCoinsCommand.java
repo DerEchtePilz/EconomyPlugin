@@ -7,7 +7,6 @@ import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
-import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 public class TakeCoinsCommand {
@@ -20,6 +19,7 @@ public class TakeCoinsCommand {
                         return;
                     }
                     double amount = (double) args[0];
+
                     double playerBalance = player.getPersistentDataContainer().get(NamespacedKeys.BALANCE.getKey(), PersistentDataType.DOUBLE);
                     double startBalance = player.getPersistentDataContainer().get(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE);
                     if (amount > playerBalance) {

@@ -72,6 +72,14 @@
     "permissionCommand.removed_permission": "\u00A7cYou have been taken the permission \u00A76%s\u00A7c!",
     "permissionCommand.assigned_permission_other": "\u00A7aYou gave \u00A7b%s \u00A7athe permission \u00A76%%s\u00A7a!",
     "permissionCommand.removed_permission_other": "\u00A7cYou have taken \u00A7b%s \u00A7athe permission \u00A76%%s\u00A7c!",
-    "permissionCommand.player_permissions": "\u00A7b%s \u00A7ahas the following permissions:"
+    "permissionCommand.player_permissions": "\u00A7b%s \u00A7ahas the following permissions:",
+    "configCommand.item_quantities.max_amount": "\u00A7aYou set the config value \u00A76itemQuantities.maxAmount \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.item_quantities.min_amount": "\u00A7aYou set the config value \u00A76itemQuantities.minAmount \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.item_price.max_amount": "\u00A7aYou set the config value \u00A76itemPrice.maxAmount \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.item_price.min_amount": "\u00A7aYou set the config value \u00A76itemPrice.minAmount \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.start_balance": "\u00A7aYou set the config value \u00A76startBalance \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.interest": "\u00A7aYou set the config value \u00A76interest \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.language": "\u00A7aYou set the config value \u00A76language \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.reset_config": "\u00A7cThe config has been reset!"
   }
 }

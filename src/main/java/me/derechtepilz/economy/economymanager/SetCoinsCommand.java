@@ -8,9 +8,13 @@ import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
-import me.derechtepilz.economy.utility.Config;
+import me.derechtepilz.economy.utility.RangeValidator;
+import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.config.ConfigFields;
+import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,7 +25,7 @@ public class SetCoinsCommand {
     public SetCoinsCommand() {
         new CommandAPICommand("setcoins")
                 .withArguments(playerArgument)
-                .withArguments(new DoubleArgument("amount", (Double) Config.get("startBalance")))
+                .withArguments(new DoubleArgument("amount"))
                 .executes((sender, args) -> {
                     if (sender instanceof Player player) {
                         if (!Permission.hasPermission(player, Permission.SET_COINS)) {
@@ -30,6 +34,14 @@ public class SetCoinsCommand {
                         }
                         Player target = (Player) args[0];
                         double amount = (double) args[1];
+
+                        try {
+                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                            new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
+                        } catch (InvalidRangeException e) {
+                            sender.sendMessage(ChatColor.RED + e.getMessage());
+                        }
+
                         if (target.equals(player)) {
                             if (!Main.getInstance().getBankAccounts().containsKey(player.getUniqueId())) {
                                 player.sendMessage(TranslatableChatComponent.read("command.self.bank_account_missing"));
