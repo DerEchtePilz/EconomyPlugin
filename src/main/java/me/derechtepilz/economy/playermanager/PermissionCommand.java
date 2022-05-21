@@ -79,7 +79,7 @@ public class PermissionCommand {
                                     for (String permission : permissions) {
                                         player.sendMessage("\u00A76- \u00A7a" + permission);
                                     }
-                                }))
+                                })))
                 .then(new LiteralArgument("remove")
                         .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
                                 .then(new StringArgument("permission").replaceSuggestions(ArgumentSuggestions.strings(getPermissions()))
@@ -134,7 +134,7 @@ public class PermissionCommand {
                                                 return;
                                             }
                                             sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
-                                        })))))
+                                        }))))
                 .register();
     }
 

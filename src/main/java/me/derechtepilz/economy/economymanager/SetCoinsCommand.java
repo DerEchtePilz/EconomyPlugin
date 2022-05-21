@@ -1,9 +1,7 @@
 package me.derechtepilz.economy.economymanager;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
@@ -11,8 +9,8 @@ import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.RangeValidator;
-import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.config.ConfigFields;
 import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
 import org.bukkit.Bukkit;

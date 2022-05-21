@@ -8,6 +8,7 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemBuyOffer {
     public ItemBuyOffer() {
@@ -26,7 +27,8 @@ public class ItemBuyOffer {
                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                 return;
                             }
-                            Main.getInstance().getItemBuyMenu().openBuyMenu(player);
+                            ItemStack item = (ItemStack) args[0];
+                            Main.getInstance().getItemBuyMenu().openBuyMenu(player, item.getType());
                         }))
                 .then(new StringArgument("query").includeSuggestions(ArgumentSuggestions.strings(info -> new String[]{"special", "player"}))
                         .executesPlayer((player, args) -> {
