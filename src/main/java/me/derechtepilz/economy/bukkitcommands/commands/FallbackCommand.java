@@ -19,7 +19,7 @@ import java.util.List;
 public class FallbackCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!Main.getInstance().isWasCommandAPILoaded()) {
+        if (Main.getInstance().isWasCommandAPILoaded()) {
             return false;
         }
         if (args.length >= 1) {
