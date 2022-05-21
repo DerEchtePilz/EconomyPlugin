@@ -66,6 +66,7 @@ public class ItemCancelMenu implements Listener {
      */
     public void openOfferCancelMenu(Player player, ItemStack[] offeredItems) {
         List<ItemStack[]> offers = new ArrayList<>();
+
         // Prepare inventory pages
         ItemStack[] cancelOfferMenuItems = new ItemStack[offeredItems.length];
         for (int i = 0; i < offeredItems.length; i++) {

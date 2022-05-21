@@ -71,7 +71,7 @@ public final class Main extends JavaPlugin {
 
         String version = Bukkit.getBukkitVersion().split("-")[0];
         if (VersionHandler.isVersionSupported(version)) {
-            CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(true).missingExecutorImplementationMessage(TranslatableChatComponent.read("command.wrong_executor")));
+            CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage(TranslatableChatComponent.read("command.wrong_executor")));
             wasCommandAPILoaded = true;
         } else {
             getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));

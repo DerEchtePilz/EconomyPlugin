@@ -20,6 +20,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class ItemBuyMenu implements Listener {
 
     private Inventory inventory;
 
-    private final HashMap<ItemStack, List<Player>> buyers = new HashMap<>();
+    private final HashMap<ItemStack, List<UUID>> buyers = new HashMap<>();
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -112,17 +113,17 @@ public class ItemBuyMenu implements Listener {
                             return;
                         }
                         if (buyers.containsKey(clickedItem)) {
-                            List<Player> customers = buyers.get(clickedItem);
-                            if (!customers.contains(player)) {
-                                customers.add(player);
+                            List<UUID> customers = buyers.get(clickedItem);
+                            if (!customers.contains(player.getUniqueId())) {
+                                customers.add(player.getUniqueId());
                             }
                             buyers.put(clickedItem, customers);
                         } else {
-                            buyers.put(clickedItem, new ArrayList<>(List.of(player)));
+                            buyers.put(clickedItem, new ArrayList<>(List.of(player.getUniqueId())));
                         }
                         Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                             if (buyers.get(clickedItem).size() > 1) {
-                                buyers.get(clickedItem).forEach(customer -> customer.sendMessage(TranslatableChatComponent.read("itemBuyMenu.onClick.to_many_customers")));
+                                buyers.get(clickedItem).forEach(customer -> Bukkit.getPlayer(customer).sendMessage(TranslatableChatComponent.read("itemBuyMenu.onClick.to_many_customers")));
                                 buyers.remove(clickedItem);
                                 return;
                             }
@@ -167,23 +168,17 @@ public class ItemBuyMenu implements Listener {
                             player.getInventory().addItem(new ItemBuilder(clickedItem.getType(), clickedItem.getAmount()).build());
 
                             buyers.remove(clickedItem);
-                        }, 20);
+                        }, 5);
                     }
                 }
             }
         }
     }
 
-    @EventHandler
-    public void onMenuClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().contains(TranslatableChatComponent.read("itemBuyMenu.inventory_title")) && Objects.equals(event.getInventory(), event.getView().getTopInventory())) {
-            prepareInventories.remove(player.getUniqueId());
-            inventories.remove(player.getUniqueId());
-        }
-    }
-
     public void openBuyMenu(Player player) {
+        prepareInventories.remove(player.getUniqueId());
+        inventories.remove(player.getUniqueId());
+
         List<ItemStack> playerOffers = new ArrayList<>();
         List<ItemStack> specialOffers = new ArrayList<>();
 
@@ -240,6 +235,9 @@ public class ItemBuyMenu implements Listener {
     }
 
     public void openBuyMenu(Player player, Material type) {
+        prepareInventories.remove(player.getUniqueId());
+        inventories.remove(player.getUniqueId());
+
         List<ItemStack> playerOffers = new ArrayList<>();
         List<ItemStack> specialOffers = new ArrayList<>();
 
@@ -301,6 +299,9 @@ public class ItemBuyMenu implements Listener {
     }
 
     public void openBuyMenu(Player player, String query) {
+        prepareInventories.remove(player.getUniqueId());
+        inventories.remove(player.getUniqueId());
+
         switch (query) {
             case "player" -> {
                 List<ItemStack> playerOffers = new ArrayList<>();

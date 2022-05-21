@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.itemmanager;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import me.derechtepilz.economy.Main;
@@ -17,6 +16,10 @@ public class ItemCancelOffer {
                         return;
                     }
                     if (Main.getInstance().getPlayerOffers().get(player.getUniqueId()) == null) {
+                        player.sendMessage(TranslatableChatComponent.read("itemCancelOffer.no_offers_available"));
+                        return;
+                    }
+                    if (Main.getInstance().getPlayerOffers().get(player.getUniqueId()).length == 0) {
                         player.sendMessage(TranslatableChatComponent.read("itemCancelOffer.no_offers_available"));
                         return;
                     }
