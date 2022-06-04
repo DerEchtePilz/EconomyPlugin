@@ -8,12 +8,15 @@ import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
+import me.derechtepilz.economy.modules.DiscordBot;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
+import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.config.ConfigCommand;
 import me.derechtepilz.economy.utility.config.ConfigFields;
+import me.derechtepilz.economy.utility.config.JsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -42,6 +45,8 @@ public final class Main extends JavaPlugin {
 
     private final FallbackCommand fallbackCommand = new FallbackCommand();
 
+    private final JsonBuilder jsonBuilder = new JsonBuilder();
+
     private boolean wasCommandAPILoaded;
 
     @Override
@@ -55,6 +60,8 @@ public final class Main extends JavaPlugin {
         initializeEnableProcedure();
 
         getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
+
+        new DiscordBot(Config.get(ConfigFields.DISCORD_BOT_TOKEN));
     }
 
     @Override
@@ -86,6 +93,7 @@ public final class Main extends JavaPlugin {
 
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
+            /*
             try {
                 Field field = Class.forName(CommandAPIHandler.class.getName()).getDeclaredField("registeredCommands");
                 field.setAccessible(true);
@@ -101,6 +109,13 @@ public final class Main extends JavaPlugin {
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+             */
+
+            for (CommandAPIHandler.RegisteredCommand registeredCommand : CommandAPIHandler.getInstance().registeredCommands) {
+                if (!commandNames.contains(registeredCommand.command())) {
+                    commandNames.add(registeredCommand.command());
+                }
+            }
 
             for (String commandName : commandNames) {
                 CommandAPI.unregister(commandName);
@@ -108,6 +123,7 @@ public final class Main extends JavaPlugin {
         }
 
         new SaveItems();
+        Config.saveConfig();
 
         getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
     }
@@ -126,6 +142,7 @@ public final class Main extends JavaPlugin {
             new SetCoinsCommand();
             new PermissionCommand();
             new ConfigCommand();
+            new TradeCommand();
         }
         getCommand("fallback").setExecutor(fallbackCommand);
         getCommand("fallback").setTabCompleter(fallbackCommand);
@@ -168,6 +185,10 @@ public final class Main extends JavaPlugin {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public JsonBuilder getJsonBuilder() {
+        return jsonBuilder;
     }
 
     public boolean isWasCommandAPILoaded() {

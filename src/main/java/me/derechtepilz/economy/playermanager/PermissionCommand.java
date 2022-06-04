@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.playermanager;
 
+import dev.jorel.commandapi.ArgumentTree;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
@@ -9,6 +10,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PermissionCommand {
@@ -17,55 +19,71 @@ public class PermissionCommand {
                 .withPermission(CommandPermission.OP)
                 .then(new LiteralArgument("set")
                         .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
-                                .then(new StringArgument("permission").replaceSuggestions(ArgumentSuggestions.strings(getPermissions()))
+                                .then(new ArgumentTree(getListArgument("permission", ",", false, Arrays.asList(getPermissions())))
                                         .executes((sender, args) -> {
                                             if (sender instanceof Player player) {
                                                 Player target = (Player) args[0];
-                                                String permissionName = (String) args[1];
-                                                Permission permissionToAssign = null;
-                                                for (Permission permission : Permission.values()) {
-                                                    if (permission.getName().equals(permissionName)) {
-                                                        permissionToAssign = permission;
+                                                List<String> permissions = (List<String>) args[1];
+                                                for (String permissionName : permissions) {
+                                                    Permission permissionToAssign = null;
+                                                    for (Permission permission : Permission.values()) {
+                                                        if (permission.getName().equals(permissionName)) {
+                                                            permissionToAssign = permission;
+                                                        }
                                                     }
-                                                }
-                                                if (permissionToAssign == null) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", (String) args[1]));
-                                                    return;
-                                                }
-                                                if (Permission.hasPermission(target, permissionToAssign)) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_already_assigned"));
-                                                    return;
-                                                }
-                                                Permission.addPermission(target, permissionToAssign);
-                                                if (target.equals(player)) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
-                                                } else {
-                                                    target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_other").replace("%%s", permissionToAssign.getName()).replace("%s", target.getName()));
+                                                    if (permissionToAssign == null) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    if (Permission.hasPermission(target, permissionToAssign)) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_already_assigned").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    Permission.addPermission(target, permissionToAssign);
+                                                    if (target.equals(player)) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
+                                                    } else {
+                                                        target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_other").replace("%%s", target.getName()).replace("%s", permissionToAssign.getName()));
+                                                    }
                                                 }
                                                 return;
                                             }
                                             if (sender instanceof ConsoleCommandSender console) {
                                                 Player target = (Player) args[0];
-                                                String permissionName = (String) args[1];
-                                                Permission permissionToAssign = null;
-                                                for (Permission permission : Permission.values()) {
-                                                    if (permission.getName().equals(permissionName)) {
-                                                        permissionToAssign = permission;
+                                                List<String> permissions = (List<String>) args[1];
+                                                for (String permissionName : permissions) {
+                                                    Permission permissionToAssign = null;
+                                                    for (Permission permission : Permission.values()) {
+                                                        if (permission.getName().equals(permissionName)) {
+                                                            permissionToAssign = permission;
+                                                        }
                                                     }
-                                                }
-                                                if (permissionToAssign == null) {
-                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", (String) args[1]));
-                                                    return;
-                                                }
-                                                if (Permission.hasPermission(target, permissionToAssign)) {
-                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_already_assigned"));
-                                                    return;
-                                                }
-                                                Permission.addPermission(target, permissionToAssign);
+                                                    if (permissionToAssign == null) {
+                                                        console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    if (Permission.hasPermission(target, permissionToAssign)) {
+                                                        console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_already_assigned").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    Permission.addPermission(target, permissionToAssign);
 
-                                                target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
-                                                console.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_other").replace("%%s", permissionToAssign.getName()).replace("%s", target.getName()));
+                                                    target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission").replace("%s", permissionToAssign.getName()));
+                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_other").replace("%%s", target.getName()).replace("%s", permissionToAssign.getName()));
+                                                }
                                                 return;
                                             }
                                             sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
@@ -82,55 +100,71 @@ public class PermissionCommand {
                                 })))
                 .then(new LiteralArgument("remove")
                         .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
-                                .then(new StringArgument("permission").replaceSuggestions(ArgumentSuggestions.strings(getPermissions()))
+                                .then(new ArgumentTree(getListArgument("permission", ",", false, Arrays.asList(getPermissions())))
                                         .executes((sender, args) -> {
                                             if (sender instanceof Player player) {
                                                 Player target = (Player) args[0];
-                                                String permissionName = (String) args[1];
-                                                Permission permissionToRemove = null;
-                                                for (Permission permission : Permission.values()) {
-                                                    if (permission.getName().equals(permissionName)) {
-                                                        permissionToRemove = permission;
+                                                List<String> permissions = (List<String>) args[1];
+                                                for (String permissionName : permissions) {
+                                                    Permission permissionToRemove = null;
+                                                    for (Permission permission : Permission.values()) {
+                                                        if (permission.getName().equals(permissionName)) {
+                                                            permissionToRemove = permission;
+                                                        }
                                                     }
-                                                }
-                                                if (permissionToRemove == null) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", (String) args[1]));
-                                                    return;
-                                                }
-                                                if (!Permission.hasPermission(target, permissionToRemove)) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_present"));
-                                                    return;
-                                                }
-                                                Permission.removePermission(player, permissionToRemove);
-                                                if (target.equals(player)) {
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
-                                                } else {
-                                                    target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
-                                                    player.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_other").replace("%%s", permissionToRemove.getName()).replace("%s", target.getName()));
+                                                    if (permissionToRemove == null) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    if (!Permission.hasPermission(target, permissionToRemove)) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_present").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    Permission.removePermission(player, permissionToRemove);
+                                                    if (target.equals(player)) {
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
+                                                    } else {
+                                                        target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
+                                                        player.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_other").replace("%%s", target.getName()).replace("%s", permissionToRemove.getName()));
+                                                    }
                                                 }
                                                 return;
                                             }
                                             if (sender instanceof ConsoleCommandSender console) {
                                                 Player target = (Player) args[0];
-                                                String permissionName = (String) args[1];
-                                                Permission permissionToRemove = null;
-                                                for (Permission permission : Permission.values()) {
-                                                    if (permission.getName().equals(permissionName)) {
-                                                        permissionToRemove = permission;
+                                                List<String> permissions = (List<String>) args[1];
+                                                for (String permissionName : permissions) {
+                                                    Permission permissionToRemove = null;
+                                                    for (Permission permission : Permission.values()) {
+                                                        if (permission.getName().equals(permissionName)) {
+                                                            permissionToRemove = permission;
+                                                        }
                                                     }
-                                                }
-                                                if (permissionToRemove == null) {
-                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", (String) args[1]));
-                                                    return;
-                                                }
-                                                if (!Permission.hasPermission(target, permissionToRemove)) {
-                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_present"));
-                                                    return;
-                                                }
-                                                Permission.removePermission(target, permissionToRemove);
+                                                    if (permissionToRemove == null) {
+                                                        console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_found").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    if (!Permission.hasPermission(target, permissionToRemove)) {
+                                                        console.sendMessage(TranslatableChatComponent.read("permissionCommand.permission_not_present").replace("%s", permissionName));
+                                                        if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                            continue;
+                                                        }
+                                                        return;
+                                                    }
+                                                    Permission.removePermission(target, permissionToRemove);
 
-                                                target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
-                                                console.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_other").replace("%%s", permissionToRemove.getName()).replace("%s", target.getName()));
+                                                    target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission").replace("%s", permissionToRemove.getName()));
+                                                    console.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_other").replace("%%s", target.getName()).replace("%s", permissionToRemove.getName()));
+                                                }
                                                 return;
                                             }
                                             sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
@@ -160,5 +194,9 @@ public class PermissionCommand {
             suggestions[i] = permissions.get(i);
         }
         return suggestions;
+    }
+
+    private <T> ListArgument<T> getListArgument(String nodeName, String delimiter, boolean duplicates, List<T> suggestions) {
+        return new ListArgumentBuilder<T>(nodeName, delimiter).allowDuplicates(duplicates).withList(suggestions).withStringMapper().build();
     }
 }

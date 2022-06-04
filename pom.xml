@@ -98,7 +98,7 @@
         <dependency>
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-shade</artifactId>
-            <version>8.1.0</version>
+            <version>8.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.mojang</groupId>

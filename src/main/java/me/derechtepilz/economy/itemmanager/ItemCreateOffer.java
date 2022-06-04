@@ -35,12 +35,12 @@ public class ItemCreateOffer {
                                                 int price = (int) args[2];
 
                                                 try {
-                                                    int itemQuantitiesMinAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT);
-                                                    int itemQuantitiesMaxAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT);
+                                                    int itemQuantitiesMinAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT));
+                                                    int itemQuantitiesMaxAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT));
                                                     new RangeValidator(itemQuantitiesMinAmount, itemQuantitiesMaxAmount, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(itemQuantitiesMinAmount) + " to " + ChatFormatter.valueOf(itemQuantitiesMaxAmount) + "!");
 
-                                                    int itemPriceMinAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT);
-                                                    int itemPriceMaxAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT);
+                                                    int itemPriceMinAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT));
+                                                    int itemPriceMaxAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT));
                                                     new RangeValidator(itemPriceMinAmount, itemPriceMaxAmount, price, "Could not process command because " + ChatFormatter.valueOf(price) + " was not in the range from " + ChatFormatter.valueOf(itemPriceMinAmount) + " to " + ChatFormatter.valueOf(itemPriceMaxAmount) + "!");
                                                 } catch (InvalidRangeException e) {
                                                     player.sendMessage(ChatColor.RED + e.getMessage());
@@ -75,12 +75,12 @@ public class ItemCreateOffer {
                                                 int price = (int) args[2];
 
                                                 try {
-                                                    int itemQuantitiesMinAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT);
-                                                    int itemQuantitiesMaxAmount = (int) Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT);
+                                                    int itemQuantitiesMinAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT));
+                                                    int itemQuantitiesMaxAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT));
                                                     new RangeValidator(itemQuantitiesMinAmount, itemQuantitiesMaxAmount, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(itemQuantitiesMinAmount) + " to " + ChatFormatter.valueOf(itemQuantitiesMaxAmount) + "!");
 
-                                                    int itemPriceMinAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT);
-                                                    int itemPriceMaxAmount = (int) Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT);
+                                                    int itemPriceMinAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_PRICE_MIN_AMOUNT));
+                                                    int itemPriceMaxAmount = Integer.parseInt(Config.get(ConfigFields.ITEM_PRICE_MAX_AMOUNT));
                                                     new RangeValidator(itemPriceMinAmount, itemPriceMaxAmount, price, "Could not process command because " + ChatFormatter.valueOf(price) + " was not in the range from " + ChatFormatter.valueOf(itemPriceMinAmount) + " to " + ChatFormatter.valueOf(itemPriceMaxAmount) + "!");
                                                 } catch (InvalidRangeException e) {
                                                     console.sendMessage(ChatColor.RED + e.getMessage());
