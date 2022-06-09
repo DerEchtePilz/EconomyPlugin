@@ -11,8 +11,6 @@ public class JsonBuilder {
     String startBalance = "50.0";
     String interest = "1.0";
     String language = "EN_US";
-    String discordToken = "";
-    String guildId = "";
 
     public JsonBuilder setItemQuantitiesMinAmount(String itemQuantitiesMinAmount) {
         this.itemQuantitiesMinAmount = itemQuantitiesMinAmount;
@@ -46,16 +44,6 @@ public class JsonBuilder {
 
     public JsonBuilder setLanguage(String language) {
         this.language = language;
-        return this;
-    }
-
-    public JsonBuilder setDiscordToken(String discordToken) {
-        this.discordToken = discordToken;
-        return this;
-    }
-
-    public JsonBuilder setDiscordGuild(String guildId) {
-        this.guildId = guildId;
         return this;
     }
 
@@ -107,18 +95,6 @@ public class JsonBuilder {
             configValues.addProperty("language", language);
         } else {
             configValues.addProperty("language", Config.get(ConfigFields.LANGUAGE));
-        }
-
-        if (!LoadConfig.equalValues(discordToken, "discordToken")) {
-            configValues.addProperty("discordToken", discordToken);
-        } else {
-            configValues.addProperty("discordToken", Config.get(ConfigFields.DISCORD_BOT_TOKEN));
-        }
-
-        if (!LoadConfig.equalValues(guildId, "guildId")) {
-            configValues.addProperty("guildId", guildId);
-        } else {
-            configValues.addProperty("guildId", Config.get(ConfigFields.DISCORD_GUILD_ID));
         }
 
         return new GsonBuilder().setPrettyPrinting().create().toJson(configValues);

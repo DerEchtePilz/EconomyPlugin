@@ -16,8 +16,6 @@ class LoadConfig {
     private final String startBalance = "50.0";
     private final String interest = "1.0";
     private final String language = "EN_US";
-    private final String discordToken = "";
-    private final String guildId = "";
 
     static String configBackup = "";
 
@@ -68,8 +66,6 @@ class LoadConfig {
                 .setStartBalance(object.getAsJsonPrimitive("startBalance").getAsString())
                 .setInterest(object.getAsJsonPrimitive("interest").getAsString())
                 .setLanguage(object.getAsJsonPrimitive("language").getAsString())
-                .setDiscordToken(object.getAsJsonPrimitive("discordToken").getAsString())
-                .setDiscordGuild(object.getAsJsonPrimitive("guildId").getAsString())
                 .buildJson();
     }
 
@@ -92,8 +88,6 @@ class LoadConfig {
         configValues.addProperty("startBalance", startBalance);
         configValues.addProperty("interest", interest);
         configValues.addProperty("language", language);
-        configValues.addProperty("discordToken", discordToken);
-        configValues.addProperty("guildId", guildId);
 
         writer.write(gson.toJson(configValues));
         writer.close();

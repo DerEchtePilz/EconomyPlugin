@@ -9,9 +9,7 @@ public enum ConfigFields {
     ITEM_PRICE_MAX_AMOUNT("itemPrice", "maxAmount"),
     START_BALANCE("startBalance"),
     INTEREST("interest"),
-    LANGUAGE("language"),
-    DISCORD_BOT_TOKEN("discordToken"),
-    DISCORD_GUILD_ID("guildId");
+    LANGUAGE("language");
 
     private final String primitive;
     private String object;
