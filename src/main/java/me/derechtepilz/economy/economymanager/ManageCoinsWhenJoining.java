@@ -41,16 +41,16 @@ public class ManageCoinsWhenJoining implements Listener {
             }
         } else {
             // Give start balance
-            bankManager = new BankManager(player, Double.parseDouble(Config.get(ConfigFields.START_BALANCE)));
+            bankManager = new BankManager(player, (Double) Config.get(ConfigFields.START_BALANCE));
             player.getPersistentDataContainer().set(NamespacedKeys.LAST_INTEREST.getKey(), PersistentDataType.LONG, System.currentTimeMillis());
-            player.getPersistentDataContainer().set(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE, Double.parseDouble(Config.get(ConfigFields.START_BALANCE)));
+            player.getPersistentDataContainer().set(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE, (Double) Config.get(ConfigFields.START_BALANCE));
 
             player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.join_bonus").replace("%s", ChatFormatter.valueOf(bankManager.getBalance())));
         }
 
         // Check if start balance has been increased and give player missing start balance
         double playerStartBalance = player.getPersistentDataContainer().get(NamespacedKeys.START_BALANCE.getKey(), PersistentDataType.DOUBLE);
-        double configStartBalance = Double.parseDouble(Config.get(ConfigFields.START_BALANCE));
+        double configStartBalance = (Double) Config.get(ConfigFields.START_BALANCE);
 
         if (configStartBalance > playerStartBalance) {
             double missingStartBalance = configStartBalance - playerStartBalance;

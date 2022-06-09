@@ -63,7 +63,7 @@ public class ConfigCommandExecutor extends CommandBase {
                             player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(0)));
                             return;
                         }
-                        Config.set(ConfigFields.START_BALANCE, String.valueOf(startBalance));
+                        Config.set(ConfigFields.START_BALANCE, startBalance);
                         Config.reloadConfig();
                         player.sendMessage(TranslatableChatComponent.read("configCommand.start_balance").replace("%s", ChatFormatter.valueOf(startBalance)));
                     }
@@ -81,7 +81,7 @@ public class ConfigCommandExecutor extends CommandBase {
                             player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(-99)));
                             return;
                         }
-                        Config.set(ConfigFields.INTEREST, String.valueOf(interest));
+                        Config.set(ConfigFields.INTEREST, interest);
                         Config.reloadConfig();
                         player.sendMessage(TranslatableChatComponent.read("configCommand.interest").replace("%s", ChatFormatter.valueOf(interest)));
                     }
@@ -116,7 +116,7 @@ public class ConfigCommandExecutor extends CommandBase {
                                     player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(0)));
                                     return;
                                 }
-                                Config.set(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT, String.valueOf(value));
+                                Config.set(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT, value);
                                 Config.reloadConfig();
                                 player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.min_amount").replace("%s", ChatFormatter.valueOf(value)));
                             }
@@ -134,7 +134,7 @@ public class ConfigCommandExecutor extends CommandBase {
                                     player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(0)));
                                     return;
                                 }
-                                Config.set(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT, String.valueOf(value));
+                                Config.set(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT, value);
                                 Config.reloadConfig();
                                 player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.max_amount").replace("%s", ChatFormatter.valueOf(value)));
                             }
@@ -156,7 +156,7 @@ public class ConfigCommandExecutor extends CommandBase {
                                     player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(0)));
                                     return;
                                 }
-                                Config.set(ConfigFields.ITEM_PRICE_MIN_AMOUNT, String.valueOf(value));
+                                Config.set(ConfigFields.ITEM_PRICE_MIN_AMOUNT, value);
                                 Config.reloadConfig();
                                 player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.min_amount").replace("%s", ChatFormatter.valueOf(value)));
                             }
@@ -174,7 +174,7 @@ public class ConfigCommandExecutor extends CommandBase {
                                     player.sendMessage(TranslatableChatComponent.read("fallbackCommand.value_too_small").replace("%s", ChatFormatter.valueOf(0)));
                                     return;
                                 }
-                                Config.set(ConfigFields.ITEM_PRICE_MAX_AMOUNT, String.valueOf(value));
+                                Config.set(ConfigFields.ITEM_PRICE_MAX_AMOUNT, value);
                                 Config.reloadConfig();
                                 player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.max_amount").replace("%s", ChatFormatter.valueOf(value)));
                             }

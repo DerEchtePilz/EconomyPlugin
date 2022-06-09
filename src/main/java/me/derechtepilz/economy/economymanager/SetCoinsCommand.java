@@ -37,7 +37,7 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = Double.parseDouble(Config.get(ConfigFields.START_BALANCE));
+                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());
@@ -68,7 +68,7 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = Double.parseDouble(Config.get(ConfigFields.START_BALANCE));
+                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());
