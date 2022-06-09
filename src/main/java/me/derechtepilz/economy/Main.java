@@ -3,7 +3,6 @@ package me.derechtepilz.economy;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.CommandAPIHandler;
-import me.derechtepilz.economy.bukkitcommands.commands.FallbackCommand;
 import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
@@ -14,6 +13,7 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.config.ConfigCommand;
 import me.derechtepilz.economy.utility.config.ConfigFields;
+import me.derechtepilz.economy.utility.config.JsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -40,7 +40,7 @@ public final class Main extends JavaPlugin {
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
 
-    private final FallbackCommand fallbackCommand = new FallbackCommand();
+    private final JsonBuilder jsonBuilder = new JsonBuilder();
 
     private boolean wasCommandAPILoaded;
 
@@ -62,9 +62,8 @@ public final class Main extends JavaPlugin {
         plugin = this;
         Config.loadConfig();
 
-
         if (Config.contains(ConfigFields.LANGUAGE)) {
-            language = Language.valueOf((String) Config.get(ConfigFields.LANGUAGE));
+            language = Language.valueOf(Config.get(ConfigFields.LANGUAGE));
         } else {
             language = Language.EN_US;
         }
@@ -108,6 +107,7 @@ public final class Main extends JavaPlugin {
         }
 
         new SaveItems();
+        Config.saveConfig();
 
         getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
     }
@@ -127,8 +127,6 @@ public final class Main extends JavaPlugin {
             new PermissionCommand();
             new ConfigCommand();
         }
-        getCommand("fallback").setExecutor(fallbackCommand);
-        getCommand("fallback").setTabCompleter(fallbackCommand);
     }
 
     private void listenerRegistration() {
@@ -168,6 +166,10 @@ public final class Main extends JavaPlugin {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public JsonBuilder getJsonBuilder() {
+        return jsonBuilder;
     }
 
     public boolean isWasCommandAPILoaded() {

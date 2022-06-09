@@ -13,6 +13,7 @@ class SaveConfig {
                 new LoadConfig().getConfigValues(false);
             }
             Writer writer = new FileWriter(config);
+            LoadConfig.configBackup = configValues;
             writer.write(configValues);
             writer.close();
         } catch (IOException e) {

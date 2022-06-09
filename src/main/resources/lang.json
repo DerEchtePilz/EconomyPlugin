@@ -1,8 +1,9 @@
 {
   "en_us": {
     "main.onEnable.plugin_enable_message": "\u00A7aThe Economy plugin has been enabled!",
-    "main.onLoad.version_info": "This server is running on version %s, but because of the CommandAPI commands depend on versions 1.16.5 - 1.18.2! Command '/economyplugin:fallback' was enabled instead!",
+    "main.onLoad.version_info": "This server is running on version %s, the EconomyPlugin only supports 1.13 - 1.19! Please change your server version!",
     "main.onDisable.plugin_disable_message": "\u00A7cThe Economy plugin has been disabled",
+    "main.onDisable.offers_could_not_be_saved": "Offers could not be saved!",
     "main.initialize_enable_procedure.coin_display_missing": "\u00A7cPlease rejoin the server! Otherwise you won't be able to see your balance or buy items!",
     "config.loadConfig.is_loaded": "You called the loadConfig method more than once! Continuing without processing the second call.",
     "command.self.bank_account_missing": "\u00A7cYou have no bank account! Please rejoin the server!",
@@ -69,13 +70,13 @@
     "takeCoinsCommand.player_executor.not_enough_coins_at_target": "\u00A7b%s \u00A7cdoes not have enough coins to get \u00A76%%s coins \u00A7cdeducted!",
     "setCoinsCommand.balance_set": "\u00A7cYour balance has been set to \u00A76%s coins\u00A7c!",
     "setCoinsCommand.player_balance_set": "\u00A7cYou set \u00A7b%s\u00A7c's balance to \u00A76%%s coins\u00A7c!",
-    "permissionCommand.permission_not_found": "\u00A7cA permission corresponding to the name '%s' could not be found!",
-    "permissionCommand.permission_already_assigned": "\u00A7cThe permission cannot be assigned because the player already has this permission!",
-    "permissionCommand.permission_not_present": "\u00A7cThe permission cannot be removed because the player does not have the specified permission!",
+    "permissionCommand.permission_not_found": "\u00A7cFailed to assign the permission '\u00A71%s\u00A7c' because it could not be found!",
+    "permissionCommand.permission_already_assigned": "\u00A7cFailed to assign the permission \u00A71%s \u00A7cbecause the player already has this permission!",
+    "permissionCommand.permission_not_present": "\u00A7cFailed to remove the permission \u00A71%s \u00A7cbecause the player does not have this permission!",
     "permissionCommand.assigned_permission": "\u00A7aYou have got the permission \u00A76%s\u00A7a!",
     "permissionCommand.removed_permission": "\u00A7cYou have been taken the permission \u00A76%s\u00A7c!",
-    "permissionCommand.assigned_permission_other": "\u00A7aYou gave \u00A7b%s \u00A7athe permission \u00A76%%s\u00A7a!",
-    "permissionCommand.removed_permission_other": "\u00A7cYou have taken \u00A7b%s \u00A7athe permission \u00A76%%s\u00A7c!",
+    "permissionCommand.assigned_permission_other": "\u00A7aSUCCESS! The permission \u00A76%s \u00A7awas given to \u00A7b%%s\u00A7a!",
+    "permissionCommand.removed_permission_other": "\u00A7aSUCCESS! \u00A7cThe permission \u00A76%s \u00A7awas taken from \u00A7b%%s\u00A7c!",
     "permissionCommand.player_permissions": "\u00A7b%s \u00A7ahas the following permissions:",
     "configCommand.item_quantities.max_amount": "\u00A7aYou set the config value \u00A76itemQuantities.maxAmount \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.item_quantities.min_amount": "\u00A7aYou set the config value \u00A76itemQuantities.minAmount \u00A7ato \u00A76%s\u00A7a!",
@@ -84,7 +85,12 @@
     "configCommand.start_balance": "\u00A7aYou set the config value \u00A76startBalance \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.interest": "\u00A7aYou set the config value \u00A76interest \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.language": "\u00A7aYou set the config value \u00A76language \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.guildId": "\u00A7aYou set the config value \u00A76guildId \u00A7ato \u00A76%s\u00A7a!",
+    "configCommand.discordToken": "\u00A7aYou set the config value \u00A76discordToken \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.reset_config": "\u00A7cThe config has been reset!",
-    "configCommand.reload_config": "\u00A7aThe config was reloaded!"
+    "configCommand.reload_config": "\u00A7aThe config was reloaded!",
+    "tradeCommand.pending_request": "\u00A7cYou already have an outgoing trade request!",
+    "tradeCommand.target_did_not_request": "\u00A7cThere is no pending request from \u00A7b%s\u00A7c!",
+    "tradeCommand.target_did_not_request_player": "\u00A7b%s \u00A7cdid not send a trade request to you!"
   }
 }

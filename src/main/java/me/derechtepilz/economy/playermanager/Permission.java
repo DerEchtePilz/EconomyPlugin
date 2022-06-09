@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.playermanager;
 
-import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
