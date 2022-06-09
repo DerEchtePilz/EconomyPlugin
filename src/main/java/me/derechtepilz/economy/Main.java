@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +72,7 @@ public final class Main extends JavaPlugin {
             CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage(TranslatableChatComponent.read("command.wrong_executor")));
             wasCommandAPILoaded = true;
         } else {
-            getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", Bukkit.getBukkitVersion().split("-")[0]));
+            getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", version));
             wasCommandAPILoaded = false;
         }
 
@@ -82,9 +81,9 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
+            /*
             try {
                 Field field = Class.forName(CommandAPIHandler.class.getName()).getDeclaredField("registeredCommands");
                 field.setAccessible(true);
@@ -99,6 +98,13 @@ public final class Main extends JavaPlugin {
                 }
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
+            }
+             */
+
+            for (CommandAPIHandler.RegisteredCommand registeredCommand : CommandAPIHandler.getInstance().registeredCommands) {
+                if (!commandNames.contains(registeredCommand.command())) {
+                    commandNames.add(registeredCommand.command());
+                }
             }
 
             for (String commandName : commandNames) {
@@ -117,16 +123,14 @@ public final class Main extends JavaPlugin {
     }
 
     private void commandRegistration() {
-        if (wasCommandAPILoaded) {
-            new ItemCreateOffer();
-            new ItemCancelOffer();
-            new ItemBuyOffer();
-            new GiveCoinsCommand();
-            new TakeCoinsCommand();
-            new SetCoinsCommand();
-            new PermissionCommand();
-            new ConfigCommand();
-        }
+        new ItemCreateOffer();
+        new ItemCancelOffer();
+        new ItemBuyOffer();
+        new GiveCoinsCommand();
+        new TakeCoinsCommand();
+        new SetCoinsCommand();
+        new PermissionCommand();
+        new ConfigCommand();
     }
 
     private void listenerRegistration() {
