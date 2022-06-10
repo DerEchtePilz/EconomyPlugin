@@ -10,6 +10,7 @@ import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
 import me.derechtepilz.economy.modules.discord.communication.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
+import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
@@ -149,6 +150,7 @@ public final class Main extends JavaPlugin {
         new SetCoinsCommand();
         new PermissionCommand();
         new ConfigCommand();
+        new TradeCommand();
     }
 
     private void listenerRegistration() {
