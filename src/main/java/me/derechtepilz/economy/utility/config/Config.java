@@ -33,6 +33,8 @@ public class Config {
             case START_BALANCE -> Main.getInstance().getJsonBuilder().setStartBalance(value);
             case INTEREST -> Main.getInstance().getJsonBuilder().setInterest(value);
             case LANGUAGE -> Main.getInstance().getJsonBuilder().setLanguage(value);
+            case DISCORD_BOT_TOKEN -> Main.getInstance().getJsonBuilder().setDiscordToken(value);
+            case DISCORD_GUILD_ID -> Main.getInstance().getJsonBuilder().setDiscordGuild(value);
         }
         new SaveConfig(Main.getInstance().getJsonBuilder().buildJson());
     }

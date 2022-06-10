@@ -7,6 +7,7 @@ import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
+import me.derechtepilz.economy.modules.discord.DiscordBot;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -14,6 +15,8 @@ import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.config.ConfigCommand;
 import me.derechtepilz.economy.utility.config.ConfigFields;
 import me.derechtepilz.economy.utility.config.JsonBuilder;
+import net.dv8tion.jda.api.JDA;
+import okhttp3.OkHttpClient;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -81,6 +84,24 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        DiscordBot.getDiscordBot().setActive(false);
+        try {
+            if (DiscordBot.getDiscordBot() != null) {
+                DiscordBot.getDiscordBot().sendShutdownMessage();
+                Thread.sleep(2000);
+                DiscordBot.getDiscordBot().getJda().shutdownNow();
+
+                OkHttpClient client = DiscordBot.getDiscordBot().getJda().getHttpClient();
+                client.connectionPool().evictAll();
+                client.dispatcher().executorService().shutdown();
+                while (DiscordBot.getDiscordBot().getJda().getStatus() != JDA.Status.SHUTDOWN) {
+                    Thread.sleep(20);
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
             /*
