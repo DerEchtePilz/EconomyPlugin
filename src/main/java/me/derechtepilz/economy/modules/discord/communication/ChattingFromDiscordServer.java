@@ -10,13 +10,11 @@ import org.jetbrains.annotations.NotNull;
 public class ChattingFromDiscordServer extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (DiscordBot.getDiscordBot().isActive()) {
+        if (DiscordBot.getDiscordBot().isActive() && event.getChannel().equals(DiscordBot.getDiscordBot().getMinecraftChat())) {
             if (event.getAuthor().isBot() || event.getAuthor().isSystem()) {
                 return;
             }
-            if (!event.getTextChannel().equals(DiscordBot.getDiscordBot().getMinecraftChat())) {
-                return;
-            }
+
             String message = event.getMessage().getContentStripped();
             String member = event.getMember().getEffectiveName();
             String messageId = event.getMessageId();

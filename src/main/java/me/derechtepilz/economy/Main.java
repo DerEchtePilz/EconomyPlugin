@@ -8,6 +8,7 @@ import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
+import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
@@ -57,11 +58,7 @@ public final class Main extends JavaPlugin {
 
         getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
 
-        try {
-            new DiscordBot(Config.get("discordToken"));
-        } catch (LoginException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        startDiscordBot(Config.get("discordToken"));
     }
 
     @Override
@@ -165,6 +162,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(itemBuyMenu, this);
         manager.registerEvents(new ManageCoinsWhenJoining(), this);
         manager.registerEvents(new ChattingFromMinecraftServer(), this);
+        manager.registerEvents(new StartUpBot(), this);
     }
 
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {
@@ -211,6 +209,23 @@ public final class Main extends JavaPlugin {
             return multiple;
         } else {
             return multipleToFind;
+        }
+    }
+
+    public void startDiscordBot(String token) {
+        if (DiscordBot.getDiscordBot() != null) {
+            DiscordBot.getDiscordBot().setActive(false);
+            if (DiscordBot.getDiscordBot().getJda() != null) {
+                DiscordBot.getDiscordBot().getJda().shutdownNow();
+            }
+            DiscordBot.getDiscordBot().setDiscordBotNull();
+        }
+        try {
+            new DiscordBot(token);
+        } catch (LoginException e) {
+            getLogger().severe(TranslatableChatComponent.read("discord.startup.failed"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

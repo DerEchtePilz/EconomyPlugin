@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.bukkit.Bukkit;
 
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class DiscordBot {
     private boolean active = false;
 
     public DiscordBot(String token) throws LoginException, InterruptedException {
-        if (!token.equals("")) {
+        if (!token.equals("") && DISCORD_BOT == null) {
             DISCORD_BOT = this;
             jda = JDABuilder.createDefault(token, Arrays.asList(GatewayIntent.values()))
                     .setActivity(Activity.listening("Minecraft server"))
@@ -35,6 +36,7 @@ public class DiscordBot {
                 throw new LoginException();
             }
             Guild guild = jda.awaitStatus(JDA.Status.CONNECTED).getGuildById(Config.get("guildId"));
+            Bukkit.broadcastMessage(TranslatableChatComponent.read("startUpBot.discord_bot_running"));
             active = true;
             minecraftChat = (guild.getTextChannelsByName("minecraft-chat", true).size() >= 1) ? guild.getTextChannelsByName("minecraft-chat", true).get(0) : (TextChannel) guild.getDefaultChannel();
             minecraftChat.sendMessageEmbeds(new EmbedBuilder()
@@ -51,6 +53,10 @@ public class DiscordBot {
 
     public static DiscordBot getDiscordBot() {
         return DISCORD_BOT;
+    }
+
+    public void setDiscordBotNull() {
+        DISCORD_BOT = null;
     }
 
     public JDA getJda() {
