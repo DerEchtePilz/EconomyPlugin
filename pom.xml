@@ -18,7 +18,6 @@
         <spigot.version>1.18.1-R0.1-SNAPSHOT</spigot.version>
         <commandapi.version>8.3.1</commandapi.version>
         <mojang.authlib.version>1.5.21</mojang.authlib.version>
-        <discord.api.version>5.0.0-alpha.12</discord.api.version>
     </properties>
 
     <build>
@@ -46,6 +45,12 @@
                         <configuration>
                             <outputDirectory>C:\Users\User\Desktop\Minecraft-Related\Minecraft Servers\Server EconomyPlugin\plugins</outputDirectory>
                             <finalName>EconomyPlugin</finalName>
+                            <artifactSet>
+                                <includes>
+                                    <include>dev.jorel:commandapi-shade</include>
+                                    <include>net.dv8tion:JDA</include>
+                                </includes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
@@ -54,6 +59,10 @@
                         <relocation>
                             <pattern>dev.jorel.commandapi</pattern>
                             <shadedPattern>me.derechtepilz.economy.commandapi</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.dv8tion</pattern>
+                            <shadedPattern>me.derechtepilz.economy.jda</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

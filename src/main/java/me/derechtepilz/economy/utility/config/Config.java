@@ -14,8 +14,8 @@ public class Config {
 
     private static Map<String, String> config = new HashMap<>();
     private static Map<String, String> defaultConfigValues = new HashMap<>();
-    static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    static final File configFile = new File(new File("./plugins/Economy"), "config.json");
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final File configFile = new File(new File("./plugins/Economy"), "config.json");
 
     private static boolean isLoaded = false;
 

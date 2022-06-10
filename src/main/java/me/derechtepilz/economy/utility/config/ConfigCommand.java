@@ -9,6 +9,7 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import org.bukkit.entity.Player;
 
 public class ConfigCommand {
     public ConfigCommand() {
@@ -95,37 +96,31 @@ public class ConfigCommand {
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
                                 })))
-                .then(new LiteralArgument("discord")
-                        .then(new StringArgument("guildId")
-                                .then(new StringArgument("discordToken")
-                                        .executesPlayer((player, args) -> {
-                                            if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
-                                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                                return;
-                                            }
-                                            Config.set("guildId", (String) args[0]);
-                                            Config.set("discordToken", (String) args[1]);
-                                            Config.reloadConfig();
-                                            player.sendMessage(TranslatableChatComponent.read("configCommand.guildId").replace("%s", (String) args[0]));
-                                            player.sendMessage(TranslatableChatComponent.read("configCommand.discordToken").replace("%s", (String) args[1]));
-                                        }))))
                 .then(new LiteralArgument("reset")
-                        .executesPlayer((player, args) -> {
-                            if (!Permission.hasPermission(player, Permission.RESET_CONFIG)) {
-                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                return;
+                        .executes((sender, args) -> {
+                            if (sender instanceof Player player) {
+                                if (!Permission.hasPermission(player, Permission.RESET_CONFIG)) {
+                                    player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                    return;
+                                }
+                                Config.resetConfig();
+                                player.sendMessage(TranslatableChatComponent.read("configCommand.reset_config"));
+                            } else {
+                                Config.resetConfig();
                             }
-                            Config.resetConfig();
-                            player.sendMessage(TranslatableChatComponent.read("configCommand.reset_config"));
                         }))
                 .then(new LiteralArgument("reload")
-                        .executesPlayer((player, args) -> {
-                            if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
-                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                return;
+                        .executes((sender, args) -> {
+                            if (sender instanceof Player player) {
+                                if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
+                                    player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                    return;
+                                }
+                                Config.reloadConfig();
+                                player.sendMessage(TranslatableChatComponent.read("configCommand.reload_config"));
+                            } else {
+                                Config.reloadConfig();
                             }
-                            Config.reloadConfig();
-                            player.sendMessage(TranslatableChatComponent.read("configCommand.reload_config"));
                         }))
                 .register();
     }

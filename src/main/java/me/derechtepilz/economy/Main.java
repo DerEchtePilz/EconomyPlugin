@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,12 @@ public final class Main extends JavaPlugin {
         initializeEnableProcedure();
 
         getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
+
+        try {
+            new DiscordBot(Config.get("discordToken"));
+        } catch (LoginException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,7 +106,6 @@ public final class Main extends JavaPlugin {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
             /*
