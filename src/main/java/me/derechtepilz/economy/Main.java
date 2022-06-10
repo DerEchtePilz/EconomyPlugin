@@ -8,13 +8,12 @@ import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
+import me.derechtepilz.economy.modules.discord.communication.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.config.ConfigCommand;
-import me.derechtepilz.economy.utility.config.ConfigFields;
-import me.derechtepilz.economy.utility.config.JsonBuilder;
 import net.dv8tion.jda.api.JDA;
 import okhttp3.OkHttpClient;
 import org.bukkit.Bukkit;
@@ -42,8 +41,6 @@ public final class Main extends JavaPlugin {
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
 
-    private final JsonBuilder jsonBuilder = new JsonBuilder();
-
     private boolean wasCommandAPILoaded;
 
     @Override
@@ -64,8 +61,8 @@ public final class Main extends JavaPlugin {
         plugin = this;
         Config.loadConfig();
 
-        if (Config.contains(ConfigFields.LANGUAGE)) {
-            language = Language.valueOf(Config.get(ConfigFields.LANGUAGE));
+        if (Config.contains("language")) {
+            language = Language.valueOf(Config.get("language"));
         } else {
             language = Language.EN_US;
         }
@@ -159,6 +156,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(itemCancelMenu, this);
         manager.registerEvents(itemBuyMenu, this);
         manager.registerEvents(new ManageCoinsWhenJoining(), this);
+        manager.registerEvents(new ChattingFromMinecraftServer(), this);
     }
 
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {
@@ -191,14 +189,6 @@ public final class Main extends JavaPlugin {
 
     public Language getLanguage() {
         return language;
-    }
-
-    public JsonBuilder getJsonBuilder() {
-        return jsonBuilder;
-    }
-
-    public boolean isWasCommandAPILoaded() {
-        return wasCommandAPILoaded;
     }
 
     public int findNextMultiple(int input, int multipleToFind) {

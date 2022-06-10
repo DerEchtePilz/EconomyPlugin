@@ -11,7 +11,6 @@ import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.RangeValidator;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
-import me.derechtepilz.economy.utility.config.ConfigFields;
 import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,7 +36,7 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                                            double min = Double.parseDouble(Config.get("startBalance"));
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());
@@ -68,7 +67,7 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                                            double min = Double.parseDouble(Config.get("startBalance"));
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());

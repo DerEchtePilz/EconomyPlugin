@@ -22,7 +22,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT, String.valueOf(args[0]));
+                                            Config.set("itemQuantitiesMaxAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.max_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         })))
@@ -33,7 +33,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT, String.valueOf(args[0]));
+                                            Config.set("itemQuantitiesMinAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.min_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         }))))
@@ -45,7 +45,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_PRICE_MAX_AMOUNT, String.valueOf(args[0]));
+                                            Config.set("itemPriceMaxAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.max_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         })))
@@ -56,7 +56,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_PRICE_MIN_AMOUNT, String.valueOf(args[0]));
+                                            Config.set("itemPriceMinAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.min_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         }))))
@@ -68,7 +68,7 @@ public class ConfigCommand {
                                         return;
                                     }
                                     double startBalance = (double) args[0];
-                                    Config.set(ConfigFields.START_BALANCE, String.valueOf(startBalance));
+                                    Config.set("startBalance", String.valueOf(startBalance));
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.start_balance").replace("%s", ChatFormatter.valueOf(startBalance)));
                                 })))
@@ -80,7 +80,7 @@ public class ConfigCommand {
                                         return;
                                     }
                                     double interest = (double) args[0];
-                                    Config.set(ConfigFields.INTEREST, String.valueOf(interest));
+                                    Config.set("interest", String.valueOf(interest));
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.interest").replace("%s", ChatFormatter.valueOf(interest)));
                                 })))
@@ -91,7 +91,7 @@ public class ConfigCommand {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                         return;
                                     }
-                                    Config.set(ConfigFields.LANGUAGE, (String) args[0]);
+                                    Config.set("language", (String) args[0]);
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
                                 })))
@@ -103,8 +103,8 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.DISCORD_GUILD_ID, (String) args[0]);
-                                            Config.set(ConfigFields.DISCORD_BOT_TOKEN, (String) args[1]);
+                                            Config.set("guildId", (String) args[0]);
+                                            Config.set("discordToken", (String) args[1]);
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.guildId").replace("%s", (String) args[0]));
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.discordToken").replace("%s", (String) args[1]));

@@ -3,7 +3,6 @@ package me.derechtepilz.economy.modules.discord;
 import me.derechtepilz.economy.modules.discord.communication.ChattingFromDiscordServer;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
-import me.derechtepilz.economy.utility.config.ConfigFields;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -31,11 +30,11 @@ public class DiscordBot {
                     .addEventListeners(new ChattingFromDiscordServer())
                     .build();
 
-            String guildId = Config.get(ConfigFields.DISCORD_GUILD_ID);
+            String guildId = Config.get("guildId");
             if (guildId.equals("")) {
                 throw new LoginException();
             }
-            Guild guild = jda.awaitStatus(JDA.Status.CONNECTED).getGuildById(Config.get(ConfigFields.DISCORD_GUILD_ID));
+            Guild guild = jda.awaitStatus(JDA.Status.CONNECTED).getGuildById(Config.get("guildId"));
             active = true;
             minecraftChat = (guild.getTextChannelsByName("minecraft-chat", true).size() >= 1) ? guild.getTextChannelsByName("minecraft-chat", true).get(0) : (TextChannel) guild.getDefaultChannel();
             minecraftChat.sendMessageEmbeds(new EmbedBuilder()
