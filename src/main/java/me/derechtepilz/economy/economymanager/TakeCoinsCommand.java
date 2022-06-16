@@ -2,11 +2,10 @@ package me.derechtepilz.economy.economymanager;
 
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.DoubleArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -20,7 +19,6 @@ import java.util.List;
 public class TakeCoinsCommand {
     public TakeCoinsCommand() {
         new CommandTree("takecoins")
-                .withPermission(CommandPermission.NONE)
                 .then(new DoubleArgument("amount", 0)
                         .executesPlayer((player, args) -> {
                             if (!Permission.hasPermission(player, Permission.TAKE_COINS)) {
@@ -43,7 +41,7 @@ public class TakeCoinsCommand {
                             manager.setBalance(playerBalance - amount);
                             player.sendMessage(TranslatableChatComponent.read("takeCoinsCommand.player_executor.take_coins").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                         })
-                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
+                        .then(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument()
                                 .executesPlayer((player, args) -> {
                                     if (!Permission.hasPermission(player, Permission.TAKE_COINS)) {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));

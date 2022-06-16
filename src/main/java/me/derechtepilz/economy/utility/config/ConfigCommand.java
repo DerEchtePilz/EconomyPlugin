@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 public class ConfigCommand {
     public ConfigCommand() {
         new CommandTree("config")
-                .withPermission(CommandPermission.NONE)
                 .then(new LiteralArgument("itemQuantities")
                         .then(new LiteralArgument("maxAmount")
                                 .then(new IntegerArgument("maxAmount", 0)

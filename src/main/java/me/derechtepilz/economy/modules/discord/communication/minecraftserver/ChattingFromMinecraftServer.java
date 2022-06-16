@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.modules.discord.communication;
+package me.derechtepilz.economy.modules.discord.communication.minecraftserver;
 
 import me.derechtepilz.economy.modules.discord.DiscordBot;
 import net.dv8tion.jda.api.EmbedBuilder;

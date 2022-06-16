@@ -1,17 +1,18 @@
 package me.derechtepilz.economy.playermanager;
 
-import dev.jorel.commandapi.CommandPermission;
+import dev.jorel.commandapi.ArgumentTree;
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.LiteralArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
+import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class TradeCommand {
@@ -20,8 +21,7 @@ public class TradeCommand {
 
     public TradeCommand() {
         new CommandTree("trade")
-                .withPermission(CommandPermission.NONE)
-                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
+                .then(new ArgumentTree(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument())
                         .executesPlayer((player, args) -> {
                             if (!Permission.hasPermission(player, Permission.TRADE)) {
                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
@@ -33,6 +33,20 @@ public class TradeCommand {
                                 return;
                             }
                             requestingPlayers.put(player.getUniqueId(), target.getUniqueId());
+                            player.sendMessage(TranslatableChatComponent.read("tradeCommand.trade_request_sent").replace("%s", target.getName()));
+                            target.sendMessage(TranslatableChatComponent.read("tradeCommand.incoming_trade_request").replace("%s", player.getName()));
+
+                            TextComponent acceptTradeRequest = new TextComponent();
+                            acceptTradeRequest.setText(TranslatableChatComponent.read("tradeCommand.accept_request"));
+                            acceptTradeRequest.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(TranslatableChatComponent.read("tradeCommand.accept_request_hover").replace("%s", player.getName()))));
+                            acceptTradeRequest.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade " + player.getName() + " accept"));
+
+                            TextComponent denyTradeRequest = new TextComponent();
+                            denyTradeRequest.setText(" " + TranslatableChatComponent.read("tradeCommand.deny_request"));
+                            denyTradeRequest.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(TranslatableChatComponent.read("tradeCommand.deny_request_hover").replace("%s", player.getName()))));
+                            denyTradeRequest.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade " + player.getName() + " deny"));
+
+                            target.spigot().sendMessage(acceptTradeRequest, denyTradeRequest);
                         })
                         .then(new LiteralArgument("accept")
                                 .executesPlayer((player, args) -> {
@@ -53,7 +67,8 @@ public class TradeCommand {
                                     }
 
                                     // target sent a trade request to player, so we accept it
-
+                                    Main.getInstance().getTradeMenu().openTradeMenu(target, player);
+                                    requestingPlayers.remove(target.getUniqueId());
                                 }))
                         .then(new LiteralArgument("deny")
                                 .executesPlayer((player, args) -> {
@@ -61,19 +76,24 @@ public class TradeCommand {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                         return;
                                     }
+                                    Player target = (Player) args[0];
+                                    if (!requestingPlayers.containsKey(target.getUniqueId())) {
+                                        player.sendMessage(TranslatableChatComponent.read("tradeCommand.target_did_not_request").replace("%s", target.getName()));
+                                        return;
+                                    }
+
+                                    // target sent a request, it is not sure that player is the player target wants to trade with
+                                    if (!requestingPlayers.get(target.getUniqueId()).equals(player.getUniqueId())) {
+                                        player.sendMessage(TranslatableChatComponent.read("tradeCommand.target_did_not_request_player").replace("%s", target.getName()));
+                                        return;
+                                    }
+
+                                    // target sent a trade request to player, so we deny it
+                                    target.sendMessage(TranslatableChatComponent.read("tradeCommand.trade_was_denied").replace("%s", player.getName()));
+                                    player.sendMessage(TranslatableChatComponent.read("tradeCommand.trade_denied"));
+
+                                    requestingPlayers.remove(target.getUniqueId());
                                 })))
                 .register();
-    }
-
-    private String[] getPlayers() {
-        List<String> players = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(player.getName());
-        }
-        String[] suggestions = new String[players.size()];
-        for (int i = 0; i < players.size(); i++) {
-            suggestions[i] = players.get(i);
-        }
-        return suggestions;
     }
 }

@@ -43,7 +43,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>C:\Users\User\Desktop\Minecraft-Related\Minecraft Servers\Server EconomyPlugin\plugins</outputDirectory>
                             <finalName>EconomyPlugin</finalName>
                             <artifactSet>
                                 <includes>

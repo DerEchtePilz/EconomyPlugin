@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 public class ItemCreateOffer {
     public ItemCreateOffer() {
         new CommandTree("createoffer")
-                .withPermission(CommandPermission.NONE)
                 .then(new ItemStackArgument("item")
                         .then(new IntegerArgument("count")
                                 .then(new IntegerArgument("price")

@@ -9,9 +9,10 @@ import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
-import me.derechtepilz.economy.modules.discord.communication.ChattingFromMinecraftServer;
+import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
+import me.derechtepilz.economy.playermanager.TradeMenu;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
@@ -43,6 +44,7 @@ public final class Main extends JavaPlugin {
 
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
+    private TradeMenu tradeMenu;
 
     private boolean wasCommandAPILoaded;
 
@@ -50,11 +52,13 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         itemCancelMenu = new ItemCancelMenu();
         itemBuyMenu = new ItemBuyMenu();
+        tradeMenu = new TradeMenu();
 
         commandRegistration();
         listenerRegistration();
 
         initializeEnableProcedure();
+        CommandAPI.onEnable(this);
 
         getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
 
@@ -160,6 +164,7 @@ public final class Main extends JavaPlugin {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(itemCancelMenu, this);
         manager.registerEvents(itemBuyMenu, this);
+        manager.registerEvents(tradeMenu, this);
         manager.registerEvents(new ManageCoinsWhenJoining(), this);
         manager.registerEvents(new ChattingFromMinecraftServer(), this);
         manager.registerEvents(new StartUpBot(), this);
@@ -191,6 +196,10 @@ public final class Main extends JavaPlugin {
 
     public ItemBuyMenu getItemBuyMenu() {
         return itemBuyMenu;
+    }
+
+    public TradeMenu getTradeMenu() {
+        return tradeMenu;
     }
 
     public Language getLanguage() {

@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 public class ItemBuyOffer {
     public ItemBuyOffer() {
         new CommandTree("buy")
-                .withPermission(CommandPermission.NONE)
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));

@@ -31,7 +31,7 @@ public class ManageCoinsWhenJoining implements Listener {
         if (player.getPersistentDataContainer().has(NamespacedKeys.LAST_INTEREST.getKey(), PersistentDataType.LONG)) {
             // Calculate interest if at least 24 hours have passed
             long lastPlayerInterest = player.getPersistentDataContainer().get(NamespacedKeys.LAST_INTEREST.getKey(), PersistentDataType.LONG);
-            long interestDays = betweenDates(new Date(lastPlayerInterest), new Date(System.currentTimeMillis()));
+            long interestDays = daysBetweenDates(new Date(lastPlayerInterest), new Date(System.currentTimeMillis()));
             if (interestDays >= 1) {
                 new CoinManager().calculateInterest(bankManager, interestDays);
 
@@ -60,15 +60,15 @@ public class ManageCoinsWhenJoining implements Listener {
             player.sendMessage(TranslatableChatComponent.read("manageCoinsWhenJoining.onJoin.awarded_missing_start_balance").replace("%%s", ChatFormatter.valueOf(bankManager.getBalance())).replace("%s", ChatFormatter.valueOf(missingStartBalance)));
         }
 
-        giveEarnedCoins(player);
-        displayCoins(player);
+        giveEarnedCoinsFromSelling(player);
+        displayBalance(player);
     }
 
-    private long betweenDates(Date firstDate, Date secondDate) {
+    private long daysBetweenDates(Date firstDate, Date secondDate) {
         return ChronoUnit.DAYS.between(firstDate.toInstant(), secondDate.toInstant());
     }
 
-    private void giveEarnedCoins(Player player) {
+    private void giveEarnedCoinsFromSelling(Player player) {
         int earnedCoins = Main.getInstance().getEarnedCoins().getOrDefault(player.getUniqueId(), 0);
         if (earnedCoins > 0) {
             BankManager bankManager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
@@ -78,7 +78,7 @@ public class ManageCoinsWhenJoining implements Listener {
         }
     }
 
-    private void displayCoins(Player player) {
+    private void displayBalance(Player player) {
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), () -> {
             BankManager bankManager = Main.getInstance().getBankAccounts().get(player.getUniqueId());
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TranslatableChatComponent.read("manageCoinsWhenJoining.display_coins").replace("%s", ChatFormatter.valueOf(bankManager.getBalance()))));
