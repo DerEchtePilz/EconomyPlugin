@@ -110,6 +110,8 @@
     "tradeMenu.item.target_accepted": "\u00A7aYour trade partner currently accepts the trade",
     "tradeMenu.item.accept_trade": "\u00A7bClick to accept the trade",
     "tradeMenu.item.trade_accepted": "\u00A7bYou accepted the trade",
-    "tradeMenu.item.cancel_trade": "\u00A7cCancel the trade"
+    "tradeMenu.item.cancel_trade": "\u00A7cCancel the trade",
+    "helpCommand.help": "\u00A7fHelp",
+    "reloadCommand.reload_not_supported": "\u00A7cDue to reloading issues and because of the potential that plugins break, the /reload command has been disabled!"
   }
 }
