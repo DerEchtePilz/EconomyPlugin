@@ -110,23 +110,6 @@ public final class Main extends JavaPlugin {
         }
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
-            /*
-            try {
-                Field field = Class.forName(CommandAPIHandler.class.getName()).getDeclaredField("registeredCommands");
-                field.setAccessible(true);
-
-                List list = (List) field.get(CommandAPIHandler.getInstance());
-                for (Object object : list) {
-                    String[] firstSplit = object.toString().split("=");
-                    String commandName = firstSplit[1].split(",")[0];
-                    if (!commandNames.contains(commandName)) {
-                        commandNames.add(commandName);
-                    }
-                }
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-             */
 
             for (CommandAPIHandler.RegisteredCommand registeredCommand : CommandAPIHandler.getInstance().registeredCommands) {
                 if (!commandNames.contains(registeredCommand.command())) {
