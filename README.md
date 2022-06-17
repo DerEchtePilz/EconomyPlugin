@@ -67,10 +67,41 @@ Usage:
 - If something has the prefix `config:` that means that these values are dependant from what is in the config
 
 ## Changelogs
-| Plugin version | Features                                                                                                                                  |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| 1.0.0          | - Initial release <br/> Added: <br/>- Many commands<br/>- The basic economy structure                                                     |
-| 1.1.0          | - Added `/trade` command <br/> - Added `/economyhelp` command <br/> - Added a trade system <br/> - Added a discord integration (**BETA**) |
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="10%">Version</th>
+      <th width="10%">Minecraft Versions</th>
+      <th width="80%">Features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><b>1.0.0</b></td>
+      <td valign="top">Version independent</td>
+      <td valign="top">
+        <ul>
+          <li>Added multiple commands</li>
+          <li>Added basic economy structure</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.1.0</b></td>
+      <td valign="top">1.13 - 1.19</td>
+      <td valign="top">
+        <ul>
+          <li>Added <code>/trade</code> command</li>
+          <li>Added <code>/economyhelp</code> command</li>
+          <li>Added trade system</li>
+          <li>Added a discord integration (<b>BETA, won't receive support for this</b>)</li>
+          <li>Removed <code>/fallback</code> command</li>
+          <li>Many bug fixes</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## What is planned for the future?
 - Further development of the discord integration
