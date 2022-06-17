@@ -28,13 +28,13 @@ public class ItemBuilder {
     private String playerHeadSignature;
 
     public ItemBuilder(Material material) {
-        item = new ItemStack(material);
+        this.item = new ItemStack(material);
         this.material = material;
-        meta = item.getItemMeta();
+        this.meta = item.getItemMeta();
     }
 
     public ItemBuilder(Material material, int amount) {
-        item = new ItemStack(material, amount);
+        this.item = new ItemStack(material, amount);
         this.material = material;
         this.meta = item.getItemMeta();
     }

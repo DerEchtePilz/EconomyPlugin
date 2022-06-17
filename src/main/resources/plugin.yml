@@ -4,6 +4,3 @@ main: me.derechtepilz.economy.Main
 api-version: 1.18
 authors: [ DerEchtePilz ]
 description: This plugin lets you sell and buy items!
-commands:
-  fallback:
-    description:

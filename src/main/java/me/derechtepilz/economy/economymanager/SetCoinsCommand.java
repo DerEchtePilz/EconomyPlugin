@@ -1,17 +1,14 @@
 package me.derechtepilz.economy.economymanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.DoubleArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.RangeValidator;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
-import me.derechtepilz.economy.utility.config.ConfigFields;
 import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,8 +21,7 @@ import java.util.List;
 public class SetCoinsCommand {
     public SetCoinsCommand() {
         new CommandTree("setcoins")
-                .withPermission(CommandPermission.NONE)
-                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(getPlayers()))
+                .then(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument()
                         .then(new DoubleArgument("amount")
                                 .executes((sender, args) -> {
                                     if (sender instanceof Player player) {
@@ -37,10 +33,11 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                                            double min = Double.parseDouble(Config.get("startBalance"));
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());
+                                            return;
                                         }
 
                                         if (target.equals(player)) {
@@ -68,7 +65,7 @@ public class SetCoinsCommand {
                                         double amount = (double) args[1];
 
                                         try {
-                                            double min = (Double) Config.get(ConfigFields.START_BALANCE);
+                                            double min = Double.parseDouble(Config.get("startBalance"));
                                             new RangeValidator(min, Integer.MAX_VALUE, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(min) + " to " + ChatFormatter.valueOf(Integer.MAX_VALUE) + "!");
                                         } catch (InvalidRangeException e) {
                                             sender.sendMessage(ChatColor.RED + e.getMessage());
@@ -88,17 +85,5 @@ public class SetCoinsCommand {
                                     sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
                                 })))
                 .register();
-    }
-
-    private String[] getPlayers() {
-        List<String> players = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(player.getName());
-        }
-        String[] suggestions = new String[players.size()];
-        for (int i = 0; i < players.size(); i++) {
-            suggestions[i] = players.get(i);
-        }
-        return suggestions;
     }
 }

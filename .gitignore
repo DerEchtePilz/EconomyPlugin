@@ -114,3 +114,4 @@ run/
 
 # Files
 EconomyPlugin.iml
+*.env

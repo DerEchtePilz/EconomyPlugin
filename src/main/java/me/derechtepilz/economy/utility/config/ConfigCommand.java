@@ -1,19 +1,20 @@
 package me.derechtepilz.economy.utility.config;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
+import me.derechtepilz.economy.events.DiscordValuesSetEvent;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class ConfigCommand {
     public ConfigCommand() {
         new CommandTree("config")
-                .withPermission(CommandPermission.NONE)
                 .then(new LiteralArgument("itemQuantities")
                         .then(new LiteralArgument("maxAmount")
                                 .then(new IntegerArgument("maxAmount", 0)
@@ -22,7 +23,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_QUANTITIES_MAX_AMOUNT, args[0]);
+                                            Config.set("itemQuantitiesMaxAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.max_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         })))
@@ -33,7 +34,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_QUANTITIES_MIN_AMOUNT, args[0]);
+                                            Config.set("itemQuantitiesMinAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_quantities.min_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         }))))
@@ -45,7 +46,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_PRICE_MAX_AMOUNT, args[0]);
+                                            Config.set("itemPriceMaxAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.max_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         })))
@@ -56,7 +57,7 @@ public class ConfigCommand {
                                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                                 return;
                                             }
-                                            Config.set(ConfigFields.ITEM_PRICE_MIN_AMOUNT, args[0]);
+                                            Config.set("itemPriceMinAmount", String.valueOf(args[0]));
                                             Config.reloadConfig();
                                             player.sendMessage(TranslatableChatComponent.read("configCommand.item_price.min_amount").replace("%s", ChatFormatter.valueOf((Integer) args[0])));
                                         }))))
@@ -68,7 +69,7 @@ public class ConfigCommand {
                                         return;
                                     }
                                     double startBalance = (double) args[0];
-                                    Config.set(ConfigFields.START_BALANCE, startBalance);
+                                    Config.set("startBalance", String.valueOf(startBalance));
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.start_balance").replace("%s", ChatFormatter.valueOf(startBalance)));
                                 })))
@@ -80,7 +81,7 @@ public class ConfigCommand {
                                         return;
                                     }
                                     double interest = (double) args[0];
-                                    Config.set(ConfigFields.INTEREST, interest);
+                                    Config.set("interest", String.valueOf(interest));
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.interest").replace("%s", ChatFormatter.valueOf(interest)));
                                 })))
@@ -91,27 +92,51 @@ public class ConfigCommand {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                         return;
                                     }
-                                    Config.set(ConfigFields.LANGUAGE, args[0]);
+                                    Config.set("language", (String) args[0]);
                                     Config.reloadConfig();
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
                                 })))
+                .then(new LiteralArgument("discord")
+                        .then(new StringArgument("guildId")
+                                .then(new StringArgument("discordToken")
+                                        .executesPlayer((player, args) -> {
+                                            if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
+                                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                                return;
+                                            }
+                                            Config.set("guildId", (String) args[0]);
+                                            Config.set("discordToken", (String) args[1]);
+                                            Config.reloadConfig();
+                                            player.sendMessage(TranslatableChatComponent.read("configCommand.guildId").replace("%s", (String) args[0]));
+                                            player.sendMessage(TranslatableChatComponent.read("configCommand.discordToken").replace("%s", (String) args[1]));
+
+                                            Bukkit.getPluginManager().callEvent(new DiscordValuesSetEvent(player));
+                                        }))))
                 .then(new LiteralArgument("reset")
-                        .executesPlayer((player, args) -> {
-                            if (!Permission.hasPermission(player, Permission.RESET_CONFIG)) {
-                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                return;
+                        .executes((sender, args) -> {
+                            if (sender instanceof Player player) {
+                                if (!Permission.hasPermission(player, Permission.RESET_CONFIG)) {
+                                    player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                    return;
+                                }
+                                Config.resetConfig();
+                                player.sendMessage(TranslatableChatComponent.read("configCommand.reset_config"));
+                            } else {
+                                Config.resetConfig();
                             }
-                            Config.resetConfig();
-                            player.sendMessage(TranslatableChatComponent.read("configCommand.reset_config"));
                         }))
                 .then(new LiteralArgument("reload")
-                        .executesPlayer((player, args) -> {
-                            if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
-                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                return;
+                        .executes((sender, args) -> {
+                            if (sender instanceof Player player) {
+                                if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
+                                    player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                    return;
+                                }
+                                Config.reloadConfig();
+                                player.sendMessage(TranslatableChatComponent.read("configCommand.reload_config"));
+                            } else {
+                                Config.reloadConfig();
                             }
-                            Config.reloadConfig();
-                            player.sendMessage(TranslatableChatComponent.read("configCommand.reload_config"));
                         }))
                 .register();
     }
