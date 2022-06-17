@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.economymanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
@@ -86,17 +85,5 @@ public class SetCoinsCommand {
                                     sender.sendMessage(TranslatableChatComponent.read("command.wrong_executor"));
                                 })))
                 .register();
-    }
-
-    private String[] getPlayers() {
-        List<String> players = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(player.getName());
-        }
-        String[] suggestions = new String[players.size()];
-        for (int i = 0; i < players.size(); i++) {
-            suggestions[i] = players.get(i);
-        }
-        return suggestions;
     }
 }

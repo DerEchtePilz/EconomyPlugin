@@ -1,13 +1,12 @@
 package me.derechtepilz.economy.itemmanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 
-public class ItemCancelOffer {
-    public ItemCancelOffer() {
+public class CancelOfferCommand {
+    public CancelOfferCommand() {
         new CommandTree("canceloffer")
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.CANCEL_OFFER)) {

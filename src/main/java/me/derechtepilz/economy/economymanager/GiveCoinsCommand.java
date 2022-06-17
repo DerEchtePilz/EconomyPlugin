@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.economymanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;

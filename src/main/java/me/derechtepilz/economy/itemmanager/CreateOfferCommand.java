@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.itemmanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
@@ -16,8 +15,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemCreateOffer {
-    public ItemCreateOffer() {
+public class CreateOfferCommand {
+    public CreateOfferCommand() {
         new CommandTree("createoffer")
                 .then(new ItemStackArgument("item")
                         .then(new IntegerArgument("count")

@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.itemmanager;
 
-import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
@@ -10,8 +9,8 @@ import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemBuyOffer {
-    public ItemBuyOffer() {
+public class BuyCommand {
+    public BuyCommand() {
         new CommandTree("buy")
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {
