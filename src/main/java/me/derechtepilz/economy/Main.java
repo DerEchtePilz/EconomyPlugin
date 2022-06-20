@@ -2,15 +2,17 @@ package me.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import dev.jorel.commandapi.CommandAPIHandler;
+import dev.jorel.commandapi.RegisteredCommand;
 import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
 import me.derechtepilz.economy.minecraft.HelpCommand;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
+import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
+import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
 import me.derechtepilz.economy.playermanager.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.playermanager.TradeMenu;
@@ -26,6 +28,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,9 +115,9 @@ public final class Main extends JavaPlugin {
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
 
-            for (CommandAPIHandler.RegisteredCommand registeredCommand : CommandAPIHandler.getInstance().registeredCommands) {
-                if (!commandNames.contains(registeredCommand.command())) {
-                    commandNames.add(registeredCommand.command());
+            for (RegisteredCommand command : CommandAPI.getRegisteredCommands()) {
+                if (!commandNames.contains(command.commandName())) {
+                    commandNames.add(command.commandName());
                 }
             }
 
@@ -143,6 +147,7 @@ public final class Main extends JavaPlugin {
         new ConfigCommand();
         new TradeCommand();
         new HelpCommand();
+        new DiscordCommand();
     }
 
     private void listenerRegistration() {
@@ -153,6 +158,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new ManageCoinsWhenJoining(), this);
         manager.registerEvents(new ChattingFromMinecraftServer(), this);
         manager.registerEvents(new StartUpBot(), this);
+        manager.registerEvents(new ServerStatus(), this);
     }
 
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {

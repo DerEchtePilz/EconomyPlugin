@@ -14,6 +14,12 @@
     "discord.message_discord.disconnected": "Disconnected from the Minecraft Server!",
     "discord.message_discord.connected_description": "Communicate with players on the Minecraft server\nWrite a message here and it will appear there!\nReceive public messages sent on the Minecraft server!",
     "discord.message_discord.disconnected_description": "The Minecraft server has stopped running!",
+    "discord.minecraft_server.player_joined": "%s joined the Minecraft server!",
+    "discord.minecraft_server.player_quit": "%s left the Minecraft server!",
+    "discord.minecraft_player_count": "There are currently %s players on the Minecraft server!",
+    "discordCommand.search_members": "\u00A7aYou have got \u00A76%s \u00A7asearch results:",
+    "discordCommand.sent_private_message": "\u00A77You message %s:",
+    "discordCommand.cannot_send_private_message": "\u00A7cCannot send a private message to \u00A7b%s\u00A7c!",
     "config.loadConfig.is_loaded": "You called the loadConfig method more than once! Continuing without processing the second call.",
     "command.self.bank_account_missing": "\u00A7cYou have no bank account! Please rejoin the server!",
     "command.player_executor.target.bank_account_missing": "\u00A7b%s \u00A7cdoes not have a bank account! Please tell them to (re-)join the server!",
@@ -111,7 +117,12 @@
     "tradeMenu.item.accept_trade": "\u00A7bClick to accept the trade",
     "tradeMenu.item.trade_accepted": "\u00A7bYou accepted the trade",
     "tradeMenu.item.cancel_trade": "\u00A7cCancel the trade",
-    "helpCommand.help": "\u00A7fHelp",
-    "reloadCommand.reload_not_supported": "\u00A7cDue to reloading issues and because of the potential that plugins break, the /reload command has been disabled!"
+    "helpCommand.help": "\u00A7fHelp"
+  },
+  "en_en": {
+
+  },
+  "de_de": {
+
   }
 }

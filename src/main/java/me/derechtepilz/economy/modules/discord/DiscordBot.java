@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.Bukkit;
 
 import javax.security.auth.login.LoginException;
@@ -20,6 +21,7 @@ public class DiscordBot {
     private static DiscordBot DISCORD_BOT = null;
 
     private JDA jda;
+    private Guild guild;
     private TextChannel minecraftChat;
     private boolean active = false;
 
@@ -28,6 +30,7 @@ public class DiscordBot {
             DISCORD_BOT = this;
             jda = JDABuilder.createDefault(token, Arrays.asList(GatewayIntent.values()))
                     .setActivity(Activity.listening("Minecraft server"))
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .addEventListeners(new ChattingFromDiscordServer())
                     .build();
 
@@ -35,7 +38,7 @@ public class DiscordBot {
             if (guildId.equals("")) {
                 throw new LoginException();
             }
-            Guild guild = jda.awaitStatus(JDA.Status.CONNECTED).getGuildById(Config.get("guildId"));
+            guild = jda.awaitStatus(JDA.Status.CONNECTED).getGuildById(Config.get("guildId"));
             Bukkit.broadcastMessage(TranslatableChatComponent.read("startUpBot.discord_bot_running"));
             active = true;
             minecraftChat = (guild.getTextChannelsByName("minecraft-chat", true).size() >= 1) ? guild.getTextChannelsByName("minecraft-chat", true).get(0) : (TextChannel) guild.getDefaultChannel();
@@ -61,6 +64,10 @@ public class DiscordBot {
 
     public JDA getJda() {
         return jda;
+    }
+
+    public Guild getGuild() {
+        return guild;
     }
 
     public void sendShutdownMessage() {
