@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,7 @@ public class TradeMenu implements Listener, InventoryBase {
 
     private final HashMap<UUID, UUID> tradingPlayers = new HashMap<>();
     private final HashMap<UUID, List<ItemStack>> tradedItems = new HashMap<>();
+    private final HashMap<UUID, Integer> tradeCancelled = new HashMap<>();
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -62,13 +64,32 @@ public class TradeMenu implements Listener, InventoryBase {
             Inventory targetTradeInventory = target.getOpenInventory().getTopInventory();
             if (event.getClickedInventory().equals(event.getView().getTopInventory())) {
                 if (item.equals(cancelTrade)) {
+                    tradeCancelled.put(player.getUniqueId(), 1);
+                    tradeCancelled.put(target.getUniqueId(), 1);
+
                     closeInventory(player);
                     closeInventory(target);
                     player.sendMessage(TranslatableChatComponent.read("tradeMenu.trade_cancelled"));
                     target.sendMessage(TranslatableChatComponent.read("tradeMenu.trade_cancelled"));
 
+                    // return player items to player
+                    for (ItemStack tradedItem : tradedItems.get(target.getUniqueId())) {
+                        player.getInventory().addItem(tradedItem);
+                    }
+
+                    // return target items to target
+                    for (ItemStack tradedItem : tradedItems.get(player.getUniqueId())) {
+                        target.getInventory().addItem(tradedItem);
+                    }
+
                     tradingPlayers.remove(target.getUniqueId());
                     tradingPlayers.remove(player.getUniqueId());
+
+                    tradedItems.remove(player.getUniqueId());
+                    tradedItems.remove(target.getUniqueId());
+
+                    tradeCancelled.remove(player.getUniqueId());
+                    tradeCancelled.remove(target.getUniqueId());
                     return;
                 }
                 if (item.equals(acceptTrade)) {
@@ -147,6 +168,40 @@ public class TradeMenu implements Listener, InventoryBase {
                 setNotAcceptTrade(target, player);
 
                 player.getInventory().remove(item);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (tradingPlayers.containsKey(player.getUniqueId())) {
+            Player target = Bukkit.getPlayer(tradingPlayers.get(player.getUniqueId()));
+            if (event.getView().getTitle().equals(TranslatableChatComponent.read("tradeMenu.menu.title"))) {
+                if (tradeCancelled.containsKey(player.getUniqueId())) {
+                    return;
+                }
+
+                player.sendMessage(TranslatableChatComponent.read("tradeMenu.trade_cancelled"));
+                target.sendMessage(TranslatableChatComponent.read("tradeMenu.trade_cancelled"));
+
+                // return player items to player
+                for (ItemStack tradedItem : tradedItems.get(target.getUniqueId())) {
+                    player.getInventory().addItem(tradedItem);
+                }
+
+                // return target items to target
+                for (ItemStack tradedItem : tradedItems.get(player.getUniqueId())) {
+                    target.getInventory().addItem(tradedItem);
+                }
+
+                tradingPlayers.remove(target.getUniqueId());
+                tradingPlayers.remove(player.getUniqueId());
+
+                tradedItems.remove(player.getUniqueId());
+                tradedItems.remove(target.getUniqueId());
+
+                target.closeInventory();
             }
         }
     }
