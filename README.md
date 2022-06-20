@@ -1,4 +1,4 @@
-# EconomyPlugin v1.0.0
+# EconomyPlugin v1.1.1
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
 
 ## Table of contents
