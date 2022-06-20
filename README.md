@@ -77,12 +77,11 @@ Usage:
   </thead>
   <tbody>
     <tr>
-      <td valign="top"><b>1.0.0</b></td>
-      <td valign="top">Version independent</td>
+      <td valign="top"><b>1.1.1</b></td>
+      <td valign="top">1.13 - 1.19</td>
       <td valign="top">
         <ul>
-          <li>Added multiple commands</li>
-          <li>Added basic economy structure</li>
+          <li>Fixes trade system issue where items would not be given back when the trade menu gets closed</li>
         </ul>
       </td>
     </tr>
@@ -97,6 +96,16 @@ Usage:
           <li>Added a discord integration (<b>BETA, won't receive support for this</b>)</li>
           <li>Removed <code>/fallback</code> command</li>
           <li>Many bug fixes</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.0.0</b></td>
+      <td valign="top">Version independent</td>
+      <td valign="top">
+        <ul>
+          <li>Added multiple commands</li>
+          <li>Added basic economy structure</li>
         </ul>
       </td>
     </tr>
