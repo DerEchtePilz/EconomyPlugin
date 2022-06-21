@@ -20,6 +20,7 @@
     "discordCommand.search_members": "\u00A7aYou have got \u00A76%s \u00A7asearch results:",
     "discordCommand.sent_private_message": "\u00A77You message %s:",
     "discordCommand.cannot_send_private_message": "\u00A7cCannot send a private message to \u00A7b%s\u00A7c!",
+    "discordCommand.copy_id": "Click to put id into chat so you can copy",
     "config.loadConfig.is_loaded": "You called the loadConfig method more than once! Continuing without processing the second call.",
     "command.self.bank_account_missing": "\u00A7cYou have no bank account! Please rejoin the server!",
     "command.player_executor.target.bank_account_missing": "\u00A7b%s \u00A7cdoes not have a bank account! Please tell them to (re-)join the server!",

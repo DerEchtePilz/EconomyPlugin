@@ -8,8 +8,12 @@ import me.derechtepilz.economy.modules.discord.DiscordBot;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +30,17 @@ public class DiscordCommand {
                                                     long discordId = (long) args[0];
                                                     String message = (String) args[1];
                                                     String userName = DiscordBot.getDiscordBot().getGuild().getMemberById(discordId).getUser().getName()
-                                                                    + "#" + DiscordBot.getDiscordBot().getGuild().getMemberById(discordId).getUser().getDiscriminator();
-                                                    try {
-                                                        DiscordBot.getDiscordBot().getJda().openPrivateChannelById(discordId).complete().sendMessage("**" + player.getName() + "**: " + message).queue();
-                                                        player.sendMessage(TranslatableChatComponent.read("discordCommand.sent_private_message")
-                                                                .replace("%s", userName) + " " + message);
-                                                    } catch (Exception e) {
-                                                        player.sendMessage(TranslatableChatComponent.read("discordCommand.cannot_send_private_message")
-                                                                .replace("%s", userName));
-                                                    }
+                                                            + "#" + DiscordBot.getDiscordBot().getGuild().getMemberById(discordId).getUser().getDiscriminator();
+
+                                                    DiscordBot.getDiscordBot().getJda().openPrivateChannelById(discordId).complete()
+                                                            .sendMessage("**" + player.getName() + "**: " + message).queue(null, new ErrorHandler()
+                                                                    .handle(ErrorResponse.CANNOT_SEND_TO_USER,
+                                                                            (e) -> {
+                                                                                player.sendMessage(TranslatableChatComponent.read("discordCommand.cannot_send_private_message")
+                                                                                        .replace("%s", userName));
+                                                                            }));
+                                                    player.sendMessage(TranslatableChatComponent.read("discordCommand.sent_private_message")
+                                                            .replace("%s", userName) + " " + message);
                                                 }
                                             }
                                         }))))
@@ -67,7 +73,8 @@ public class DiscordCommand {
                                         TextComponent component = new TextComponent();
                                         String s = "§6" + (searchResults.indexOf(member) + 1) + ". §a" + member.getUser().getName() + "#" + member.getUser().getDiscriminator() + " (ID: " + member.getId() + ")";
                                         component.setText(s);
-                                        component.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, member.getId()));
+                                        component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, member.getId()));
+                                        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(TranslatableChatComponent.read("discordCommand.copy_id"))));
                                         player.spigot().sendMessage(component);
                                     }
                                 })))
