@@ -28,6 +28,10 @@ public class TradeCommand {
                                 return;
                             }
                             Player target = (Player) args[0];
+                            if (target.equals(player)) {
+                                player.sendMessage(TranslatableChatComponent.read("tradeCommand.cannot_trade_with_yourself"));
+                                return;
+                            }
                             if (requestingPlayers.containsKey(player.getUniqueId())) {
                                 player.sendMessage(TranslatableChatComponent.read("tradeCommand.pending_request"));
                                 return;

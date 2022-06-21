@@ -90,6 +90,7 @@
     "configCommand.discordToken": "\u00A7aYou set the config value \u00A76discordToken \u00A7ato \u00A76%s\u00A7a!",
     "configCommand.reset_config": "\u00A7cThe config has been reset!",
     "configCommand.reload_config": "\u00A7aThe config was reloaded!",
+    "tradeCommand.cannot_trade_with_yourself": "\u00A7cYou cannot trade with yourself!",
     "tradeCommand.trade_request_sent": "\u00A7aYou sent a trade request to \u00A7b%s\u00A7a!",
     "tradeCommand.incoming_trade_request": "\u00A7b%s \u00A7ahas sent a trade request!",
     "tradeCommand.accept_request": "\u00A7a[ACCEPT]",
