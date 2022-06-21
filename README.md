@@ -7,7 +7,7 @@
 - [Commands](#commands)
 - [Changelogs](#changelogs)
 - [What is planned for the future](#what-is-planned-for-the-future)
-- [Unfinished features](#unfinished-features-in-v110)
+- [Unfinished features](#unfinished-features-in-v112)
 - [Credits](#credits)
 
 ## Information
