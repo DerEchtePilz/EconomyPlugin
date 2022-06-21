@@ -1,4 +1,4 @@
-# EconomyPlugin v1.1.1
+# EconomyPlugin v1.1.2
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
 
 ## Table of contents
@@ -77,6 +77,15 @@ Usage:
   </thead>
   <tbody>
     <tr>
+      <td valign="top"><b>1.1.2</b></td>
+      <td valign="top">1.13 - 1.19</td>
+      <td valign="top">
+        <ul>
+          <li>Fixes trade system issue where you could trade with yourself causing item duplication when cancelling the trade</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td valign="top"><b>1.1.1</b></td>
       <td valign="top">1.13 - 1.19</td>
       <td valign="top">
@@ -116,7 +125,7 @@ Usage:
 - Further development of the discord integration
 - Still going away from a pure economy plugin
 
-## Unfinished features in v1.1.0
+## Unfinished features in v1.1.2
 - Multiple language support => Currently the only language that has translations is English
 - Discord integration
 
