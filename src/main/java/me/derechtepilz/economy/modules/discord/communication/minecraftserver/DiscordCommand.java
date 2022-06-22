@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.LongArgument;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
+import me.derechtepilz.economy.playermanager.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,6 +26,10 @@ public class DiscordCommand {
                         .then(new LongArgument("discordId")
                                 .then(new GreedyStringArgument("msg")
                                         .executesPlayer((player, args) -> {
+                                            if (!Permission.hasPermission(player, Permission.DISCORD_MESSAGE_USER)) {
+                                                player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                                return;
+                                            }
                                             if (DiscordBot.getDiscordBot() != null) {
                                                 if (DiscordBot.getDiscordBot().isActive()) {
                                                     long discordId = (long) args[0];
@@ -47,35 +52,43 @@ public class DiscordCommand {
                 .then(new LiteralArgument("searchId")
                         .then(new GreedyStringArgument("query")
                                 .executesPlayer((player, args) -> {
-                                    String query = ((String) args[0]).toLowerCase();
-                                    Guild guild = DiscordBot.getDiscordBot().getGuild();
-
-                                    List<Member> searchResults = new ArrayList<>();
-                                    for (Member member : guild.getMemberCache()) {
-                                        // check if member is bot or system
-                                        if (member.getUser().isSystem() || member.getUser().isBot()) {
-                                            continue;
-                                        }
-                                        // Search member name or nickname for query
-                                        if (member.getEffectiveName().toLowerCase().contains(query)) {
-                                            searchResults.add(member);
-                                            continue;
-                                        }
-
-                                        // search member name in case they don't have a nickname
-                                        if (member.getUser().getName().toLowerCase().contains(query)) {
-                                            searchResults.add(member);
-                                        }
+                                    if (!Permission.hasPermission(player, Permission.DISCORD_SEARCH_ID)) {
+                                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                        return;
                                     }
+                                    if (DiscordBot.getDiscordBot() != null) {
+                                        if (DiscordBot.getDiscordBot().isActive()) {
+                                            String query = ((String) args[0]).toLowerCase();
+                                            Guild guild = DiscordBot.getDiscordBot().getGuild();
 
-                                    player.sendMessage(TranslatableChatComponent.read("discordCommand.search_members").replace("%s", String.valueOf(searchResults.size())));
-                                    for (Member member : searchResults) {
-                                        TextComponent component = new TextComponent();
-                                        String s = "§6" + (searchResults.indexOf(member) + 1) + ". §a" + member.getUser().getName() + "#" + member.getUser().getDiscriminator() + " (ID: " + member.getId() + ")";
-                                        component.setText(s);
-                                        component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, member.getId()));
-                                        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(TranslatableChatComponent.read("discordCommand.copy_id"))));
-                                        player.spigot().sendMessage(component);
+                                            List<Member> searchResults = new ArrayList<>();
+                                            for (Member member : guild.getMemberCache()) {
+                                                // check if member is bot or system
+                                                if (member.getUser().isSystem() || member.getUser().isBot()) {
+                                                    continue;
+                                                }
+                                                // Search member name or nickname for query
+                                                if (member.getEffectiveName().toLowerCase().contains(query)) {
+                                                    searchResults.add(member);
+                                                    continue;
+                                                }
+
+                                                // search member name in case they don't have a nickname
+                                                if (member.getUser().getName().toLowerCase().contains(query)) {
+                                                    searchResults.add(member);
+                                                }
+                                            }
+
+                                            player.sendMessage(TranslatableChatComponent.read("discordCommand.search_members").replace("%s", String.valueOf(searchResults.size())));
+                                            for (Member member : searchResults) {
+                                                TextComponent component = new TextComponent();
+                                                String s = "§6" + (searchResults.indexOf(member) + 1) + ". §a" + member.getUser().getName() + "#" + member.getUser().getDiscriminator() + " (ID: " + member.getId() + ")";
+                                                component.setText(s);
+                                                component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, member.getId()));
+                                                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(TranslatableChatComponent.read("discordCommand.copy_id"))));
+                                                player.spigot().sendMessage(component);
+                                            }
+                                        }
                                     }
                                 })))
                 .register();
