@@ -48,22 +48,15 @@ public class TranslatableChatComponent {
         }
         switch (Main.getInstance().getLanguage()) {
             case EN_US -> {
-                if (object.getAsJsonObject("en_us").has(translationKey)) {
-                    return object.getAsJsonObject("en_us").get(translationKey).getAsString();
-                } else {
-                    return translationKey;
-                }
-            }
-            case EN_EN -> {
-                if (object.getAsJsonObject("en_en").has(translationKey)) {
-                    return object.getAsJsonObject("en_en").get(translationKey).getAsString();
+                if (object.has(translationKey)) {
+                    return object.getAsJsonObject(translationKey).get("en_us").getAsString();
                 } else {
                     return translationKey;
                 }
             }
             case DE_DE -> {
-                if (object.getAsJsonObject("de_de").has(translationKey)) {
-                    return object.getAsJsonObject("de_de").get(translationKey).getAsString();
+                if (object.has(translationKey)) {
+                    return object.getAsJsonObject(translationKey).get("de_de").getAsString();
                 } else {
                     return translationKey;
                 }
