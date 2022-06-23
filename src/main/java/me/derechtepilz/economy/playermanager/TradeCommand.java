@@ -4,6 +4,7 @@ import dev.jorel.commandapi.ArgumentTree;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -21,7 +22,7 @@ public class TradeCommand {
 
     public TradeCommand() {
         new CommandTree("trade")
-                .then(new ArgumentTree(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument())
+                .then(new ArgumentTree(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument())
                         .executesPlayer((player, args) -> {
                             if (!Permission.hasPermission(player, Permission.TRADE)) {
                                 player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));

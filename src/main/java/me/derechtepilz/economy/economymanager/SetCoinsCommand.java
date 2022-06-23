@@ -3,25 +3,21 @@ package me.derechtepilz.economy.economymanager;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.RangeValidator;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
 import me.derechtepilz.economy.utility.exceptions.InvalidRangeException;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SetCoinsCommand {
     public SetCoinsCommand() {
         new CommandTree("setcoins")
-                .then(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument()
+                .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                         .then(new DoubleArgument("amount")
                                 .executes((sender, args) -> {
                                     if (sender instanceof Player player) {

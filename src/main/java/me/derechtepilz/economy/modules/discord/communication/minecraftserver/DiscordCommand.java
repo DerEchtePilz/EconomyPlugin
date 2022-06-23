@@ -5,7 +5,7 @@ import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.LongArgument;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
-import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

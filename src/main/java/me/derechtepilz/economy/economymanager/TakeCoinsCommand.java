@@ -3,17 +3,13 @@ package me.derechtepilz.economy.economymanager;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TakeCoinsCommand {
     public TakeCoinsCommand() {
@@ -40,7 +36,7 @@ public class TakeCoinsCommand {
                             manager.setBalance(playerBalance - amount);
                             player.sendMessage(TranslatableChatComponent.read("takeCoinsCommand.player_executor.take_coins").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                         })
-                        .then(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument()
+                        .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                                 .executesPlayer((player, args) -> {
                                     if (!Permission.hasPermission(player, Permission.TAKE_COINS)) {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));

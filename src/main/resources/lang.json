@@ -315,28 +315,56 @@
     "en_us": "\u00A7cFailed to assign the permission '\u00A71%s\u00A7c' because it could not be found!",
     "de_de": ""
   },
+  "permissionCommand.permission_group_not_found": {
+    "en_us": "\u00A7cFailed to assign the permission group '\u00A71%s\u00A7c' because it could not be found!",
+    "de_de": ""
+  },
   "permissionCommand.permission_already_assigned": {
     "en_us": "\u00A7cFailed to assign the permission \u00A71%s \u00A7cbecause the player already has this permission!",
+    "de_de": ""
+  },
+  "permissionCommand.permission_group_already_assigned": {
+    "en_us": "\u00A7cFailed to assign the permission group \u00A71%s \u00A7cbecause the player already has this permission group!",
     "de_de": ""
   },
   "permissionCommand.permission_not_present": {
     "en_us": "\u00A7cFailed to remove the permission \u00A71%s \u00A7cbecause the player does not have this permission!",
     "de_de": ""
   },
+  "permissionCommand.permission_group_not_present": {
+    "en_us": "\u00A7cFailed to remove the permission group \u00A71%s \u00A7cbecause the player does not have this permission group!",
+    "de_de": ""
+  },
   "permissionCommand.assigned_permission": {
     "en_us": "\u00A7aYou have got the permission \u00A76%s\u00A7a!",
+    "de_de": ""
+  },
+  "permissionCommand.assigned_permission_group": {
+    "en_us": "\u00A7aYou have got the permission group \u00A76%s\u00A7a!",
     "de_de": ""
   },
   "permissionCommand.removed_permission": {
     "en_us": "\u00A7cYou have been taken the permission \u00A76%s\u00A7c!",
     "de_de": ""
   },
+  "permissionCommand.removed_permission_group": {
+    "en_us": "\u00A7cYou have been taken the permission group \u00A76%s\u00A7c!",
+    "de_de": ""
+  },
   "permissionCommand.assigned_permission_other": {
     "en_us": "\u00A7aSUCCESS! The permission \u00A76%s \u00A7awas given to \u00A7b%%s\u00A7a!",
     "de_de": ""
   },
+  "permissionCommand.assigned_permission_group_other": {
+    "en_us": "\u00A7aSUCCESS! The permission group \u00A76%s \u00A7awas given to \u00A7b%%s\u00A7a!",
+    "de_de": ""
+  },
   "permissionCommand.removed_permission_other": {
     "en_us": "\u00A7aSUCCESS! \u00A7cThe permission \u00A76%s \u00A7cwas taken from \u00A7b%%s\u00A7c!",
+    "de_de": ""
+  },
+  "permissionCommand.removed_permission_group_other": {
+    "en_us": "\u00A7aSUCCESS! \u00A7cThe permission group \u00A76%s \u00A7cwas taken from \u00A7b%%s\u00A7c!",
     "de_de": ""
   },
   "permissionCommand.player_permissions": {

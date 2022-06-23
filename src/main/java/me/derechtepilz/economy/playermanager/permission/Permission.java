@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.playermanager;
+package me.derechtepilz.economy.playermanager.permission;
 
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;

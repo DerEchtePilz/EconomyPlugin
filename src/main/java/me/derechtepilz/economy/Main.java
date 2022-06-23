@@ -13,7 +13,7 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
-import me.derechtepilz.economy.playermanager.PermissionCommand;
+import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.playermanager.TradeMenu;
 import me.derechtepilz.economy.utility.Language;
@@ -28,8 +28,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
