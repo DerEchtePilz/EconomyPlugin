@@ -367,6 +367,14 @@
     "en_us": "\u00A7aSUCCESS! \u00A7cThe permission group \u00A76%s \u00A7cwas taken from \u00A7b%%s\u00A7c!",
     "de_de": ""
   },
+  "permissionCommand.custom_group.created": {
+    "en_us": "\u00A7aSuccessfully created the permission group \u00A76%s\u00A7a!",
+    "de_de": ""
+  },
+  "permissionCommand.custom_group.deleted": {
+    "en_us": "\u00A7cSuccessfully deleted the permission group \u00A76%s\u00A7c!",
+    "de_de": ""
+  },
   "permissionCommand.player_permissions": {
     "en_us": "\u00A7b%s \u00A7ahas the following permissions:",
     "de_de": ""

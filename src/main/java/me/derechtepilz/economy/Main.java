@@ -13,6 +13,7 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
+import me.derechtepilz.economy.playermanager.permission.CustomPermissionGroup;
 import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.playermanager.TradeMenu;
@@ -28,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,8 @@ public final class Main extends JavaPlugin {
     private ItemCancelMenu itemCancelMenu;
     private ItemBuyMenu itemBuyMenu;
     private TradeMenu tradeMenu;
+
+    private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
 
     private boolean wasCommandAPILoaded;
 
@@ -71,7 +75,12 @@ public final class Main extends JavaPlugin {
     @Override
     public void onLoad() {
         plugin = this;
-        Config.loadConfig();
+        try {
+            Config.loadConfig();
+            customPermissionGroup.loadPermissionGroup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (Config.contains("language")) {
             language = Language.valueOf(Config.get("language"));
@@ -93,23 +102,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        DiscordBot.getDiscordBot().setActive(false);
-        try {
-            if (DiscordBot.getDiscordBot() != null) {
-                DiscordBot.getDiscordBot().sendShutdownMessage();
-                Thread.sleep(2000);
-                DiscordBot.getDiscordBot().getJda().shutdownNow();
-
-                OkHttpClient client = DiscordBot.getDiscordBot().getJda().getHttpClient();
-                client.connectionPool().evictAll();
-                client.dispatcher().executorService().shutdown();
-                while (DiscordBot.getDiscordBot().getJda().getStatus() != JDA.Status.SHUTDOWN) {
-                    Thread.sleep(20);
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        stopDiscordBot();
         if (wasCommandAPILoaded) {
             List<String> commandNames = new ArrayList<>();
 
@@ -124,8 +117,13 @@ public final class Main extends JavaPlugin {
             }
         }
 
-        new SaveItems();
-        Config.saveConfig();
+        try {
+            new SaveItems();
+            Config.saveConfig();
+            customPermissionGroup.buildPermissionGroup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         getLogger().info(TranslatableChatComponent.read("main.onDisable.plugin_disable_message"));
     }
@@ -191,6 +189,10 @@ public final class Main extends JavaPlugin {
         return tradeMenu;
     }
 
+    public CustomPermissionGroup getCustomPermissionGroup() {
+        return customPermissionGroup;
+    }
+
     public Language getLanguage() {
         return language;
     }
@@ -222,6 +224,26 @@ public final class Main extends JavaPlugin {
             new DiscordBot(token);
         } catch (LoginException e) {
             getLogger().severe(TranslatableChatComponent.read("discord.startup.failed"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopDiscordBot() {
+        DiscordBot.getDiscordBot().setActive(false);
+        try {
+            if (DiscordBot.getDiscordBot() != null) {
+                DiscordBot.getDiscordBot().sendShutdownMessage();
+                Thread.sleep(2000);
+                DiscordBot.getDiscordBot().getJda().shutdownNow();
+
+                OkHttpClient client = DiscordBot.getDiscordBot().getJda().getHttpClient();
+                client.connectionPool().evictAll();
+                client.dispatcher().executorService().shutdown();
+                while (DiscordBot.getDiscordBot().getJda().getStatus() != JDA.Status.SHUTDOWN) {
+                    Thread.sleep(20);
+                }
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

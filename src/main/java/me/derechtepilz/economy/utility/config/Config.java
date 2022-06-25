@@ -24,7 +24,7 @@ public class Config {
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadConfig() {
+    public static void loadConfig() throws FileNotFoundException {
         if (isLoaded) {
             Main.getInstance().getLogger().severe(TranslatableChatComponent.read("config.loadConfig.is_loaded"));
             return;
@@ -32,14 +32,10 @@ public class Config {
         if (!configFile.exists()) {
             resetConfig();
         }
-        try {
-            config = gson.fromJson(new FileReader(configFile), HashMap.class);
-            defaultConfigValues = gson.fromJson(getValuesFromDefaultConfig(), HashMap.class);
-            checkConfigValues(config, defaultConfigValues);
-            saveConfig();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        config = gson.fromJson(new FileReader(configFile), HashMap.class);
+        defaultConfigValues = gson.fromJson(getValuesFromDefaultConfig(), HashMap.class);
+        checkConfigValues(config, defaultConfigValues);
+        saveConfig();
         isLoaded = true;
     }
 

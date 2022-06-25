@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.utility;
 
 import dev.jorel.commandapi.arguments.*;
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.playermanager.permission.PermissionGroup;
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ public class Argument<T> {
             case PLAYER_SINGLE -> this.argument = (dev.jorel.commandapi.arguments.Argument<T>) new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> getPlayers()));
             case PLAYER_MULTIPLE -> this.argument = (dev.jorel.commandapi.arguments.Argument<T>) getListArgument("players", ",", false, this::getPlayerList);
             case PERMISSION_SINGLE -> this.argument = (dev.jorel.commandapi.arguments.Argument<T>) getListArgument("permissions", ",", false, getPermissions());
-            case PERMISSION_GROUP -> this.argument = (dev.jorel.commandapi.arguments.Argument<T>) getListArgument("permissionGroups", ",", false, getPermissionGroup());
+            case PERMISSION_GROUP -> this.argument = (dev.jorel.commandapi.arguments.Argument<T>) getListArgument("permissionGroups", ",", false, this::getPermissionGroup);
         }
     }
 
@@ -62,6 +63,9 @@ public class Argument<T> {
         List<String> permissionGroups = new ArrayList<>();
         for (PermissionGroup permissionGroup : PermissionGroup.values()) {
             permissionGroups.add(permissionGroup.getGroupName());
+        }
+        for (String customPermissionGroup : Main.getInstance().getCustomPermissionGroup().getGroupNames()) {
+            permissionGroups.add(customPermissionGroup);
         }
         return permissionGroups;
     }

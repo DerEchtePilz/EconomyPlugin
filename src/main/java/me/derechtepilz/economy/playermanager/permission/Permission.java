@@ -18,7 +18,7 @@ public enum Permission {
     RESET_CONFIG("reset_config", 7),
     DELETE_CONFIG("delete_config", 9),
     TRADE("trade", 8),
-    DISCORD_SEARCH_ID("discord_id", 10),
+    DISCORD_SEARCH_ID("discord_search_id", 10),
     DISCORD_MESSAGE_USER("discord_message_user", 11);
 
     private final String name;
