@@ -7,6 +7,7 @@ import me.derechtepilz.economy.economymanager.*;
 import me.derechtepilz.economy.itemmanager.*;
 import me.derechtepilz.economy.itemmanager.save.LoadItems;
 import me.derechtepilz.economy.itemmanager.save.SaveItems;
+import me.derechtepilz.economy.listeners.CheckPluginUpdate;
 import me.derechtepilz.economy.minecraft.HelpCommand;
 import me.derechtepilz.economy.modules.discord.DiscordBot;
 import me.derechtepilz.economy.modules.discord.ServerStatus;
@@ -55,7 +56,7 @@ public final class Main extends JavaPlugin {
     private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
 
     private boolean wasCommandAPILoaded;
-    private boolean isNewUpdateAvailable;
+    private boolean isNewUpdateAvailable = false;
 
     @Override
     public void onEnable() {
@@ -158,6 +159,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new ChattingFromMinecraftServer(), this);
         manager.registerEvents(new StartUpBot(), this);
         manager.registerEvents(new ServerStatus(), this);
+        manager.registerEvents(new CheckPluginUpdate(), this);
     }
 
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {
@@ -198,6 +200,10 @@ public final class Main extends JavaPlugin {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public boolean isNewUpdateAvailable() {
+        return isNewUpdateAvailable;
     }
 
     public int findNextMultiple(int input, int multipleToFind) {

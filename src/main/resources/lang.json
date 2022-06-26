@@ -19,6 +19,10 @@
     "en_us": "\u00A7cPlease rejoin the server! Otherwise you won't be able to see your balance or buy items!",
     "de_de": ""
   },
+  "checkPluginUpdate.new_update_available": {
+    "en_us": "\u00A76[UPDATE CHECKER] \u00A7eThere is a new update available for the EconomyPlugin! Download it from \u00A79https://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
+    "de_de": ""
+  },
   "startUpBot.activated_discord_bot": {
     "en_us": "\u00A7eThe discord bot has been started!",
     "de_de": ""
