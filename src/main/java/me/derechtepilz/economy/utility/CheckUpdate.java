@@ -6,22 +6,18 @@ import java.io.IOException;
 
 public class CheckUpdate {
 
-    private static final String pluginVersion = "v2.0.0";
+    private final String currentPluginVersion = "v2.0.0";
 
-    private CheckUpdate() {
-
-    }
-
-    public static boolean checkForUpdate() {
+    public boolean checkForUpdate() {
         try {
             String apiResponse = new APIRequest().request("https://api.github.com/repos/DerEchtePilz/EconomyPlugin/releases");
             JsonArray checkVersionUpdateArray = JsonParser.parseString(apiResponse).getAsJsonArray();
             JsonObject checkVersionUpdateObject = checkVersionUpdateArray.get(0).getAsJsonObject();
 
-            String pluginVersion = checkVersionUpdateObject.get("tag_name").getAsString();
+            String currentReleaseVersion = checkVersionUpdateObject.get("tag_name").getAsString(); // this is one version behind currentPluginVersion
             boolean isPreRelease = checkVersionUpdateObject.get("prerelease").getAsBoolean();
 
-            return !isPreRelease && !pluginVersion.equals(CheckUpdate.pluginVersion);
+            return !isPreRelease && !currentReleaseVersion.equals(this.currentPluginVersion);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

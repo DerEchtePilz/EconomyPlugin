@@ -101,7 +101,11 @@ public final class Main extends JavaPlugin {
         }
 
         new LoadItems();
-        isNewUpdateAvailable = CheckUpdate.checkForUpdate();
+        isNewUpdateAvailable = new CheckUpdate().checkForUpdate();
+
+        if (isNewUpdateAvailable) {
+            getLogger().warning(TranslatableChatComponent.read("checkPluginUpdate.new_update_available"));
+        }
     }
 
     @Override
