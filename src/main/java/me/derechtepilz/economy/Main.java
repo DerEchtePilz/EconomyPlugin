@@ -17,6 +17,7 @@ import me.derechtepilz.economy.playermanager.permission.CustomPermissionGroup;
 import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
 import me.derechtepilz.economy.playermanager.TradeMenu;
+import me.derechtepilz.economy.utility.CheckUpdate;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
@@ -54,6 +55,7 @@ public final class Main extends JavaPlugin {
     private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
 
     private boolean wasCommandAPILoaded;
+    private boolean isNewUpdateAvailable;
 
     @Override
     public void onEnable() {
@@ -98,6 +100,7 @@ public final class Main extends JavaPlugin {
         }
 
         new LoadItems();
+        isNewUpdateAvailable = CheckUpdate.checkForUpdate();
     }
 
     @Override

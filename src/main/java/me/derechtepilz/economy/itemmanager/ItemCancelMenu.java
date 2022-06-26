@@ -85,8 +85,9 @@ public class ItemCancelMenu implements Listener {
         int inventoryCount = cancelOfferMenuItems.length / 45;
         for (int i = 0; i < inventoryCount; i++) {
             ItemStack[] inventory = new ItemStack[54];
+            int index = i * 45;
             for (int j = 0; j < 45; j++) {
-                inventory[j] = cancelOfferMenuItems[j];
+                inventory[j] = cancelOfferMenuItems[index + j];
             }
             if (i == 0) {
                 for (int j = 45; j < inventory.length; j++) {

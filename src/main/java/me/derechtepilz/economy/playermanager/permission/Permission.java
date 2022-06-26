@@ -79,6 +79,26 @@ public enum Permission {
         player.getPersistentDataContainer().set(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
     }
 
+    public static Permission getPermissionFromId(int permissionId) {
+        Permission requestedPermission = null;
+        for (Permission permission : Permission.values()) {
+            if (permission.getId() == permissionId) {
+                requestedPermission = permission;
+            }
+        }
+        return requestedPermission;
+    }
+
+    public static int getPermissionIdFromName(String name) {
+        int requestedPermission = -1;
+        for (Permission permission : Permission.values()) {
+            if (permission.getName().equals(name)) {
+                requestedPermission = permission.getId();
+            }
+        }
+        return requestedPermission;
+    }
+
     public static String[] getPermissions(Player player) {
         if (!player.getPersistentDataContainer().has(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY)) {
             return new String[0];

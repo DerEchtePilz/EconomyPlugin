@@ -411,8 +411,9 @@ public class ItemBuyMenu implements Listener {
         if (playerOffers) {
             for (int i = 0; i < playerOfferPages; i++) {
                 ItemStack[] inventoryPage = new ItemStack[54];
+                int index = i * 45;
                 for (int j = 0; j < 45; j++) {
-                    inventoryPage[j] = offers.get(j);
+                    inventoryPage[j] = offers.get(index + j);
                 }
                 if (i == 0) {
                     for (int j = 45; j < 54; j++) {

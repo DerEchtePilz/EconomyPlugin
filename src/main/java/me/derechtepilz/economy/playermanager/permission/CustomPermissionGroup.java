@@ -11,11 +11,11 @@ import java.io.*;
 import java.util.*;
 
 public class CustomPermissionGroup {
-    private Map<String, List<String>> customPermissionGroups = new HashMap<>();
+    private Map<String, List<Double>> customPermissionGroups = new HashMap<>();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final File permissionGroup = new File(new File("./plugins/Economy"), "permission_groups.json");
 
-    public void registerPermissionGroup(@NotNull String groupName, @NotNull List<String> groupPermissions) throws IOException {
+    public void registerPermissionGroup(@NotNull String groupName, @NotNull List<Double> groupPermissions) throws IOException {
         customPermissionGroups.put(groupName, groupPermissions);
         buildPermissionGroup();
     }
@@ -28,38 +28,42 @@ public class CustomPermissionGroup {
         buildPermissionGroup();
     }
 
-    public List<String> getPermissionGroup(@NotNull String groupName) {
+    public List<Permission> getPermissionGroup(@NotNull String groupName) {
         if (!isPermissionGroup(groupName)) {
             return new ArrayList<>();
         }
-        return customPermissionGroups.get(groupName);
+        List<Permission> permissionGroup = new ArrayList<>();
+        for (double permissionId : customPermissionGroups.get(groupName)) {
+            permissionGroup.add(Permission.getPermissionFromId((int) permissionId));
+        }
+        return permissionGroup;
     }
 
     public void addPermissionGroupToPlayer(@NotNull String groupName, @NotNull Player player) {
-        for (String permission : getPermissionGroup(groupName)) {
-            if (Permission.hasPermission(player, Permission.valueOf(permission.toUpperCase()))) {
+        for (Permission permission : getPermissionGroup(groupName)) {
+            if (Permission.hasPermission(player, permission)) {
                 continue;
             }
-            Permission.addPermission(player, Permission.valueOf(permission.toUpperCase()));
+            Permission.addPermission(player, permission);
         }
     }
 
     public void removePermissionGroupFromPlayer(@NotNull String groupName, @NotNull Player player) {
-        for (String permission : getPermissionGroup(groupName)) {
-            if (!Permission.hasPermission(player, Permission.valueOf(permission.toUpperCase()))) {
+        for (Permission permission : getPermissionGroup(groupName)) {
+            if (!Permission.hasPermission(player, permission)) {
                 continue;
             }
-            Permission.removePermission(player, Permission.valueOf(permission.toUpperCase()));
+            Permission.removePermission(player, permission);
         }
     }
 
     public boolean hasPlayerPermissionGroup(@NotNull String groupName, @NotNull Player player) {
         int[] playerPermissions = player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY);
         int checkedMatchingPermissions = 0;
-        List<String> customPermissionGroup = getPermissionGroup(groupName);
+        List<Permission> customPermissionGroup = getPermissionGroup(groupName);
         for (int permissionId : playerPermissions) {
-            for (String permission : customPermissionGroup) {
-                if (Permission.valueOf(permission.toUpperCase()).getId() == permissionId) {
+            for (Permission permission : customPermissionGroup) {
+                if (permission.getId() == permissionId) {
                     checkedMatchingPermissions += 1;
                 }
             }
@@ -79,7 +83,6 @@ public class CustomPermissionGroup {
         return groupNames;
     }
 
-    @SuppressWarnings("unchecked")
     public void loadPermissionGroup() throws IOException {
         customPermissionGroups.clear();
         if (!permissionGroup.exists()) {

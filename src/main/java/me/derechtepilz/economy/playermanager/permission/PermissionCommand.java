@@ -11,6 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -125,6 +126,9 @@ public class PermissionCommand {
                                                                     target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_group").replace("%s", permissionGroupName));
                                                                     player.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_group_other").replace("%%s", target.getName()).replace("%s", permissionGroupName));
                                                                 }
+                                                                if (permissionGroups.indexOf(permissionGroupName) != permissionGroups.size() - 1) {
+                                                                    continue;
+                                                                }
                                                                 return;
                                                             }
                                                             if (PermissionGroup.hasPermissionGroup(target, permissionGroupToAssign)) {
@@ -172,6 +176,9 @@ public class PermissionCommand {
                                                                 Main.getInstance().getCustomPermissionGroup().addPermissionGroupToPlayer(permissionGroupName, target);
                                                                 target.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_group").replace("%s", permissionGroupName));
                                                                 console.sendMessage(TranslatableChatComponent.read("permissionCommand.assigned_permission_group_other").replace("%%s", target.getName()).replace("%s", permissionGroupName));
+                                                                if (permissionGroups.indexOf(permissionGroupName) != permissionGroups.size() - 1) {
+                                                                    continue;
+                                                                }
                                                                 return;
                                                             }
                                                             if (PermissionGroup.hasPermissionGroup(target, permissionGroupToAssign)) {
@@ -306,6 +313,9 @@ public class PermissionCommand {
                                                                     target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_group").replace("%s", permissionGroupName));
                                                                     player.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_group_other").replace("%%s", target.getName()).replace("%s", permissionGroupName));
                                                                 }
+                                                                if (permissionGroups.indexOf(permissionGroupName) != permissionGroups.size() - 1) {
+                                                                    continue;
+                                                                }
                                                                 return;
                                                             }
                                                             if (!PermissionGroup.hasPermissionGroup(target, permissionGroupToRemove)) {
@@ -353,6 +363,9 @@ public class PermissionCommand {
                                                                 Main.getInstance().getCustomPermissionGroup().removePermissionGroupFromPlayer(permissionGroupName, target);
                                                                 target.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_group").replace("%s", permissionGroupName));
                                                                 console.sendMessage(TranslatableChatComponent.read("permissionCommand.removed_permission_group_other").replace("%%s", target.getName()).replace("%s", permissionGroupName));
+                                                                if (permissionGroups.indexOf(permissionGroupName) != permissionGroups.size() - 1) {
+                                                                    continue;
+                                                                }
                                                                 return;
                                                             }
                                                             if (!PermissionGroup.hasPermissionGroup(target, permissionGroupToRemove)) {
@@ -378,9 +391,13 @@ public class PermissionCommand {
                                                     if (sender instanceof Player player) {
                                                         String permissionGroupName = (String) args[0];
                                                         List<String> permissionGroupPermissions = (List<String>) args[1];
+                                                        List<Double> permissionGroupPermissionIds = new ArrayList<>();
+                                                        for (String permissionName : permissionGroupPermissions) {
+                                                            permissionGroupPermissionIds.add((double) Permission.getPermissionIdFromName(permissionName));
+                                                        }
 
                                                         try {
-                                                            Main.getInstance().getCustomPermissionGroup().registerPermissionGroup(permissionGroupName.toLowerCase(), permissionGroupPermissions);
+                                                            Main.getInstance().getCustomPermissionGroup().registerPermissionGroup(permissionGroupName.toLowerCase(), permissionGroupPermissionIds);
 
                                                             player.sendMessage(TranslatableChatComponent.read("permissionCommand.custom_group.created").replace("%s", permissionGroupName.toLowerCase()));
                                                         } catch (IOException e) {
@@ -391,9 +408,13 @@ public class PermissionCommand {
                                                     if (sender instanceof ConsoleCommandSender console) {
                                                         String permissionGroupName = (String) args[0];
                                                         List<String> permissionGroupPermissions = (List<String>) args[1];
+                                                        List<Double> permissionGroupPermissionIds = new ArrayList<>();
+                                                        for (String permissionName : permissionGroupPermissions) {
+                                                            permissionGroupPermissionIds.add((double) Permission.getPermissionIdFromName(permissionName));
+                                                        }
 
                                                         try {
-                                                            Main.getInstance().getCustomPermissionGroup().registerPermissionGroup(permissionGroupName.toLowerCase(), permissionGroupPermissions);
+                                                            Main.getInstance().getCustomPermissionGroup().registerPermissionGroup(permissionGroupName.toLowerCase(), permissionGroupPermissionIds);
 
                                                             console.sendMessage(TranslatableChatComponent.read("permissionCommand.custom_group.created").replace("%s", permissionGroupName.toLowerCase()));
                                                         } catch (IOException e) {
