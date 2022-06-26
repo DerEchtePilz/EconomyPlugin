@@ -21,7 +21,7 @@ public class CheckUpdate {
             String pluginVersion = checkVersionUpdateObject.get("tag_name").getAsString();
             boolean isPreRelease = checkVersionUpdateObject.get("prerelease").getAsBoolean();
 
-            return !isPreRelease && pluginVersion.equals(CheckUpdate.pluginVersion);
+            return !isPreRelease && !pluginVersion.equals(CheckUpdate.pluginVersion);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
