@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class CheckUpdate {
 
-    private static final String pluginVersion = "v1.1.3";
+    private static final String pluginVersion = "v2.0.0";
 
     private CheckUpdate() {
 
