@@ -68,9 +68,8 @@ public class FriendCommand implements ICooldown {
                                     long time = date.toInstant().plusSeconds(300).toEpochMilli();
 
                                     cooldown.put(player.getUniqueId(), time);
-                                    Main.getInstance().getCooldownMap().put(player.getUniqueId(), this);
 
-                                    Cooldown cooldown = new Cooldown(player, time);
+                                    Cooldown cooldown = new Cooldown(player, time, this);
                                     cooldown.setCancelTask(Bukkit.getScheduler().runTaskTimer(Main.getInstance(), cooldown, 0, 20));
                                 })))
                 .then(new LiteralArgument("remove")
@@ -108,7 +107,6 @@ public class FriendCommand implements ICooldown {
 
             Player target = Bukkit.getPlayer(requestingPlayers.get(player.getUniqueId()));
             requestingPlayers.remove(player.getUniqueId());
-            Main.getInstance().getCooldownMap().remove(player.getUniqueId());
 
             player.sendMessage(TranslatableChatComponent.read("friendCommand.request_expired"));
             target.sendMessage(TranslatableChatComponent.read("friendCommand.request_expired"));

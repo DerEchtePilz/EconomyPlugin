@@ -232,10 +232,6 @@ public final class Main extends JavaPlugin {
         return language;
     }
 
-    public Map<UUID, ICooldown> getCooldownMap() {
-        return cooldownMap;
-    }
-
     public boolean isNewUpdateAvailable() {
         return isNewUpdateAvailable;
     }

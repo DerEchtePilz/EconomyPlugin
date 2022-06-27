@@ -7,16 +7,18 @@ import org.bukkit.scheduler.BukkitTask;
 public class Cooldown implements Runnable {
     private final Player player;
     private final long endTime;
+    private final ICooldown iCooldown;
     private BukkitTask toCancel;
 
-    public Cooldown(Player player, long endTime) {
+    public Cooldown(Player player, long endTime, ICooldown iCooldown) {
         this.player = player;
         this.endTime = endTime;
+        this.iCooldown = iCooldown;
     }
 
     @Override
     public void run() {
-        boolean cooldownEnded = Main.getInstance().getCooldownMap().get(player.getUniqueId()).checkDate(player, this);
+        boolean cooldownEnded = iCooldown.checkDate(player, this);
         if (cooldownEnded) {
             toCancel.cancel();
         }
