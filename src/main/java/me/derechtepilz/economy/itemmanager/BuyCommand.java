@@ -10,7 +10,7 @@ import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.inventory.ItemStack;
 
 public class BuyCommand {
-    public BuyCommand() {
+    public void register() {
         new CommandTree("buy")
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.BUY_OFFER)) {

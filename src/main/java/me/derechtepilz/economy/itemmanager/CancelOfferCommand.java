@@ -6,7 +6,7 @@ import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 
 public class CancelOfferCommand {
-    public CancelOfferCommand() {
+    public void register() {
         new CommandTree("canceloffer")
                 .executesPlayer((player, args) -> {
                     if (!Permission.hasPermission(player, Permission.CANCEL_OFFER)) {

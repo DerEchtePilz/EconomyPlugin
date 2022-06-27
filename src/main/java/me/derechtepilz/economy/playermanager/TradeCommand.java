@@ -6,21 +6,27 @@ import dev.jorel.commandapi.arguments.LiteralArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
+import me.derechtepilz.economy.utility.Cooldown;
+import me.derechtepilz.economy.utility.ICooldown;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class TradeCommand {
+public class TradeCommand implements ICooldown {
 
     private final HashMap<UUID, UUID> requestingPlayers = new HashMap<>();
+    private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
-    public TradeCommand() {
+    public void register() {
         new CommandTree("trade")
                 .then(new ArgumentTree(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument())
                         .executesPlayer((player, args) -> {
@@ -52,6 +58,15 @@ public class TradeCommand {
                             denyTradeRequest.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade " + player.getName() + " deny"));
 
                             target.spigot().sendMessage(acceptTradeRequest, denyTradeRequest);
+
+                            Date date = Calendar.getInstance().getTime();
+                            long time = date.toInstant().plusSeconds(300).toEpochMilli();
+
+                            cooldown.put(player.getUniqueId(), time);
+                            Main.getInstance().getCooldownMap().put(player.getUniqueId(), this);
+
+                            Cooldown cooldown = new Cooldown(player, time);
+                            cooldown.setCancelTask(Bukkit.getScheduler().runTaskTimer(Main.getInstance(), cooldown, 0, 20));
                         })
                         .then(new LiteralArgument("accept")
                                 .executesPlayer((player, args) -> {
@@ -100,5 +115,22 @@ public class TradeCommand {
                                     requestingPlayers.remove(target.getUniqueId());
                                 })))
                 .register();
+    }
+
+    @Override
+    public boolean checkDate(Player player, Cooldown cooldown) {
+        if (System.currentTimeMillis() >= cooldown.endTime()) {
+            this.cooldown.remove(cooldown.player().getUniqueId());
+
+            Player target = Bukkit.getPlayer(requestingPlayers.get(player.getUniqueId()));
+            requestingPlayers.remove(player.getUniqueId());
+            Main.getInstance().getCooldownMap().remove(player.getUniqueId());
+
+            player.sendMessage(TranslatableChatComponent.read("tradeCommand.request_expired"));
+            target.sendMessage(TranslatableChatComponent.read("tradeCommand.request_expired"));
+
+            return true;
+        }
+        return false;
     }
 }

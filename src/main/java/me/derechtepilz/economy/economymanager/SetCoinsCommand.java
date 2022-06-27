@@ -15,7 +15,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class SetCoinsCommand {
-    public SetCoinsCommand() {
+    public void register() {
         new CommandTree("setcoins")
                 .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                         .then(new DoubleArgument("amount")

@@ -479,6 +479,10 @@
     "en_us": "\u00A7cYou denied the trade request!",
     "de_de": ""
   },
+  "tradeCommand.request_expired": {
+    "en_us": "\u00A7cThe trade request has expired!",
+    "de_de": ""
+  },
   "tradeMenu.trade_cancelled": {
     "en_us": "\u00A7cThe trade has been cancelled!",
     "de_de": ""
@@ -524,11 +528,11 @@
     "de_de": ""
   },
   "friendCommand.sent_friend_request": {
-    "en_us": "\u00A7aYou sent a friend request to \u00A7b%s\u00A7a!",
+    "en_us": "\u00A7aYou sent a friend request to \u00A7b%s\u00A7a! They have \u00A755 \u00A7aminutes to accept!",
     "de_de": ""
   },
   "friendCommand.received_friend_request": {
-    "en_us": "\u00A7aYou received a friend request from \u00A7b%s\u00A7a!",
+    "en_us": "\u00A7aYou received a friend request from \u00A7b%s\u00A7a! You have \u00A755 \u00A7aminutes to accept!",
     "de_de": ""
   },
   "friendCommand.accept_friend_request": {
@@ -553,6 +557,18 @@
   },
   "friendCommand.removed_friend": {
     "en_us": "\u00A7cYou removed \u00A7b%s \u00A7cfrom your friend list!",
+    "de_de": ""
+  },
+  "friendCommand.request_expired": {
+    "en_us": "\u00A7cThe friend request has expired!",
+    "de_de": ""
+  },
+  "friendCommand.cannot_friend_yourself": {
+    "en_us": "\u00A7cYou cannot send a friend request to yourself!",
+    "de_de": ""
+  },
+  "friendCommand.pending_request": {
+    "en_us": "\u00A7cYou already have a pending friend request!",
     "de_de": ""
   }
 }

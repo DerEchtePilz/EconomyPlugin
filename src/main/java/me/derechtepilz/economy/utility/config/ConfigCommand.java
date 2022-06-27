@@ -13,7 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ConfigCommand {
-    public ConfigCommand() {
+    public void register() {
         new CommandTree("config")
                 .then(new LiteralArgument("itemQuantities")
                         .then(new LiteralArgument("maxAmount")

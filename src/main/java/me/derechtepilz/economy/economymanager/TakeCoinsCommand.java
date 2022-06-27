@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 public class TakeCoinsCommand {
-    public TakeCoinsCommand() {
+    public void register() {
         new CommandTree("takecoins")
                 .then(new DoubleArgument("amount", 0)
                         .executesPlayer((player, args) -> {

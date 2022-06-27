@@ -14,13 +14,14 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
+import me.derechtepilz.economy.playermanager.TradeCommand;
+import me.derechtepilz.economy.playermanager.TradeMenu;
 import me.derechtepilz.economy.playermanager.friend.Friend;
 import me.derechtepilz.economy.playermanager.friend.FriendCommand;
 import me.derechtepilz.economy.playermanager.permission.CustomPermissionGroup;
 import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
-import me.derechtepilz.economy.playermanager.TradeCommand;
-import me.derechtepilz.economy.playermanager.TradeMenu;
 import me.derechtepilz.economy.utility.CheckUpdate;
+import me.derechtepilz.economy.utility.ICooldown;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
@@ -34,10 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class Main extends JavaPlugin {
     private static Main plugin;
@@ -55,11 +53,28 @@ public final class Main extends JavaPlugin {
     private ItemBuyMenu itemBuyMenu;
     private TradeMenu tradeMenu;
 
+    private final CreateOfferCommand createOfferCommand = new CreateOfferCommand();
+    private final CancelOfferCommand cancelOfferCommand = new CancelOfferCommand();
+    private final BuyCommand buyCommand = new BuyCommand();
+    private final GiveCoinsCommand giveCoinsCommand = new GiveCoinsCommand();
+    private final TakeCoinsCommand takeCoinsCommand = new TakeCoinsCommand();
+    private final SetCoinsCommand setCoinsCommand = new SetCoinsCommand();
+    private final PermissionCommand permissionCommand = new PermissionCommand();
+    private final ConfigCommand configCommand = new ConfigCommand();
+    private final TradeCommand tradeCommand = new TradeCommand();
+    private final HelpCommand helpCommand = new HelpCommand();
+    private final DiscordCommand discordCommand = new DiscordCommand();
+    private final FriendCommand friendCommand = new FriendCommand();
+
     private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
     private final Friend friend = new Friend();
 
+    private final Map<UUID, ICooldown> cooldownMap = new HashMap<>();
+
     private boolean wasCommandAPILoaded;
     private boolean isNewUpdateAvailable = false;
+
+    private int taskId;
 
     @Override
     public void onEnable() {
@@ -147,18 +162,18 @@ public final class Main extends JavaPlugin {
     }
 
     private void commandRegistration() {
-        new CreateOfferCommand();
-        new CancelOfferCommand();
-        new BuyCommand();
-        new GiveCoinsCommand();
-        new TakeCoinsCommand();
-        new SetCoinsCommand();
-        new PermissionCommand();
-        new ConfigCommand();
-        new TradeCommand();
-        new HelpCommand();
-        new DiscordCommand();
-        new FriendCommand();
+        createOfferCommand.register();
+        cancelOfferCommand.register();
+        buyCommand.register();
+        giveCoinsCommand.register();
+        takeCoinsCommand.register();
+        setCoinsCommand.register();
+        permissionCommand.register();
+        configCommand.register();
+        tradeCommand.register();
+        helpCommand.register();
+        discordCommand.register();
+        friendCommand.register();
     }
 
     private void listenerRegistration() {
@@ -217,6 +232,10 @@ public final class Main extends JavaPlugin {
         return language;
     }
 
+    public Map<UUID, ICooldown> getCooldownMap() {
+        return cooldownMap;
+    }
+
     public boolean isNewUpdateAvailable() {
         return isNewUpdateAvailable;
     }
@@ -253,6 +272,7 @@ public final class Main extends JavaPlugin {
         }
     }
 
+    @SuppressWarnings({"", "BusyWait"})
     public void stopDiscordBot() {
         DiscordBot.getDiscordBot().setActive(false);
         try {

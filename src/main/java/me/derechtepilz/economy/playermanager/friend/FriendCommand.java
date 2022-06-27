@@ -6,22 +6,28 @@ import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
+import me.derechtepilz.economy.utility.Cooldown;
+import me.derechtepilz.economy.utility.ICooldown;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class FriendCommand {
+public class FriendCommand implements ICooldown {
 
     private final HashMap<UUID, UUID> requestingPlayers = new HashMap<>();
+    private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
-    public FriendCommand() {
+    public void register() {
         new CommandTree("friend")
                 .withAliases("f")
                 .then(new LiteralArgument("add")
@@ -40,7 +46,9 @@ public class FriendCommand {
                                         player.sendMessage(TranslatableChatComponent.read("friendCommand.pending_request"));
                                         return;
                                     }
+
                                     requestingPlayers.put(player.getUniqueId(), target.getUniqueId());
+
                                     player.sendMessage(TranslatableChatComponent.read("friendCommand.sent_friend_request").replace("%s", target.getName()));
                                     target.sendMessage(TranslatableChatComponent.read("friendCommand.received_friend_request").replace("%s", player.getName()));
 
@@ -55,6 +63,15 @@ public class FriendCommand {
                                     denyFriendRequest.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend deny " + player.getName()));
 
                                     target.spigot().sendMessage(acceptFriendRequest, denyFriendRequest);
+
+                                    Date date = Calendar.getInstance().getTime();
+                                    long time = date.toInstant().plusSeconds(300).toEpochMilli();
+
+                                    cooldown.put(player.getUniqueId(), time);
+                                    Main.getInstance().getCooldownMap().put(player.getUniqueId(), this);
+
+                                    Cooldown cooldown = new Cooldown(player, time);
+                                    cooldown.setCancelTask(Bukkit.getScheduler().runTaskTimer(Main.getInstance(), cooldown, 0, 20));
                                 })))
                 .then(new LiteralArgument("remove")
                         .then(new OfflinePlayerArgument("friend")
@@ -82,5 +99,22 @@ public class FriendCommand {
 
                                 })))
                 .register();
+    }
+
+    @Override
+    public boolean checkDate(Player player, Cooldown cooldown) {
+        if (System.currentTimeMillis() >= cooldown.endTime()) {
+            this.cooldown.remove(cooldown.player().getUniqueId());
+
+            Player target = Bukkit.getPlayer(requestingPlayers.get(player.getUniqueId()));
+            requestingPlayers.remove(player.getUniqueId());
+            Main.getInstance().getCooldownMap().remove(player.getUniqueId());
+
+            player.sendMessage(TranslatableChatComponent.read("friendCommand.request_expired"));
+            target.sendMessage(TranslatableChatComponent.read("friendCommand.request_expired"));
+
+            return true;
+        }
+        return false;
     }
 }

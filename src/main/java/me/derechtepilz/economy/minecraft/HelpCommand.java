@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand {
-    public HelpCommand() {
+    public void register() {
         new CommandTree("economyhelp")
                 .executes((sender, args) -> {
                     sender.sendMessage("§e------- " + TranslatableChatComponent.read("helpCommand.help") + " §e---------------------");

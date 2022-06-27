@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscordCommand {
-    public DiscordCommand() {
+    public void register() {
         new CommandTree("discord")
                 .then(new LiteralArgument("msg")
                         .then(new LongArgument("discordId")
@@ -93,5 +93,4 @@ public class DiscordCommand {
                                 })))
                 .register();
     }
-
 }

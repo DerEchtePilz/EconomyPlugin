@@ -16,7 +16,7 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class PermissionCommand {
-    public PermissionCommand() {
+    public void register() {
         new CommandTree("permission")
                 .withPermission(CommandPermission.OP)
                 .then(new LiteralArgument("set")
