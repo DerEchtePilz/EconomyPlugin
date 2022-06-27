@@ -23,6 +23,10 @@
     "en_us": "\u00A76[UPDATE CHECKER] \u00A7eThere is a new update available for the EconomyPlugin! Download it from \u00A79https://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
     "de_de": ""
   },
+  "checkPluginUpdate.new_update_available_console": {
+    "en_us": "[UPDATE CHECKER] There is a new update available for the EconomyPlugin! Download it from https://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
+    "de_de": ""
+  },
   "startUpBot.activated_discord_bot": {
     "en_us": "\u00A7eThe discord bot has been started!",
     "de_de": ""
@@ -444,7 +448,7 @@
     "de_de": ""
   },
   "tradeCommand.accept_request_hover": {
-    "en_us": "\u00A7a/trade %s accept",
+    "en_us": "\u00A7aClick to run command: \u00A7e/trade %s accept",
     "de_de": ""
   },
   "tradeCommand.deny_request": {
@@ -452,7 +456,7 @@
     "de_de": ""
   },
   "tradeCommand.deny_request_hover": {
-    "en_us": "\u00A7c/trade %s deny",
+    "en_us": "\u00A7cClick to run command: \u00A7e/trade %s deny",
     "de_de": ""
   },
   "tradeCommand.pending_request": {
@@ -517,6 +521,38 @@
   },
   "helpCommand.help": {
     "en_us": "\u00A7fHelp",
+    "de_de": ""
+  },
+  "friendCommand.sent_friend_request": {
+    "en_us": "\u00A7aYou sent a friend request to \u00A7b%s\u00A7a!",
+    "de_de": ""
+  },
+  "friendCommand.received_friend_request": {
+    "en_us": "\u00A7aYou received a friend request from \u00A7b%s\u00A7a!",
+    "de_de": ""
+  },
+  "friendCommand.accept_friend_request": {
+    "en_us": "\u00A7a[ACCEPT]",
+    "de_de": ""
+  },
+  "friendCommand.accept_friend_request_hover": {
+    "en_us": "\u00A7aClick to run command: \u00A7e/friend accept %s",
+    "de_de": ""
+  },
+  "friendCommand.deny_friend_request": {
+    "en_us": "\u00A7c[DENY]",
+    "de_de": ""
+  },
+  "friendCommand.deny_friend_request_hover": {
+    "en_us": "\u00A7cClick to run command: \u00A7e/friend deny %s",
+    "de_de": ""
+  },
+  "friendCommand.friend_not_found": {
+    "en_us": "\u00A7b%s \u00A7ccould not be found on your friend list!",
+    "de_de": ""
+  },
+  "friendCommand.removed_friend": {
+    "en_us": "\u00A7cYou removed \u00A7b%s \u00A7cfrom your friend list!",
     "de_de": ""
   }
 }

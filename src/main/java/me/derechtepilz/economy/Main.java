@@ -14,6 +14,8 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
+import me.derechtepilz.economy.playermanager.friend.Friend;
+import me.derechtepilz.economy.playermanager.friend.FriendCommand;
 import me.derechtepilz.economy.playermanager.permission.CustomPermissionGroup;
 import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
 import me.derechtepilz.economy.playermanager.TradeCommand;
@@ -54,6 +56,7 @@ public final class Main extends JavaPlugin {
     private TradeMenu tradeMenu;
 
     private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
+    private final Friend friend = new Friend();
 
     private boolean wasCommandAPILoaded;
     private boolean isNewUpdateAvailable = false;
@@ -64,11 +67,14 @@ public final class Main extends JavaPlugin {
         itemBuyMenu = new ItemBuyMenu();
         tradeMenu = new TradeMenu();
 
-        commandRegistration();
         listenerRegistration();
 
         initializeEnableProcedure();
-        CommandAPI.onEnable(this);
+
+        if (wasCommandAPILoaded) {
+            commandRegistration();
+            CommandAPI.onEnable(this);
+        }
 
         getLogger().info(TranslatableChatComponent.read("main.onEnable.plugin_enable_message"));
 
@@ -104,7 +110,7 @@ public final class Main extends JavaPlugin {
         isNewUpdateAvailable = new CheckUpdate().checkForUpdate();
 
         if (isNewUpdateAvailable) {
-            getLogger().warning(TranslatableChatComponent.read("checkPluginUpdate.new_update_available"));
+            getLogger().warning(TranslatableChatComponent.read("checkPluginUpdate.new_update_available_console"));
         }
     }
 
@@ -152,6 +158,7 @@ public final class Main extends JavaPlugin {
         new TradeCommand();
         new HelpCommand();
         new DiscordCommand();
+        new FriendCommand();
     }
 
     private void listenerRegistration() {
@@ -200,6 +207,10 @@ public final class Main extends JavaPlugin {
 
     public CustomPermissionGroup getCustomPermissionGroup() {
         return customPermissionGroup;
+    }
+
+    public Friend getFriend() {
+        return friend;
     }
 
     public Language getLanguage() {

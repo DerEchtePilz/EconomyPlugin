@@ -92,7 +92,6 @@ public class CustomPermissionGroup {
     }
 
     public void buildPermissionGroup() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (!permissionGroup.exists()) {
             permissionGroup.createNewFile();
         }

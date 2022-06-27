@@ -10,7 +10,7 @@ public enum PermissionGroup {
     COINS("coins", new Permission[]{Permission.GIVE_COINS, Permission.SET_COINS, Permission.TAKE_COINS}),
     OFFER("offer", new Permission[]{Permission.BUY_OFFER, Permission.CANCEL_OFFER, Permission.CREATE_OFFER}),
     CONFIG("config", new Permission[]{Permission.MODIFY_CONFIG, Permission.RESET_CONFIG, Permission.DELETE_CONFIG}),
-    TRADE("trade", new Permission[]{Permission.TRADE}),
+    MISCELLANEOUS("miscellaneous", new Permission[]{Permission.TRADE, Permission.FRIEND}),
     DISCORD("discord", new Permission[]{Permission.DISCORD_MESSAGE_USER, Permission.DISCORD_SEARCH_ID});
 
     private final Permission[] permissionGroup;
