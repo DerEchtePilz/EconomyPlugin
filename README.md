@@ -1,4 +1,4 @@
-# EconomyPlugin v1.1.2
+# EconomyPlugin v2.0.0
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
 
 ## Table of contents
@@ -7,7 +7,7 @@
 - [Commands](#commands)
 - [Changelogs](#changelogs)
 - [What is planned for the future](#what-is-planned-for-the-future)
-- [Unfinished features](#unfinished-features-in-v112)
+- [Unfinished features](#unfinished-features-in-v200)
 - [Credits](#credits)
 
 ## Information
@@ -125,9 +125,8 @@ Usage:
 - Further development of the discord integration
 - Still going away from a pure economy plugin
 
-## Unfinished features in v1.1.2
-- Multiple language support => Currently the only language that has translations is English
-- Discord integration
+## Unfinished features in v2.0.0
+- Discord integration (permanent development because of lack of ideas)
 
 ## Credits
 - A huge "thank you" goes to [@JorelAli](https://jorel.dev/) who did not directly contribute to this plugin but created the [CommandAPI](https://github.com/JorelAli/CommandAPI) which is used in this plugin!
