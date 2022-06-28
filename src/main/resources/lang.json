@@ -1,331 +1,331 @@
 {
   "main.onEnable.plugin_enable_message": {
-    "en_us": "\u00A7aThe Economy plugin has been enabled!",
-    "de_de": ""
+    "en_us": "The EconomyPlugin has been enabled!",
+    "de_de": "Das EconomyPlugin wurde aktiviert!"
   },
   "main.onLoad.version_info": {
     "en_us": "This server is running on version %s, the EconomyPlugin only supports 1.13 - 1.19! Please change your server version!",
-    "de_de": ""
+    "de_de": "Dieser Server läuft auf Version %s, das EconomyPlugin unterstützt nur 1.13 - 1.19! Bitte wechsel deine Server Version!"
   },
   "main.onDisable.plugin_disable_message": {
-    "en_us": "\u00A7cThe Economy plugin has been disabled",
-    "de_de": ""
+    "en_us": "The EconomyPlugin has been disabled",
+    "de_de": "Das EconomyPlugin wurde deaktiviert!"
   },
   "main.onDisable.offers_could_not_be_saved": {
     "en_us": "Offers could not be saved!",
-    "de_de": ""
+    "de_de": "Angebote konnten nicht gespeichert werden!"
   },
   "main.initialize_enable_procedure.coin_display_missing": {
     "en_us": "\u00A7cPlease rejoin the server! Otherwise you won't be able to see your balance or buy items!",
-    "de_de": ""
+    "de_de": "\u00A7cBitte betritt den Server erneut! Ansonsten wirst du nicht in der Lage sein, deinen Kontostand zu sehen oder Items zu kaufen!"
   },
   "checkPluginUpdate.new_update_available": {
     "en_us": "\u00A76[UPDATE CHECKER] \u00A7eThere is a new update available for the EconomyPlugin! Download it from \u00A79https://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
-    "de_de": ""
+    "de_de": "\u00A76[UPDATE CHECKER] \u00A7eEs gibt ein neues Update für das EconomyPlugin! Lad es dir hier herunter: \u00A79https://github.com/DerEchtePilz/EconomyPlugin/releases/latest"
   },
   "checkPluginUpdate.new_update_available_console": {
     "en_us": "[UPDATE CHECKER] There is a new update available for the EconomyPlugin! Download it from https://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
-    "de_de": ""
+    "de_de": "[UPDATE CHECKER] Es gibt ein neues Update für das EconomyPlugin! Lad es dir hier herunter: https://github.com/DerEchtePilz/EconomyPlugin/releases/latest"
   },
   "startUpBot.activated_discord_bot": {
     "en_us": "\u00A7eThe discord bot has been started!",
-    "de_de": ""
+    "de_de": "\u00A7eDer Discord Bot wurde gestartet!"
   },
   "startUpBot.discord_bot_running": {
     "en_us": "\u00A7aThe discord bot is now running!",
-    "de_de": ""
+    "de_de": "\u00A7aDer Discord Bot läuft jetzt!"
   },
   "discord.startup.failed": {
     "en_us": "Failed starting the bot because the provided token is invalid!",
-    "de_de": ""
+    "de_de": "Der Bot konnte nicht gestartet werden, da das angegebene Token nicht gültig ist!"
   },
   "discord.login.failed": {
     "en_us": "Failed logging in to discord!",
-    "de_de": ""
+    "de_de": "Anmeldung bei Discord fehlgeschlagen!"
   },
   "discord.channel_information": {
     "en_us": "This bot is currently using the default channel of this server! Change this by creating a `minecraft-chat` channel!",
-    "de_de": ""
+    "de_de": "Dieser Bot benutzt im Moment den Standardkanal dieses Server! Änder dies, indem du einen `minecraft-chat` Kanal erstellst!"
   },
   "discord.message_discord.connected": {
     "en_us": "Connected to the Minecraft Server!",
-    "de_de": ""
+    "de_de": "Verbunden mit dem Minecraft Server!"
   },
   "discord.message_discord.disconnected": {
     "en_us": "Disconnected from the Minecraft Server!",
-    "de_de": ""
+    "de_de": "Die Verbindung zum Minecraft Server wurde getrennt!"
   },
   "discord.message_discord.connected_description": {
     "en_us": "Communicate with players on the Minecraft server\nWrite a message here and it will appear there!\nReceive public messages sent on the Minecraft server!",
-    "de_de": ""
+    "de_de": "Unterhalte dich mit Spielern auf dem Minecraft Server\nSchreibe hier eine Nachricht und sie wird dort erscheinen!"
   },
   "discord.message_discord.disconnected_description": {
     "en_us": "The Minecraft server has stopped running!",
-    "de_de": ""
+    "de_de": "Der Minecraft Server wurde gestoppt!"
   },
   "discord.minecraft_server.player_joined": {
     "en_us": "%s joined the Minecraft server!",
-    "de_de": ""
+    "de_de": "%s ist dem Minecraft Server beigetreten!"
   },
   "discord.minecraft_server.player_quit": {
     "en_us": "%s left the Minecraft server!",
-    "de_de": ""
+    "de_de": "%s hat den Minecraft Server verlassen!"
   },
   "discord.minecraft_player_count": {
     "en_us": "There are currently %s players on the Minecraft server!",
-    "de_de": ""
+    "de_de": "Es sind gerade %s Spieler auf dem Minecraft Server!"
   },
   "discordCommand.search_members": {
     "en_us": "\u00A7aYou have got \u00A76%s \u00A7asearch results:",
-    "de_de": ""
+    "de_de": "\u00A7aYou hast \u00A76%s \u00A7aSuchergebnisse:"
   },
   "discordCommand.sent_private_message": {
     "en_us": "\u00A77You message %s:",
-    "de_de": ""
+    "de_de": "\u00A77Du schreibst %s:"
   },
   "discordCommand.cannot_send_private_message": {
     "en_us": "\u00A7cCannot send a private message to \u00A7b%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u0A7ckann keine private Nachricht geschickt werden!"
   },
   "discordCommand.copy_id": {
     "en_us": "Click to put id into chat so you can copy",
-    "de_de": ""
+    "de_de": "Klicke, um die ID in den Chat zu legen, so dass du sie kopieren kannst"
   },
   "config.loadConfig.is_loaded": {
     "en_us": "You called the loadConfig method more than once! Continuing without processing the second call.",
-    "de_de": ""
+    "de_de": "Du hast die loadConfig Methode mehr als einmal aufgerufen! Fahre fort, ohne den zweiten Call zu bearbeiten."
   },
   "command.self.bank_account_missing": {
     "en_us": "\u00A7cYou have no bank account! Please rejoin the server!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast keinen Bankaccount! Bitte tritt dem Server erneut bei!"
   },
   "command.player_executor.target.bank_account_missing": {
     "en_us": "\u00A7b%s \u00A7cdoes not have a bank account! Please tell them to (re-)join the server!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7chat keinen Bankaccount! Bitte sag ihm/ihr, dem Server erneut beizutreten!"
   },
   "command.console_executor.target_bank_account_missing": {
     "en_us": "%s does not have a bank account! Please tell them to (re-)join the server!",
-    "de_de": ""
+    "de_de": "%s hat keinen bankaccount! Bitte sag ihm/ihr, dem Server erneut beizutreten!"
   },
   "command.wrong_executor": {
     "en_us": "\u00A7cYou cannot execute this command!",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst diesen Command nicht ausführen!"
   },
   "command.insufficient_permission": {
     "en_us": "\u00A7cFailed to execute command! Do you have the required permission?",
-    "de_de": ""
+    "de_de": "\u00A7cCommand konnte nicht ausgeführt werden! Hast du die erforderliche Berechtigung?"
   },
   "items.title.close": {
     "en_us": "\u00A7cClose",
-    "de_de": ""
+    "de_de": "\u00A7cSchließen"
   },
   "items.title.next_page": {
     "en_us": "\u00A7aNext page",
-    "de_de": ""
+    "de_de": "\u00A7aNächste Seite"
   },
   "items.title.previous_page": {
     "en_us": "\u00A7aPrevious page",
-    "de_de": ""
+    "de_de": "\u00A7aVorherige Seite"
   },
   "items.title.menu_glass": {
     "en_us": "\u00A77",
-    "de_de": ""
+    "de_de": "\u00A77"
   },
   "itemCreateOffer.player_executor.too_few_items": {
     "en_us": "\u00A7cYou do not have enough items of type '%s' to sell %%s items!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast nicht genug Items des Typs '%s', um %%s Items verkaufen zu können!"
   },
   "itemCreateOffer.player_executor.missing_item": {
     "en_us": "\u00A7cYou do not have the specified item in your inventory!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast das angegebene Item nicht in deinem Inventar!"
   },
   "itemCreateOffer.player_executor.player_created_offer": {
-    "en_us": "\u00A7aYou created an offer for item \u00A76'%s' \u00A77%%sx \u00A7a!",
-    "de_de": ""
+    "en_us": "\u00A7aYou created an offer for item \u00A76'%s' \u00A77%%sx\u00A7a!",
+    "de_de": "\u00A7aDu hast ein Angebot für das Item \u00A76'%s' \u00A77%%sx\u00A7a!"
   },
   "itemCreateOffer.console_executor.console_created_offer": {
-    "en_us": "\u00A7aYou created a special offer for item \u00A76'%s' \u00A77%%sx \u00A7a!",
-    "de_de": ""
+    "en_us": "\u00A7aYou created a special offer for item \u00A76'%s' \u00A77%%sx\u00A7a!",
+    "de_de": "\u00A7aDu hast ein Sonderangebot für das Item \u00A76'%s' \u00A77%%sx\u00A7a!"
   },
   "itemCreateOffer.console_executor.special_offer_available": {
-    "en_us": "\u00A7aA special offer was created: \u00A76%s \u00A77x%%s \u00A7e(Cost: %%%s coins)\u00A7a!)",
-    "de_de": ""
+    "en_us": "\u00A7aA special offer was created: \u00A76%s \u00A77x%%s \u00A7e(Cost: %%%s coins)\u00A7a!",
+    "de_de": "\u00A7aEin Sonderangebot wurde erstellt: \u00A76%s \u00A77x%%s \u00A7e(Cost: %%%s coins)\u00A7a!"
   },
   "itemCancelOffer.no_offers_available": {
     "en_us": "\u00A7cYou didn't offer an item so there is nothing to cancel!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast kein Item angeboten; deshalb kannst du auch nichts abbrechen!"
   },
   "itemCancelOffer.player_executor.prepare_cancelling": {
     "en_us": "\u00A7aCancel offers in the menu!",
-    "de_de": ""
+    "de_de": "\u00A7aBrich Angebote in dem Menu ab!"
   },
   "itemCancelMenu.cancelled_item": {
     "en_us": "\u00A7cYou cancelled an item and it was returned to you!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast ein Item abgebrochen und es wurde dir zurückgegeben!"
   },
   "itemCancelMenu_item_cancelled": {
     "en_us": "\u00A7cOffer has already been cancelled!",
-    "de_de": ""
+    "de_de": "\u00A7cDas Angebot wurde schon abgebrochen!"
   },
   "itemCancelMenu.inventory_title": {
     "en_us": "Cancel offers (",
-    "de_de": ""
+    "de_de": "Angebote abbrechen ("
   },
   "itemBuyOffer.wrong_argument": {
     "en_us": "\u00A7cThe argument '%s' is not a valid query!",
-    "de_de": ""
+    "de_de": "\u00A7cDas Argument '%s' is keine gültige Anfrage!"
   },
   "itemBuyMenu.inventory_title": {
     "en_us": "Buy items (",
-    "de_de": ""
+    "de_de": "Kaufe Angebote ("
   },
   "itemBuyMenu.no_offers": {
     "en_us": "\u00A7cNo offers were found!",
-    "de_de": ""
+    "de_de": "\u00A7cEs wurden keine Angebote gefunden!"
   },
   "itemBuyMenu.no_special_offer": {
     "en_us": "\u00A7cNo special offers were found!",
-    "de_de": ""
+    "de_de": "\u00A7cEs wurden keine Sonderangebote gefunden!"
   },
   "itemBuyMenu.suggest_query_special": {
     "en_us": "\u00A7cNo player offers were found! Maybe try \u00A7b/buy special\u00A7c?",
-    "de_de": ""
+    "de_de": "\u00A7cKEs wurden keine Spielerangebote gefunden! Probiere vielleicht \u00A7c/buy special\u00A7c?"
   },
   "itemBuyMenu.suggest_query_player": {
     "en_us": "\u00A7cNo special offers were found! Maybe try \u00A7b/buy player\u00A7c?",
-    "de_de": ""
+    "de_de": "\u00A7cEs wurden keine Sonderangebote gefunden! Probiere vielleicht \u00A7b/buy player\u00A7c?"
   },
   "itemBuyMenu.onClick.to_many_customers": {
     "en_us": "\u00A7cCould not process purchase! There were too many interested customers!",
-    "de_de": ""
+    "de_de": "\u00A7cDer Kauf konnte nicht bearbeitet werden! Es gab zu viele interessierte Käufer!"
   },
   "itemBuyMenu.jump_to_special_offers_name": {
     "en_us": "\u00A7aJump to \u00A7dSpecial Offers",
-    "de_de": ""
+    "de_de": "\u00A7aSpringe zu \u00A7dSonderangebote"
   },
   "itemBuyMenu.jump_to_player_offers_name": {
     "en_us": "\u00A7aJump to \u00A7bPlayer Offers",
-    "de_de": ""
+    "de_de": "\u00A7aSpringe zu \u00A7bSpielerangebote"
   },
   "itemBuyMenu.type_not_found": {
     "en_us": "\u00A7cNo offer was found matching material \u00A7b%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cEs wurden keine Angebote vom Type \u00A7b%s \u00A7cgefunden!"
   },
   "itemBuyMenu.cannot_buy_own_item": {
     "en_us": "\u00A7cYou cannot buy your own offer!",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst deine eigenen Angebote nicht kaufen!"
   },
   "itemBuyMenu.not_enough_coins": {
     "en_us": "\u00A7cYou have not enough coins to buy this item!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast nicht genug Coins, um dieses Item zu kaufen!"
   },
   "itemBuyMenu.coins_earned": {
     "en_us": "\u00A7aOne of your offers has been bought! You have earned \u00A76%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aEins deiner Angebote wurde gekauft! Du hast \u00A76%s coins \u00A7averdient!"
   },
   "itemBuyMenu.coins_earned_bank_account_not_found": {
     "en_us": "\u00A7cOne of your offers has been bought but the coins haven't been credited to your account yet! Please rejoin the server to earn your coins!",
-    "de_de": ""
+    "de_de": "\u00A7cEins deiner Angebote wurde gekauft, aber die Coins wurden deinem Account noch nicht gutgeschrieben! Bitte tritt dem Server erneut bei, um deine Coins zu erhalten!"
   },
   "itemBuyMenu.bank_account_not_found": {
     "en_us": "\u00A7cCannot process purchase because your bank account could not be loaded! Please rejoin the server!",
-    "de_de": ""
+    "de_de": "\u00A7cDer Kauf konnte nicht bearbeitet werden, da dein Bankaccount nicht geladen werden konnte! Bitte tritt dem Server erneut bei!"
   },
   "itemBuyMenu.item_information": {
     "en_us": "\u00A7aItem: \u00A76%s\u00A7a, \u00A76%%sx",
-    "de_de": ""
+    "de_de": "\u00A7aItem: \u00A76%s\u00A7a, \u00A76%%sx"
   },
   "itemBuyMenu.seller_information": {
     "en_us": "\u00A7aSeller: \u00A76%s",
-    "de_de": ""
+    "de_de": "\u00A7aVerkäufer: \u00A76%s"
   },
   "itemBuyMenu.price_information": {
     "en_us": "\u00A7aPrice: \u00A76%s coins",
-    "de_de": ""
+    "de_de": "\u00A7aPreis: \u00A76%s Coins"
   },
   "itemBuyMenu.back_to_menu": {
     "en_us": "\u00A7aOpen menu",
-    "de_de": ""
+    "de_de": "\u00A7aMenu öffnen"
   },
   "giveCoinsCommand.player_executor.give_coins_to_player": {
     "en_us": "\u00A7aYou have given yourself \u00A76%s coins\u00A7a! You now have \u00A76%%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast dir selbst \u00A76%s Coins \u00A7agegeben! Du hast jetzt \u00A76%%s Coins\u00A7a!"
   },
   "giveCoinsCommand.player_executor.give_coins_to_other_player": {
     "en_us": "\u00A7aYou have given \u00A7b%s \u00A76%%s coins\u00A7a! They now have \u00A76%%%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast \u00A7b%s \u00A76%%s Coins \u00A7agegeben! Er/Sie hat jetzt \u00A76%%%s Coins \u00A7a!"
   },
   "giveCoinsCommand.player_executor.receive_coins_from_player": {
     "en_us": "\u00A7aYou have been given \u00A76%s coins \u00A7aby \u00A7b%%s\u00A7a! You now have \u00A76%%%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDir wurden \u00A76%s Coins \u00A7avon \u00A7b%%s \u00A7agegeben! Du hast jetzt \u00A76%%%s Coins\u00A7a!"
   },
   "giveCoinsCommand.console_executor.give_coins_to_player": {
     "en_us": "You have given %s %%s coins! They now have %%%s coins!",
-    "de_de": ""
+    "de_de": "Du hast %s %%s Coins gegeben! Er/Sie hat jetzt %%%s Coins!"
   },
   "giveCoinsCommand.console_executor.receive_coins_from_console": {
-    "en_us": "\u00A7d\u00A7lCONSOLE POWER \u00A7r\u00A7aYou got \u00A76%s \u00A7acoins and now have \u00A76%%s coins\u00A7a!",
-    "de_de": ""
+    "en_us": "\u00A7d\u00A7lCONSOLE POWER \u00A7r\u00A7aYou got \u00A76%s coins \u00A7aand now have \u00A76%%s coins\u00A7a!",
+    "de_de": "\u00A7d\u00A7lCONSOLE POWER \u00A7r\u00A7aDu hast \u00A76%s coins \u00A7abekommen und hast nun \u00A76%%s Coins\u00A7a!"
   },
   "manageCoinsWhenJoining.onJoin.grant_interest": {
     "en_us": "\u00A7aYou have earned interest! You now have \u00A76%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast Zinsen erhalten! Du hast nun \u00A76%s Coins\u00A7a!"
   },
   "manageCoinsWhenJoining.onJoin.join_bonus": {
     "en_us": "\u00A7eWelcome to the server! To start we have given you \u00A76%s coins\u00A7e as a start bonus!",
-    "de_de": ""
+    "de_de": "\u00A7eWillkommen auf dem Server! Um starten zu können, haben wir dir \u00A76%s Coins \u00A7eals ein Startbonus gegeben!"
   },
   "manageCoinsWhenJoining.onJoin.awarded_missing_start_balance": {
     "en_us": "\u00A7aThe start balance was increased! To make sure you also benefit from this increment, we have given you the missing \u00A76%s coins\u00A7a, you now have \u00A76%%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDas Startguthaben wurde erhöht! Um sicherzustellen, dass du davon auch profitierst, haben wir die dir fehlenden \u00A76%s Coins \u00A7agegeben, du hast nun \u00A76%%s Coins\u00A7a!"
   },
   "manageCoinsWhenJoining.display_coins": {
     "en_us": "\u00A7aYour balance: \u00A76%s coins",
-    "de_de": ""
+    "de_de": "\u00A7aDein Guthaben: \u00A76%s Coins"
   },
   "manageCoinsWhenJoining.give_earned_coins": {
     "en_us": "\u00A7aOne of your offers has been bought while you were offline! You have earned \u00A76%s coins\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aEins deiner Angebote wurde gekauft während du offline warst! Du hast \u00A76%s Coins \u00A7averdient!"
   },
   "takeCoinsCommand.player_executor.not_enough_coins": {
     "en_us": "\u00A7cYou do not have enough coins to deduct \u00A76%s coins\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast nicht genug Coins, um \u00A76%s Coins \u00A7cabzuziehen!"
   },
   "takeCoinsCommand.player_executor.start_balance_safe": {
     "en_us": "\u00A7cYou cannot deduct this many coins! This would bring you under the amount of your start balance.",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst nicht so viele Coins abziehen! Das würde dich unter den Betrag deines Startguthabens bringen."
   },
   "takeCoinsCommand.player_executor.take_coins": {
     "en_us": "\u00A7cYou have been deducted \u00A76%s coins\u00A7c! You now have \u00A76%%s coins\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDir wurden \u00A76%S Coins \u00A7cabgezogen! Du hast nun \u00A76%%s Coins\u00A7c!"
   },
   "takeCoinsCommand.player_executor.take_coins_from_target": {
     "en_us": "\u00A7cYou have taken \u00A76%s coins \u00A7cfrom \u00A7b%%s\u00A7c's bank account! They now have \u00A76%%%s coins\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast \u00A76%s Coins \u00A7cvon \u00A7b%%s\u00A7cxs Bankaccount! Er/sie hat nun \u00A76%%%s Coins\u00A7c!"
   },
   "takeCoinsCommand.player_executor.target_start_balance_safe": {
     "en_us": "\u00A7cYou cannot take \u00A76%s coins \u00A7cfrom \u00A7b%%s \u00A7cas that would bring them under the amount of their start balance!",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst nicht \u00A76%s Coins \u00A7cvon \u00A7b%%s \u00A7cnehmen, da das ihn/sie unter den Betrag seines/ihres Startguthabens bringen würde!"
   },
   "takeCoinsCommand.player_executor.not_enough_coins_at_target": {
     "en_us": "\u00A7b%s \u00A7cdoes not have enough coins to get \u00A76%%s coins \u00A7cdeducted!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7chat nicht genug Coins, um \u00A76%%s Coins \u00A7cabgezogen zu bekommen!"
   },
   "setCoinsCommand.balance_set": {
     "en_us": "\u00A7cYour balance has been set to \u00A76%s coins\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDein Guthaben wurde auf \u00A76%s Coins \u00A7cgesetzt!"
   },
   "setCoinsCommand.player_balance_set": {
     "en_us": "\u00A7cYou set \u00A7b%s\u00A7c's balance to \u00A76%%s coins\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast \u00A7b%s\u00A7cs Guthaben auf \u00A76%%s Coins\u00A7cgesetzt!"
   },
   "permissionCommand.permission_not_found": {
     "en_us": "\u00A7cFailed to assign the permission '\u00A71%s\u00A7c' because it could not be found!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigung '\u00A71%s\u00A7c' konnte nicht zugewiesen werden, da sie nicht gefunden wurde!"
   },
   "permissionCommand.permission_group_not_found": {
     "en_us": "\u00A7cFailed to assign the permission group '\u00A71%s\u00A7c' because it could not be found!",
-    "de_de": ""
+    "de_de": "§cDie Berechtigungsgruppe '§1%s§c' konnte nicht zugewiesen werden, da sie nicht gefunden wurde!"
   },
   "permissionCommand.permission_already_assigned": {
     "en_us": "\u00A7cFailed to assign the permission \u00A71%s \u00A7cbecause the player already has this permission!",
