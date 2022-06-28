@@ -2,14 +2,12 @@ package me.derechtepilz.economy.playermanager.friend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Friend {
     private Map<String, List<String>> saveFriends = new HashMap<>();
@@ -58,6 +56,16 @@ public class Friend {
             return friends.contains(String.valueOf(friend.getUniqueId()));
         }
         return false;
+    }
+
+    public List<String> getFriends(Player player) {
+        List<String> friendNames = new ArrayList<>();
+        if (hasFriend(player)) {
+            for (String uuid : saveFriends.get(String.valueOf(player.getUniqueId()))) {
+                friendNames.add(Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
+            }
+        }
+        return friendNames;
     }
 
     public void saveFriends() throws IOException {

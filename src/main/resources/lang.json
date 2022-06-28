@@ -570,5 +570,28 @@
   "friendCommand.pending_request": {
     "en_us": "\u00A7cYou already have a pending friend request!",
     "de_de": ""
+  },
+  "friendCommand.page_not_found": {
+    "en_us": "\u00A7cYou cannot view page \u00A76%%s \u00A7cas only \u00A76%s \u00A7cpages could be found! \u00A77(Range: 0 - %s)",
+    "de_de": ""
+  },
+  "friendCommand.friend_pages_title": {
+    "en_us": "\u00A766View friend list - Page %s"
+  },
+  "friendCommand.previous_page": {
+    "en_us": "\u00A7eClick to view previous page",
+    "de_de": ""
+  },
+  "friendCommand.next_page": {
+    "en_us": "\u00A7eClick to view next page",
+    "de_de": ""
+  },
+  "friendCommand.friend_request_accepted": {
+    "en_us": "\u00A7aYou are now friends with \u00A76%s",
+    "de_de": ""
+  },
+  "friendCommand.friend_request_denied": {
+    "en_us": "\u00A7cThe friend request coming from \u00A76%s \u00A7cwas denied!",
+    "de_de": ""
   }
 }

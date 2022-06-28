@@ -35,4 +35,8 @@ public class Cooldown implements Runnable {
     public void setCancelTask(BukkitTask task) {
         this.toCancel = task;
     }
+
+    public BukkitTask getToCancel() {
+        return toCancel;
+    }
 }

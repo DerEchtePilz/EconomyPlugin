@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.playermanager;
+package me.derechtepilz.economy.playermanager.trade;
 
 import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;

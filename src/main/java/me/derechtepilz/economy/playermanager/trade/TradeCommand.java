@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.playermanager;
+package me.derechtepilz.economy.playermanager.trade;
 
 import dev.jorel.commandapi.ArgumentTree;
 import dev.jorel.commandapi.CommandTree;
@@ -59,12 +59,7 @@ public class TradeCommand implements ICooldown {
 
                             target.spigot().sendMessage(acceptTradeRequest, denyTradeRequest);
 
-                            Date date = Calendar.getInstance().getTime();
-                            long time = date.toInstant().plusSeconds(300).toEpochMilli();
-
-                            cooldown.put(player.getUniqueId(), time);
-
-                            Cooldown cooldown = new Cooldown(player, time, this);
+                            Cooldown cooldown = new Cooldown(player, Calendar.getInstance().getTime().toInstant().plusSeconds(300).toEpochMilli(), this);
                             cooldown.setCancelTask(Bukkit.getScheduler().runTaskTimer(Main.getInstance(), cooldown, 0, 20));
                         })
                         .then(new LiteralArgument("accept")
@@ -119,8 +114,6 @@ public class TradeCommand implements ICooldown {
     @Override
     public boolean checkDate(Player player, Cooldown cooldown) {
         if (System.currentTimeMillis() >= cooldown.endTime()) {
-            this.cooldown.remove(cooldown.player().getUniqueId());
-
             Player target = Bukkit.getPlayer(requestingPlayers.get(player.getUniqueId()));
             requestingPlayers.remove(player.getUniqueId());
 
