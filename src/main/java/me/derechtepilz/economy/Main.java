@@ -232,6 +232,10 @@ public final class Main extends JavaPlugin {
         return language;
     }
 
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
     public boolean isNewUpdateAvailable() {
         return isNewUpdateAvailable;
     }

@@ -1,13 +1,12 @@
 package me.derechtepilz.economy.utility.config;
 
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.DoubleArgument;
-import dev.jorel.commandapi.arguments.IntegerArgument;
-import dev.jorel.commandapi.arguments.LiteralArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.*;
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.events.DiscordValuesSetEvent;
 import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
+import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -86,14 +85,15 @@ public class ConfigCommand {
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.interest").replace("%s", ChatFormatter.valueOf(interest)));
                                 })))
                 .then(new LiteralArgument("language")
-                        .then(new StringArgument("language")
+                        .then(new StringArgument("language").replaceSuggestions(ArgumentSuggestions.strings("en_us", "de_de"))
                                 .executesPlayer((player, args) -> {
                                     if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                         return;
                                     }
-                                    Config.set("language", (String) args[0]);
+                                    Config.set("language", args[0].toString().toUpperCase());
                                     Config.reloadConfig();
+                                    Main.getInstance().setLanguage(Language.valueOf(args[0].toString().toUpperCase()));
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
                                 })))
                 .then(new LiteralArgument("discord")

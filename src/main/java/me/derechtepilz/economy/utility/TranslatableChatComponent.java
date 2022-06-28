@@ -66,8 +66,4 @@ public class TranslatableChatComponent {
             }
         }
     }
-
-    public static String getLanguages() {
-        return languages;
-    }
 }

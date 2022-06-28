@@ -325,273 +325,274 @@
   },
   "permissionCommand.permission_group_not_found": {
     "en_us": "\u00A7cFailed to assign the permission group '\u00A71%s\u00A7c' because it could not be found!",
-    "de_de": "§cDie Berechtigungsgruppe '§1%s§c' konnte nicht zugewiesen werden, da sie nicht gefunden wurde!"
+    "de_de": "\u00A7cDie Berechtigungsgruppe '\u00A71%s\u00A7c' konnte nicht zugewiesen werden, da sie nicht gefunden wurde!"
   },
   "permissionCommand.permission_already_assigned": {
     "en_us": "\u00A7cFailed to assign the permission \u00A71%s \u00A7cbecause the player already has this permission!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigung \u00A71%s \u00A7ckonnte nicht zugewiesen werden, da der Spieler diese Berechtigung bereits besitzt!"
   },
   "permissionCommand.permission_group_already_assigned": {
     "en_us": "\u00A7cFailed to assign the permission group \u00A71%s \u00A7cbecause the player already has this permission group!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigungsgruppe \u00A71%s \u00A7ckonnte nicht zugewiesen werden, da der Spieler diese Berechtigungsgruppe bereits besitzt!"
   },
   "permissionCommand.permission_not_present": {
     "en_us": "\u00A7cFailed to remove the permission \u00A71%s \u00A7cbecause the player does not have this permission!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigung \u00A71%s \u00A7ckonnte nicht entfernt werden, da der Spieler diese Berechtigung nicht besitzt!"
   },
   "permissionCommand.permission_group_not_present": {
     "en_us": "\u00A7cFailed to remove the permission group \u00A71%s \u00A7cbecause the player does not have this permission group!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigungsgruppe \u00A71%s \u00A7ckonnte nicht entfernt werden, da der Spieler diese Berechtigungsgruppe nicht besitzt!"
   },
   "permissionCommand.assigned_permission": {
     "en_us": "\u00A7aYou have got the permission \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast die Berechtigung \u00A76%s \u00A7abekommen!"
   },
   "permissionCommand.assigned_permission_group": {
     "en_us": "\u00A7aYou have got the permission group \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast die Berechtigungsgruppe \u00A76%s \u00A7abekommen!"
   },
   "permissionCommand.removed_permission": {
     "en_us": "\u00A7cYou have been taken the permission \u00A76%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDir wurde die Berechtigung \u00A76%s \u00A7cgenommen!"
   },
   "permissionCommand.removed_permission_group": {
     "en_us": "\u00A7cYou have been taken the permission group \u00A76%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDir wurde die Berechtigungsgruppe \u00A76%s \u00A7cgenommen!"
   },
   "permissionCommand.assigned_permission_other": {
     "en_us": "\u00A7aSUCCESS! The permission \u00A76%s \u00A7awas given to \u00A7b%%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aERFOLGREICH! Die Berechtigung \u00A76%s \u00A7awurde an \u00A7b%%s \u00A7agegeben!"
   },
   "permissionCommand.assigned_permission_group_other": {
     "en_us": "\u00A7aSUCCESS! The permission group \u00A76%s \u00A7awas given to \u00A7b%%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aERFOLGREICH! Die Berechtigungsgruppe \u00A76%s \u00A7awurde an \u00A7b%%s \u00A7agegeben!"
   },
   "permissionCommand.removed_permission_other": {
     "en_us": "\u00A7aSUCCESS! \u00A7cThe permission \u00A76%s \u00A7cwas taken from \u00A7b%%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7aERFOLGREICH! \u00A7cDie Berechtigung \u00A76%s \u00A7cwurde \u00A7b%%s \u00A7cweggenommen!"
   },
   "permissionCommand.removed_permission_group_other": {
     "en_us": "\u00A7aSUCCESS! \u00A7cThe permission group \u00A76%s \u00A7cwas taken from \u00A7b%%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7aERFOLGREICH! \u00A7cDie Berechtigungsgruppe \u00a76%s \u00A7cwurde \u00A7b%%s \u00A7cweggenommen!"
   },
   "permissionCommand.custom_group.created": {
     "en_us": "\u00A7aSuccessfully created the permission group \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDie Berechtigungsgruppe \u00A76%s \u00A7awurde erfolgreich erstellt!"
   },
   "permissionCommand.custom_group.deleted": {
     "en_us": "\u00A7cSuccessfully deleted the permission group \u00A76%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Berechtigungsgruppe \u00A76%s \u00A7cwurde erfolgreich gelöscht!"
   },
   "permissionCommand.player_permissions": {
     "en_us": "\u00A7b%s \u00A7ahas the following permissions:",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7ahas die folgenden Berechtigungen:"
   },
   "configCommand.item_quantities.max_amount": {
     "en_us": "\u00A7aYou set the config value \u00A76itemQuantities.maxAmount \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76itemQuantities.maxAmount \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.item_quantities.min_amount": {
     "en_us": "\u00A7aYou set the config value \u00A76itemQuantities.minAmount \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76itemQuantities.minAmount \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.item_price.max_amount": {
     "en_us": "\u00A7aYou set the config value \u00A76itemPrice.maxAmount \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76itemPrice.maxAmount \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.item_price.min_amount": {
     "en_us": "\u00A7aYou set the config value \u00A76itemPrice.minAmount \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76itemPrice.minAmount \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.start_balance": {
     "en_us": "\u00A7aYou set the config value \u00A76startBalance \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76startBalance \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.interest": {
     "en_us": "\u00A7aYou set the config value \u00A76interest \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76interest \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.language": {
     "en_us": "\u00A7aYou set the config value \u00A76language \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76language \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.guildId": {
     "en_us": "\u00A7aYou set the config value \u00A76guildId \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76guildId \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.discordToken": {
     "en_us": "\u00A7aYou set the config value \u00A76discordToken \u00A7ato \u00A76%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast den Configwert \u00A76discordToken \u00A7aauf \u00A76%s \u00A7agesetzt!"
   },
   "configCommand.reset_config": {
     "en_us": "\u00A7cThe config has been reset!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Config wurde zurückgesetzt!"
   },
   "configCommand.reload_config": {
     "en_us": "\u00A7aThe config was reloaded!",
-    "de_de": ""
+    "de_de": "\u00A7aThe Config wurde neu geladen!"
   },
   "tradeCommand.cannot_trade_with_yourself": {
     "en_us": "\u00A7cYou cannot trade with yourself!",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst nicht mit dir selbst handeln!"
   },
   "tradeCommand.trade_request_sent": {
     "en_us": "\u00A7aYou sent a trade request to \u00A7b%s\u00A7a!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast eine Handelsanfrage an \u00A7b%s \u00A7agesendet!"
   },
   "tradeCommand.incoming_trade_request": {
     "en_us": "\u00A7b%s \u00A7ahas sent a trade request!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7ahat eine Handelsanfrage gesendet!"
   },
   "tradeCommand.accept_request": {
     "en_us": "\u00A7a[ACCEPT]",
-    "de_de": ""
+    "de_de": "\u00A7a[AKZEPTIEREN]"
   },
   "tradeCommand.accept_request_hover": {
     "en_us": "\u00A7aClick to run command: \u00A7e/trade %s accept",
-    "de_de": ""
+    "de_de": "\u00A7aKlicke, um Befehl auszuführen: \u00A7e/trade %s accept"
   },
   "tradeCommand.deny_request": {
     "en_us": "\u00A7c[DENY]",
-    "de_de": ""
+    "de_de": "\u00A7c[VERWEIGERN]"
   },
   "tradeCommand.deny_request_hover": {
     "en_us": "\u00A7cClick to run command: \u00A7e/trade %s deny",
-    "de_de": ""
+    "de_de": "\u00A7cKlicke um Befehl auszuführen: \u00A7e/trade %s deny"
   },
   "tradeCommand.pending_request": {
     "en_us": "\u00A7cYou already have an outgoing trade request!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast bereits eine ausstehende Handelsanfrage!"
   },
   "tradeCommand.target_did_not_request": {
     "en_us": "\u00A7cThere is no pending request from \u00A7b%s\u00A7c!",
-    "de_de": ""
+    "de_de": "\u00A7cEs gibt keine ausstehende Handelsanfrage von \u00A7b%s\u00A7c!"
   },
   "tradeCommand.target_did_not_request_player": {
     "en_us": "\u00A7b%s \u00A7cdid not send a trade request to you!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7chat keine Handelsanfrage an dich gesendet!"
   },
   "tradeCommand.trade_was_denied": {
     "en_us": "\u00A7b%s \u00A7chas denied the trade request!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7chat die Handelsanfrage verweigert!"
   },
   "tradeCommand.trade_denied": {
     "en_us": "\u00A7cYou denied the trade request!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast die Handelsanfrage verweigert!"
   },
   "tradeCommand.request_expired": {
     "en_us": "\u00A7cThe trade request has expired!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Handelsanfrage ist ausgelaufen!"
   },
   "tradeMenu.trade_cancelled": {
     "en_us": "\u00A7cThe trade has been cancelled!",
-    "de_de": ""
+    "de_de": "\u00A7cDas Handeln wurde abgebrochen!"
   },
   "tradeMenu.trade_complete": {
     "en_us": "\u00A7aTrade completed!",
-    "de_de": ""
+    "de_de": "\u00A7aHandel abgeschlossen!"
   },
   "tradeMenu.menu.title": {
     "en_us": "Trade menu",
-    "de_de": ""
+    "de_de": "Handelsmenu"
   },
   "tradeMenu.item.player_not_accepted": {
     "en_us": "\u00A7cYou currently do not accept the trade",
-    "de_de": ""
+    "de_de": "\u00A7cDu akzeptierst den Handel im Moment nicht!"
   },
   "tradeMenu.item.target_not_accepted": {
     "en_us": "\u00A7cYour trade partner currently does not accept the trade",
-    "de_de": ""
+    "de_de": "\u00A7cDein Handelspartner akzeptiert den Handel im Moment nicht!"
   },
   "tradeMenu.item.player_accepted": {
     "en_us": "\u00A7aYou currently accept the trade",
-    "de_de": ""
+    "de_de": "\u00A7aDu akzeptiert den Handel im Moment!"
   },
   "tradeMenu.item.target_accepted": {
     "en_us": "\u00A7aYour trade partner currently accepts the trade",
-    "de_de": ""
+    "de_de": "\u00A7aDein Handelspartner akzeptiert den Handel im Moment!"
   },
   "tradeMenu.item.accept_trade": {
     "en_us": "\u00A7bClick to accept the trade",
-    "de_de": ""
+    "de_de": "\u00A7bKlicke, um den Handel zu akzeptieren"
   },
   "tradeMenu.item.trade_accepted": {
     "en_us": "\u00A7bYou accepted the trade",
-    "de_de": ""
+    "de_de": "\u00A7bDu akzeptierst den Handel"
   },
   "tradeMenu.item.cancel_trade": {
     "en_us": "\u00A7cCancel the trade",
-    "de_de": ""
+    "de_de": "\u00A7cBrich den Handel ab"
   },
   "helpCommand.help": {
     "en_us": "\u00A7fHelp",
-    "de_de": ""
+    "de_de": "\u00A7fHilfe"
   },
   "friendCommand.sent_friend_request": {
     "en_us": "\u00A7aYou sent a friend request to \u00A7b%s\u00A7a! They have \u00A755 \u00A7aminutes to accept!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast eine Freundschaftsanfrage an \u00A7b%s \u00A7ageschickt! Er/Sie hat \u00A755 \u00A7aMinuten zum Akzeptieren!"
   },
   "friendCommand.received_friend_request": {
     "en_us": "\u00A7aYou received a friend request from \u00A7b%s\u00A7a! You have \u00A755 \u00A7aminutes to accept!",
-    "de_de": ""
+    "de_de": "\u00A7aDu hast eine Freundschaftsanfrage von \u00A7b%s \u00A7aerhalten! Du hast \u00A755 \u00A7aMinuten zum Akzeptieren!"
   },
   "friendCommand.accept_friend_request": {
     "en_us": "\u00A7a[ACCEPT]",
-    "de_de": ""
+    "de_de": "\u00A7a[AKZEPTIEREN]"
   },
   "friendCommand.accept_friend_request_hover": {
     "en_us": "\u00A7aClick to run command: \u00A7e/friend accept %s",
-    "de_de": ""
+    "de_de": "\u00A7aKlicke, um Befehl auszuführen: \u00A7e/friend accept %s"
   },
   "friendCommand.deny_friend_request": {
     "en_us": "\u00A7c[DENY]",
-    "de_de": ""
+    "de_de": "\u00A7c[VERWEIGERN]"
   },
   "friendCommand.deny_friend_request_hover": {
     "en_us": "\u00A7cClick to run command: \u00A7e/friend deny %s",
-    "de_de": ""
+    "de_de": "\u00A7cKlicke, um Befehl auszuführen: \u00A7e/friend deny %s"
   },
   "friendCommand.friend_not_found": {
     "en_us": "\u00A7b%s \u00A7ccould not be found on your friend list!",
-    "de_de": ""
+    "de_de": "\u00A7b%s \u00A7ckonnte auf deiner Freundesliste nicht gefunden werden!"
   },
   "friendCommand.removed_friend": {
     "en_us": "\u00A7cYou removed \u00A7b%s \u00A7cfrom your friend list!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast \u00A7b%s \u00A7cvon deiner Freundesliste entfernt!"
   },
   "friendCommand.request_expired": {
     "en_us": "\u00A7cThe friend request has expired!",
-    "de_de": ""
+    "de_de": "\u00A7cDie Freundschaftsanfrage ist ausgelaufen!"
   },
   "friendCommand.cannot_friend_yourself": {
     "en_us": "\u00A7cYou cannot send a friend request to yourself!",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst dir selbst keine Freundschaftsanfrage schicken!"
   },
   "friendCommand.pending_request": {
     "en_us": "\u00A7cYou already have a pending friend request!",
-    "de_de": ""
+    "de_de": "\u00A7cDu hast bereits eine ausstehende Freundschaftsanfrage!"
   },
   "friendCommand.page_not_found": {
     "en_us": "\u00A7cYou cannot view page \u00A76%%s \u00A7cas only \u00A76%s \u00A7cpages could be found! \u00A77(Range: 0 - %s)",
-    "de_de": ""
+    "de_de": "\u00A7cDu kannst Seite \u00A76%%s \u00A7cnicht ansehen, da nur \u00A76%s \u00A7cSeiten gefunden werden konnten! \u00A77(Bereich: 0 - %s)"
   },
   "friendCommand.friend_pages_title": {
-    "en_us": "\u00A766View friend list - Page %s"
+    "en_us": "\u00A76Friend list - Page %s",
+    "de_de": "\u00A76Freundesliste - Seite %s"
   },
   "friendCommand.previous_page": {
     "en_us": "\u00A7eClick to view previous page",
-    "de_de": ""
+    "de_de": "\u00A7eKlicke, um die vorherige Seite zu sehen"
   },
   "friendCommand.next_page": {
     "en_us": "\u00A7eClick to view next page",
-    "de_de": ""
+    "de_de": "\u00A7eKlicke, um die nächste Seite zu sehen"
   },
   "friendCommand.friend_request_accepted": {
-    "en_us": "\u00A7aYou are now friends with \u00A76%s",
-    "de_de": ""
+    "en_us": "\u00A7aYou are now friends with \u00A7b%s",
+    "de_de": "\u00A7aDu bist nun mit \u00A7b%s \u00A7abefreundet!"
   },
   "friendCommand.friend_request_denied": {
-    "en_us": "\u00A7cThe friend request coming from \u00A76%s \u00A7cwas denied!",
-    "de_de": ""
+    "en_us": "\u00A7cThe friend request coming from \u00A7b%s \u00A7cwas denied!",
+    "de_de": "\u00A7cDie Freundschaftsanfrage, die von \u00A7b%s \u00A7cgekommen ist, wurde abgelehnt!"
   }
 }
