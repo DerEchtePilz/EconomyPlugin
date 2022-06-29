@@ -14,6 +14,7 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraftserver.DiscordCommand;
+import me.derechtepilz.economy.playermanager.permission.DefaultPermissionGroup;
 import me.derechtepilz.economy.playermanager.trade.TradeCommand;
 import me.derechtepilz.economy.playermanager.trade.TradeMenu;
 import me.derechtepilz.economy.playermanager.friend.Friend;
@@ -29,7 +30,9 @@ import me.derechtepilz.economy.utility.config.ConfigCommand;
 import net.dv8tion.jda.api.JDA;
 import okhttp3.OkHttpClient;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -177,15 +180,11 @@ public final class Main extends JavaPlugin {
     }
 
     private void listenerRegistration() {
-        PluginManager manager = Bukkit.getPluginManager();
-        manager.registerEvents(itemCancelMenu, this);
-        manager.registerEvents(itemBuyMenu, this);
-        manager.registerEvents(tradeMenu, this);
-        manager.registerEvents(new ManageCoinsWhenJoining(), this);
-        manager.registerEvents(new ChattingFromMinecraftServer(), this);
-        manager.registerEvents(new StartUpBot(), this);
-        manager.registerEvents(new ServerStatus(), this);
-        manager.registerEvents(new CheckPluginUpdate(), this);
+        registerEvents(Bukkit.getPluginManager(), this,
+                itemCancelMenu, itemBuyMenu, tradeMenu,
+                new ManageCoinsWhenJoining(), new ChattingFromMinecraftServer(), new StartUpBot(),
+                new ServerStatus(), new CheckPluginUpdate(), new DefaultPermissionGroup()
+        );
     }
 
     public HashMap<UUID, ItemStack[]> getPlayerOffers() {
@@ -298,5 +297,11 @@ public final class Main extends JavaPlugin {
             p.closeInventory();
             p.sendMessage(TranslatableChatComponent.read("main.initialize_enable_procedure.coin_display_missing"));
         });
+    }
+
+    private void registerEvents(PluginManager manager, Plugin plugin, Listener... listeners) {
+        for (Listener listener : listeners) {
+            manager.registerEvents(listener, plugin);
+        }
     }
 }

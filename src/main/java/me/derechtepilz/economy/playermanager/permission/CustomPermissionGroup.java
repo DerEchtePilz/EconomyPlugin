@@ -60,11 +60,14 @@ public class CustomPermissionGroup {
     public boolean hasPlayerPermissionGroup(@NotNull String groupName, @NotNull Player player) {
         int[] playerPermissions = player.getPersistentDataContainer().get(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY);
         int checkedMatchingPermissions = 0;
-        List<Permission> customPermissionGroup = getPermissionGroup(groupName);
-        for (int permissionId : playerPermissions) {
-            for (Permission permission : customPermissionGroup) {
-                if (permission.getId() == permissionId) {
-                    checkedMatchingPermissions += 1;
+        List<Permission> customPermissionGroup = new ArrayList<>();
+        if (isPermissionGroup(groupName)) {
+            customPermissionGroup = getPermissionGroup(groupName);
+            for (int permissionId : playerPermissions) {
+                for (Permission permission : customPermissionGroup) {
+                    if (permission.getId() == permissionId) {
+                        checkedMatchingPermissions += 1;
+                    }
                 }
             }
         }
