@@ -16,7 +16,7 @@
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot.version>1.18.1-R0.1-SNAPSHOT</spigot.version>
-        <commandapi.version>8.4.0</commandapi.version>
+        <commandapi.version>8.4.1</commandapi.version>
         <mojang.authlib.version>1.5.21</mojang.authlib.version>
     </properties>
 
