@@ -16,7 +16,8 @@ The EconomyPlugin is a plugin for Minecraft! It provides features such as
 - Buying items
 - A custom permission system
 - A trade system
-- A discord integration (usable, but in BETA)
+- A discord integration
+- A friend system
 
 ## How to use this plugin
 Using this plugin is pretty simple! Just put it in your server's `plugin` folder and start it.
