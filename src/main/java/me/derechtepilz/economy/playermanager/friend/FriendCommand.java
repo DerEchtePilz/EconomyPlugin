@@ -167,34 +167,38 @@ public class FriendCommand implements ICooldown {
                         .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                                 .executesPlayer((player, args) -> {
                                     Player target = null;
-                                    for (UUID uuid : receivingPlayers.get(player.getUniqueId())) {
-                                        target = (((Player) args[0]).getUniqueId().equals(uuid)) ? (Player) args[0] : null;
-                                    }
-                                    if (target != null) {
-                                        Main.getInstance().getFriend().addFriend(player, target);
-                                        Main.getInstance().getFriend().addFriend(target, player);
+                                    if (receivingPlayers.containsKey(player.getUniqueId())) {
+                                        for (UUID uuid : receivingPlayers.get(player.getUniqueId())) {
+                                            target = (((Player) args[0]).getUniqueId().equals(uuid)) ? (Player) args[0] : null;
+                                        }
+                                        if (target != null) {
+                                            Main.getInstance().getFriend().addFriend(player, target);
+                                            Main.getInstance().getFriend().addFriend(target, player);
 
-                                        player.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_accepted").replace("%s", target.getName()));
-                                        target.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_accepted").replace("%s", player.getName()));
+                                            player.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_accepted").replace("%s", target.getName()));
+                                            target.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_accepted").replace("%s", player.getName()));
 
-                                        List<UUID> requestedFriends = requestingPlayers.get(player.getUniqueId());
-                                        requestedFriends.remove(target.getUniqueId());
-                                        requestingPlayers.put(player.getUniqueId(), requestedFriends);
+                                            List<UUID> requestedFriends = requestingPlayers.get(player.getUniqueId());
+                                            requestedFriends.remove(target.getUniqueId());
+                                            requestingPlayers.put(player.getUniqueId(), requestedFriends);
 
-                                        List<UUID> requestingFriends = receivingPlayers.get(target.getUniqueId());
-                                        requestingFriends.remove(player.getUniqueId());
-                                        receivingPlayers.put(target.getUniqueId(), requestingFriends);
+                                            List<UUID> requestingFriends = receivingPlayers.get(target.getUniqueId());
+                                            requestingFriends.remove(player.getUniqueId());
+                                            receivingPlayers.put(target.getUniqueId(), requestingFriends);
 
-                                        // Assuming that "player" can't be the key here because this method can only be called from a context where "player" is the one who receives the request and "target" is the one who sent the request
-                                        // Therefore "player" could be a key for another cooldown but not for the one which is required here
-                                        for (Cooldown cooldown : currentCooldowns.get(target.getUniqueId())) {
-                                            if (cooldown.target().equals(player)) {
-                                                cooldown.getToCancel().cancel();
+                                            // Assuming that "player" can't be the key here because this method can only be called from a context where "player" is the one who receives the request and "target" is the one who sent the request
+                                            // Therefore "player" could be a key for another cooldown but not for the one which is required here
+                                            for (Cooldown cooldown : currentCooldowns.get(target.getUniqueId())) {
+                                                if (cooldown.target().equals(player)) {
+                                                    cooldown.getToCancel().cancel();
 
-                                                List<Cooldown> cooldownList = currentCooldowns.get(target.getUniqueId());
-                                                cooldownList.remove(cooldown);
-                                                currentCooldowns.put(target.getUniqueId(), cooldownList);
+                                                    List<Cooldown> cooldownList = currentCooldowns.get(target.getUniqueId());
+                                                    cooldownList.remove(cooldown);
+                                                    currentCooldowns.put(target.getUniqueId(), cooldownList);
+                                                }
                                             }
+                                        } else {
+                                            player.sendMessage(TranslatableChatComponent.read("friendCommand.accepting_failed").replace("%s", ((Player) args[0]).getName()));
                                         }
                                     } else {
                                         player.sendMessage(TranslatableChatComponent.read("friendCommand.accepting_failed").replace("%s", ((Player) args[0]).getName()));
@@ -204,31 +208,35 @@ public class FriendCommand implements ICooldown {
                         .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                                 .executesPlayer((player, args) -> {
                                     Player target = null;
-                                    for (UUID uuid : receivingPlayers.get(player.getUniqueId())) {
-                                        target = (((Player) args[0]).getUniqueId().equals(uuid)) ? (Player) args[0] : null;
-                                    }
-                                    if (target != null) {
-                                        player.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_denied").replace("%s", target.getName()));
-                                        target.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_denied").replace("%s", target.getName()));
+                                    if (receivingPlayers.containsKey(player.getUniqueId())) {
+                                        for (UUID uuid : receivingPlayers.get(player.getUniqueId())) {
+                                            target = (((Player) args[0]).getUniqueId().equals(uuid)) ? (Player) args[0] : null;
+                                        }
+                                        if (target != null) {
+                                            player.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_denied").replace("%s", target.getName()));
+                                            target.sendMessage(TranslatableChatComponent.read("friendCommand.friend_request_denied").replace("%s", target.getName()));
 
-                                        List<UUID> requestedFriends = requestingPlayers.get(player.getUniqueId());
-                                        requestedFriends.remove(target.getUniqueId());
-                                        requestingPlayers.put(player.getUniqueId(), requestedFriends);
+                                            List<UUID> requestedFriends = requestingPlayers.get(player.getUniqueId());
+                                            requestedFriends.remove(target.getUniqueId());
+                                            requestingPlayers.put(player.getUniqueId(), requestedFriends);
 
-                                        List<UUID> requestingFriends = receivingPlayers.get(target.getUniqueId());
-                                        requestingFriends.remove(player.getUniqueId());
-                                        receivingPlayers.put(target.getUniqueId(), requestingFriends);
+                                            List<UUID> requestingFriends = receivingPlayers.get(target.getUniqueId());
+                                            requestingFriends.remove(player.getUniqueId());
+                                            receivingPlayers.put(target.getUniqueId(), requestingFriends);
 
-                                        // Assuming that "player" can't be the key here because this method can only be called from a context where "player" is the one who receives the request and "target" is the one who sent the request
-                                        // Therefore "player" could be a key for another cooldown but not for the one which is required here
-                                        for (Cooldown cooldown : currentCooldowns.get(target.getUniqueId())) {
-                                            if (cooldown.target().equals(player)) {
-                                                cooldown.getToCancel().cancel();
+                                            // Assuming that "player" can't be the key here because this method can only be called from a context where "player" is the one who receives the request and "target" is the one who sent the request
+                                            // Therefore "player" could be a key for another cooldown but not for the one which is required here
+                                            for (Cooldown cooldown : currentCooldowns.get(target.getUniqueId())) {
+                                                if (cooldown.target().equals(player)) {
+                                                    cooldown.getToCancel().cancel();
 
-                                                List<Cooldown> cooldownList = currentCooldowns.get(target.getUniqueId());
-                                                cooldownList.remove(cooldown);
-                                                currentCooldowns.put(target.getUniqueId(), cooldownList);
+                                                    List<Cooldown> cooldownList = currentCooldowns.get(target.getUniqueId());
+                                                    cooldownList.remove(cooldown);
+                                                    currentCooldowns.put(target.getUniqueId(), cooldownList);
+                                                }
                                             }
+                                        } else {
+                                            player.sendMessage(TranslatableChatComponent.read("friendCommand.denying_failed").replace("%s", ((Player) args[0]).getName()));
                                         }
                                     } else {
                                         player.sendMessage(TranslatableChatComponent.read("friendCommand.denying_failed").replace("%s", ((Player) args[0]).getName()));

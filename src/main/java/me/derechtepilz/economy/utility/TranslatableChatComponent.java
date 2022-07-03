@@ -4,11 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.derechtepilz.economy.Main;
+import org.bukkit.ChatColor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class TranslatableChatComponent {
 
@@ -26,7 +28,7 @@ public class TranslatableChatComponent {
                 if (inputStream == null) {
                     return "§cNo lang.json file was found!";
                 }
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                 StringBuilder builder = new StringBuilder();
 
@@ -49,14 +51,14 @@ public class TranslatableChatComponent {
         switch (Main.getInstance().getLanguage()) {
             case EN_US -> {
                 if (object.has(translationKey)) {
-                    return object.getAsJsonObject(translationKey).get("en_us").getAsString();
+                    return ChatColor.translateAlternateColorCodes('&', object.getAsJsonObject(translationKey).get("en_us").getAsString());
                 } else {
                     return translationKey;
                 }
             }
             case DE_DE -> {
                 if (object.has(translationKey)) {
-                    return object.getAsJsonObject(translationKey).get("de_de").getAsString();
+                    return ChatColor.translateAlternateColorCodes('&', object.getAsJsonObject(translationKey).get("de_de").getAsString());
                 } else {
                     return translationKey;
                 }

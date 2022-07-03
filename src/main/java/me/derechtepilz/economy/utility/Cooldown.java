@@ -1,6 +1,5 @@
 package me.derechtepilz.economy.utility;
 
-import me.derechtepilz.economy.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -38,7 +37,7 @@ public class Cooldown implements Runnable {
         return endTime;
     }
 
-    public void  setCancelTask(BukkitTask task) {
+    public void setCancelTask(BukkitTask task) {
         this.toCancel = task;
     }
 
