@@ -415,6 +415,10 @@
     "en_us": "&aYou set the config value &6language &ato &6%s&a!",
     "de_de": "&aDu hast den Configwert &6language &aauf &6%s &agesetzt!"
   },
+  "configCommand.language_not_found": {
+    "en_us": "&cThis language was not found!",
+    "de_de": "&cDiese Sprache wurde nicht gefunden!"
+  },
   "configCommand.guildId": {
     "en_us": "&aYou set the config value &6guildId &ato &6%s&a!",
     "de_de": "&aDu hast den Configwert &6guildId &aauf &6%s &agesetzt!"

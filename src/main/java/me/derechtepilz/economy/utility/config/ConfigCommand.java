@@ -85,16 +85,20 @@ public class ConfigCommand {
                                     player.sendMessage(TranslatableChatComponent.read("configCommand.interest").replace("%s", ChatFormatter.valueOf(interest)));
                                 })))
                 .then(new LiteralArgument("language")
-                        .then(new StringArgument("language").replaceSuggestions(ArgumentSuggestions.strings("en_us", "de_de"))
+                        .then(new MultiLiteralArgument("en_us", "de_de")
                                 .executesPlayer((player, args) -> {
                                     if (!Permission.hasPermission(player, Permission.MODIFY_CONFIG)) {
                                         player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
                                         return;
                                     }
-                                    Config.set("language", args[0].toString().toUpperCase());
-                                    Config.reloadConfig();
-                                    Main.getInstance().setLanguage(Language.valueOf(args[0].toString().toUpperCase()));
-                                    player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
+                                    try {
+                                        Config.set("language", args[0].toString().toUpperCase());
+                                        Config.reloadConfig();
+                                        Main.getInstance().setLanguage(Language.valueOf(args[0].toString().toUpperCase()));
+                                        player.sendMessage(TranslatableChatComponent.read("configCommand.language").replace("%s", (String) args[0]));
+                                    } catch (IllegalArgumentException e) {
+                                        player.sendMessage(TranslatableChatComponent.read("configCommand.language_not_found"));
+                                    }
                                 })))
                 .then(new LiteralArgument("discord")
                         .then(new StringArgument("guildId")
