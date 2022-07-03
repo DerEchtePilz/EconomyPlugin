@@ -78,6 +78,7 @@ public class CustomPermissionGroup {
         return customPermissionGroups.containsKey(groupName);
     }
 
+    @SuppressWarnings("UseBulkOperation")
     public List<String> getGroupNames() {
         List<String> groupNames = new ArrayList<>();
         for (String groupName : customPermissionGroups.keySet()) {
@@ -86,6 +87,7 @@ public class CustomPermissionGroup {
         return groupNames;
     }
 
+    @SuppressWarnings("unchecked")
     public void loadPermissionGroup() throws IOException {
         customPermissionGroups.clear();
         if (!permissionGroup.exists()) {
@@ -94,6 +96,7 @@ public class CustomPermissionGroup {
         customPermissionGroups = gson.fromJson(new FileReader(permissionGroup), HashMap.class);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void buildPermissionGroup() throws IOException {
         if (!permissionGroup.exists()) {
             permissionGroup.createNewFile();

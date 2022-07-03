@@ -568,8 +568,8 @@
     "de_de": "\u00A7cDu kannst dir selbst keine Freundschaftsanfrage schicken!"
   },
   "friendCommand.pending_request": {
-    "en_us": "\u00A7cYou already have a pending friend request!",
-    "de_de": "\u00A7cDu hast bereits eine ausstehende Freundschaftsanfrage!"
+    "en_us": "\u00A7cYou already have a pending friend request to this player!",
+    "de_de": "\u00A7cDu hast bereits eine ausstehende Freundschaftsanfrage an diesen Spieler!"
   },
   "friendCommand.page_not_found": {
     "en_us": "\u00A7cYou cannot view page \u00A76%%s \u00A7cas only \u00A76%s \u00A7cpages could be found! \u00A77(Range: 0 - %s)",
@@ -594,5 +594,13 @@
   "friendCommand.friend_request_denied": {
     "en_us": "\u00A7cThe friend request coming from \u00A7b%s \u00A7cwas denied!",
     "de_de": "\u00A7cDie Freundschaftsanfrage, die von \u00A7b%s \u00A7cgekommen ist, wurde abgelehnt!"
+  },
+  "friendCommand.accepting_failed": {
+    "en_us": "\u00A7cFailed to accept the friend request because \u00A7b%s \u00A7cdidn't send a friend request to you!",
+    "de_de": "\u00A7cDie Freundschaftsanfrage konnte nicht angenommen werden, weil \u00A7b%s \u00A7ckeine Freundschaftsanfrage an dich geschickt hat!"
+  },
+  "friendCommand.denying_failed": {
+    "en_us": "\u00A7cFailed to deny the friend request because \u00A7b%s \u00A7cdidn't send a friend request to you!",
+    "de_de": "\u00A7cDie Freundschaftsanfrage konnte nicht verweigert werden, weil \u00A7b%s \u00A7ckeine Freundschaftsanfrage an dich geschickt hat!"
   }
 }

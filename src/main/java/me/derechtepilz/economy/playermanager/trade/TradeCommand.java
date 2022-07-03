@@ -24,7 +24,6 @@ import java.util.UUID;
 public class TradeCommand implements ICooldown {
 
     private final HashMap<UUID, UUID> requestingPlayers = new HashMap<>();
-    private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
     public void register() {
         new CommandTree("trade")
@@ -59,15 +58,11 @@ public class TradeCommand implements ICooldown {
 
                             target.spigot().sendMessage(acceptTradeRequest, denyTradeRequest);
 
-                            Cooldown cooldown = new Cooldown(player, Calendar.getInstance().getTime().toInstant().plusSeconds(300).toEpochMilli(), this);
+                            Cooldown cooldown = new Cooldown(player, target, Calendar.getInstance().getTime().toInstant().plusSeconds(300).toEpochMilli(), this);
                             cooldown.setCancelTask(Bukkit.getScheduler().runTaskTimer(Main.getInstance(), cooldown, 0, 20));
                         })
                         .then(new LiteralArgument("accept")
                                 .executesPlayer((player, args) -> {
-                                    if (!Permission.hasPermission(player, Permission.TRADE)) {
-                                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                        return;
-                                    }
                                     Player target = (Player) args[0];
                                     if (!requestingPlayers.containsKey(target.getUniqueId())) {
                                         player.sendMessage(TranslatableChatComponent.read("tradeCommand.target_did_not_request").replace("%s", target.getName()));
@@ -86,10 +81,6 @@ public class TradeCommand implements ICooldown {
                                 }))
                         .then(new LiteralArgument("deny")
                                 .executesPlayer((player, args) -> {
-                                    if (!Permission.hasPermission(player, Permission.TRADE)) {
-                                        player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
-                                        return;
-                                    }
                                     Player target = (Player) args[0];
                                     if (!requestingPlayers.containsKey(target.getUniqueId())) {
                                         player.sendMessage(TranslatableChatComponent.read("tradeCommand.target_did_not_request").replace("%s", target.getName()));
@@ -112,9 +103,8 @@ public class TradeCommand implements ICooldown {
     }
 
     @Override
-    public boolean checkDate(Player player, Cooldown cooldown) {
+    public boolean checkDate(Player player, Player target, Cooldown cooldown) {
         if (System.currentTimeMillis() >= cooldown.endTime()) {
-            Player target = Bukkit.getPlayer(requestingPlayers.get(player.getUniqueId()));
             requestingPlayers.remove(player.getUniqueId());
 
             player.sendMessage(TranslatableChatComponent.read("tradeCommand.request_expired"));
