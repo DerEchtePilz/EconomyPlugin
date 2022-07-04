@@ -1,6 +1,6 @@
 package me.derechtepilz.economy.modules.discord;
 
-import me.derechtepilz.economy.modules.discord.communication.discordserver.ChattingFromDiscordServer;
+import me.derechtepilz.economy.modules.discord.communication.discord.ChattingFromDiscordServer;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
 import net.dv8tion.jda.api.EmbedBuilder;

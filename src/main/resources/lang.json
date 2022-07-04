@@ -91,6 +91,14 @@
     "en_us": "Click to put id into chat so you can copy",
     "de_de": "Klicke, um die ID in den Chat zu legen, so dass du sie kopieren kannst"
   },
+  "chattingFromDiscordServer.wrong_private_message_format": {
+    "en_us": "Player could not be identified! Follow the format: `<playerName>: <message>`",
+    "de_de": "Spieler konnte nicht identifiziert werden! Folge dem Format: `<spielerName>: <Nachricht>`"
+  },
+  "chattingFromDiscordServer.minecraft_server.message_received": {
+    "en_us": "&9[Discord Private Message] &7%s messages you: ",
+    "de_de": "&9[Discord Private Nachricht] &7%s schreibt dir: "
+  },
   "config.loadConfig.is_loaded": {
     "en_us": "You called the loadConfig method more than once! Continuing without processing the second call.",
     "de_de": "Du hast die loadConfig Methode mehr als einmal aufgerufen! Fahre fort, ohne den zweiten Call zu bearbeiten."

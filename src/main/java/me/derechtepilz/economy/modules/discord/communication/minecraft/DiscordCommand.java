@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.modules.discord.communication.minecraftserver;
+package me.derechtepilz.economy.modules.discord.communication.minecraft;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;

@@ -63,7 +63,6 @@ public class Config {
         } catch (IOException exception) {
             IOException ioException = new IOException("Failed to reload config!");
             Main.getInstance().getLogger().severe(ioException.getMessage());
-            Main.getInstance().getLogger().severe(Arrays.toString(ioException.getStackTrace()));
         }
     }
 
