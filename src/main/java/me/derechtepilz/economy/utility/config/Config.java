@@ -71,6 +71,10 @@ public class Config {
         save(getValuesFromDefaultConfig());
     }
 
+    public static void deleteConfig() {
+        configFile.delete();
+    }
+
     private static void save(String configValues) {
         try {
             File config = new File(new File("./plugins/Economy"), "config.json");

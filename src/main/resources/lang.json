@@ -435,6 +435,10 @@
     "en_us": "&aThe config was reloaded!",
     "de_de": "&aThe Config wurde neu geladen!"
   },
+  "configCommand.delete_config": {
+    "en_us": "&cThe config was deleted! Everything will still work and a new config will be created if the server restarts!",
+    "de_de": "&cDie Config wurde gelöscht! Ales wird weiterhin funktionieren und eine neue Config wird erstellt, wenn der Server neu startet!"
+  },
   "tradeCommand.cannot_trade_with_yourself": {
     "en_us": "&cYou cannot trade with yourself!",
     "de_de": "&cDu kannst nicht mit dir selbst handeln!"

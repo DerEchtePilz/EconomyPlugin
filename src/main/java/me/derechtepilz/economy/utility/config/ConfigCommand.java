@@ -142,6 +142,19 @@ public class ConfigCommand {
                                 Config.reloadConfig();
                             }
                         }))
+                .then(new LiteralArgument("delete")
+                        .executes((sender, args) -> {
+                            if (sender instanceof Player player) {
+                                if (!Permission.hasPermission(player, Permission.DELETE_CONFIG)) {
+                                    player.sendMessage(TranslatableChatComponent.read("command.insufficient_permission"));
+                                    return;
+                                }
+                                Config.deleteConfig();
+                                player.sendMessage(TranslatableChatComponent.read("configCommand.delete_config"));
+                            } else {
+                                Config.deleteConfig();
+                            }
+                        }))
                 .register();
     }
 }
