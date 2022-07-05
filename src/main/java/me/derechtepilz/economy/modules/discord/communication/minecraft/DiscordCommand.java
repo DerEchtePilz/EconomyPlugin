@@ -40,10 +40,8 @@ public class DiscordCommand {
                                                     DiscordBot.getDiscordBot().getJda().openPrivateChannelById(discordId).complete()
                                                             .sendMessage("**" + player.getName() + "**: " + message).queue(null, new ErrorHandler()
                                                                     .handle(ErrorResponse.CANNOT_SEND_TO_USER,
-                                                                            (e) -> {
-                                                                                player.sendMessage(TranslatableChatComponent.read("discordCommand.cannot_send_private_message")
-                                                                                        .replace("%s", userName));
-                                                                            }));
+                                                                            (e) -> player.sendMessage(TranslatableChatComponent.read("discordCommand.cannot_send_private_message")
+                                                                                    .replace("%s", userName))));
                                                     player.sendMessage(TranslatableChatComponent.read("discordCommand.sent_private_message")
                                                             .replace("%s", userName) + " " + message);
                                                 }

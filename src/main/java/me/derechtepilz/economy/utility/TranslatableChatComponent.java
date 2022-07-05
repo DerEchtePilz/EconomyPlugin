@@ -42,12 +42,11 @@ public class TranslatableChatComponent {
             }
         }
 
-        JsonElement element = JsonParser.parseString(languages);
-        JsonObject object = element.getAsJsonObject();
-
         if (languages.equals("§cNo lang.json file was found!")) {
             return "§cNo lang.json file was found!";
         }
+
+        JsonObject object = JsonParser.parseString(languages).getAsJsonObject();
         switch (Main.getInstance().getLanguage()) {
             case EN_US -> {
                 if (object.has(translationKey)) {

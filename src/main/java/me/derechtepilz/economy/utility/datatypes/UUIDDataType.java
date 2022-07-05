@@ -3,6 +3,7 @@ package me.derechtepilz.economy.utility.datatypes;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class UUIDDataType {
     public Class<byte[]> getPrimitiveType() {
         return byte[].class;

@@ -8,6 +8,7 @@ public class CheckUpdate {
 
     private final String currentPluginVersion = "v2.0.0";
 
+    @SuppressWarnings("SpellCheckingInspection")
     public boolean checkForUpdate() {
         try {
             String apiResponse = new APIRequest().request("https://api.github.com/repos/DerEchtePilz/EconomyPlugin/releases");

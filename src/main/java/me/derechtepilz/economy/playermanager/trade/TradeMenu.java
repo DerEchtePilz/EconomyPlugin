@@ -37,6 +37,7 @@ public class TradeMenu implements Listener, InventoryBase {
             41, 42, 43, 44
     };
 
+    @SuppressWarnings("SpellCheckingInspection")
     private final Character[] inventoryFillableSlots = {
             ' ', ' ', ' ', ' ', 'G', ' ', ' ', ' ', ' ',
             ' ', ' ', ' ', ' ', 'G', ' ', ' ', ' ', ' ',

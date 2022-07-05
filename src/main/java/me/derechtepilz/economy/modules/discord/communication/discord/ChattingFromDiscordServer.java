@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ChattingFromDiscordServer extends ListenerAdapter {
@@ -43,11 +42,6 @@ public class ChattingFromDiscordServer extends ListenerAdapter {
     }
 
     private boolean isPlayer(String name) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
+        return Bukkit.getPlayer(name) != null;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "TypeParameterHidesVisibleType"})
 public class Argument<T> {
     private dev.jorel.commandapi.arguments.Argument<T> argument;
     public Argument(ArgumentType type) {
@@ -59,6 +59,7 @@ public class Argument<T> {
         return permissions;
     }
 
+    @SuppressWarnings("UseBulkOperation")
     private List<String> getPermissionGroup() {
         List<String> permissionGroups = new ArrayList<>();
         for (PermissionGroup permissionGroup : PermissionGroup.values()) {
@@ -70,10 +71,12 @@ public class Argument<T> {
         return permissionGroups;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private <T> ListArgument<T> getListArgument(String nodeName, String delimiter, boolean duplicates, List<T> suggestions) {
         return new ListArgumentBuilder<T>(nodeName, delimiter).allowDuplicates(duplicates).withList(suggestions).withStringMapper().build();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private <T> ListArgument<T> getListArgument(String nodeName, String delimiter, boolean duplicates, Supplier<Collection<T>> supplier) {
         return new ListArgumentBuilder<T>(nodeName, delimiter).allowDuplicates(duplicates).withList(supplier).withStringMapper().build();
     }

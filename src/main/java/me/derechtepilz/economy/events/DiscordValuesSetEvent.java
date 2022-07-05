@@ -3,6 +3,7 @@ package me.derechtepilz.economy.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class DiscordValuesSetEvent extends Event {
@@ -13,6 +14,7 @@ public class DiscordValuesSetEvent extends Event {
         this.player = who;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }

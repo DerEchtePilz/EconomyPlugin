@@ -70,10 +70,12 @@ public class Config {
         save(getValuesFromDefaultConfig());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void deleteConfig() {
         configFile.delete();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void save(String configValues) {
         try {
             File config = new File(new File("./plugins/Economy"), "config.json");

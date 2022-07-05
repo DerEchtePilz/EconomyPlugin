@@ -72,12 +72,8 @@ public final class Main extends JavaPlugin {
     private final CustomPermissionGroup customPermissionGroup = new CustomPermissionGroup();
     private final Friend friend = new Friend();
 
-    private final Map<UUID, ICooldown> cooldownMap = new HashMap<>();
-
     private boolean wasCommandAPILoaded;
     private boolean isNewUpdateAvailable = false;
-
-    private int taskId;
 
     @Override
     public void onEnable() {

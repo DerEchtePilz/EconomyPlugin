@@ -68,6 +68,7 @@ public class Friend {
         return friendNames;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void saveFriends() throws IOException {
         if (!friends.exists()) {
             friends.createNewFile();
@@ -77,6 +78,7 @@ public class Friend {
         writer.close();
     }
 
+    @SuppressWarnings({"unchecked", "unused"})
     public void loadFriends() throws IOException {
         saveFriends.clear();
         if (!friends.exists()) {
