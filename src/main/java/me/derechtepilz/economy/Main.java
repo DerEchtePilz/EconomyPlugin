@@ -14,6 +14,7 @@ import me.derechtepilz.economy.modules.discord.ServerStatus;
 import me.derechtepilz.economy.modules.discord.StartUpBot;
 import me.derechtepilz.economy.modules.discord.communication.minecraft.ChattingFromMinecraftServer;
 import me.derechtepilz.economy.modules.discord.communication.minecraft.DiscordCommand;
+import me.derechtepilz.economy.nms.NMS;
 import me.derechtepilz.economy.playermanager.permission.DefaultPermissionGroup;
 import me.derechtepilz.economy.playermanager.trade.TradeCommand;
 import me.derechtepilz.economy.playermanager.trade.TradeMenu;
@@ -22,7 +23,6 @@ import me.derechtepilz.economy.playermanager.friend.FriendCommand;
 import me.derechtepilz.economy.playermanager.permission.CustomPermissionGroup;
 import me.derechtepilz.economy.playermanager.permission.PermissionCommand;
 import me.derechtepilz.economy.utility.CheckUpdate;
-import me.derechtepilz.economy.utility.ICooldown;
 import me.derechtepilz.economy.utility.Language;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 import me.derechtepilz.economy.utility.config.Config;
@@ -75,6 +75,8 @@ public final class Main extends JavaPlugin {
     private boolean wasCommandAPILoaded;
     private boolean isNewUpdateAvailable = false;
 
+    private NMS nms;
+
     @Override
     public void onEnable() {
         itemCancelMenu = new ItemCancelMenu();
@@ -119,6 +121,8 @@ public final class Main extends JavaPlugin {
             getLogger().severe(TranslatableChatComponent.read("main.onLoad.version_info").replace("%s", version));
             wasCommandAPILoaded = false;
         }
+
+        nms = VersionHandler.getSupportedNMS(version);
 
         new LoadItems();
         isNewUpdateAvailable = new CheckUpdate().checkForUpdate();
@@ -233,6 +237,10 @@ public final class Main extends JavaPlugin {
 
     public boolean isNewUpdateAvailable() {
         return isNewUpdateAvailable;
+    }
+
+    public NMS getNMS() {
+        return nms;
     }
 
     public int findNextMultiple(int input, int multipleToFind) {
