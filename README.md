@@ -176,6 +176,7 @@ Usage:
 
 ## Unfinished features in v2.0.0
 - Discord integration (permanent development because of lack of ideas)
+- The wiki... _I should really write it_
 
 ## Credits
 - A huge "thank you" goes to [@JorelAli](https://jorel.dev/) who did not directly contribute to this plugin but created the [CommandAPI](https://github.com/JorelAli/CommandAPI) which is used in this plugin!
