@@ -18,7 +18,7 @@ public class RangeValidator {
     }
 
     /**
-     * Utility class used to check if integers are in a certain range
+     * Utility class used to check if doubles are in a certain range
      * @param min Minimum double required
      * @param max Maximum double required
      * @param provided Double from user input

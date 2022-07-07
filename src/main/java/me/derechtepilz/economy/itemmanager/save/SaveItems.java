@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.util.UUID;
 
 public class SaveItems {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public SaveItems() {
         File dir = new File("./plugins/Economy");
         if (!dir.exists()) {

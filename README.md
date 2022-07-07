@@ -1,4 +1,4 @@
-# EconomyPlugin v1.1.2
+# EconomyPlugin v2.0.0
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
 
 ## Table of contents
@@ -7,7 +7,7 @@
 - [Commands](#commands)
 - [Changelogs](#changelogs)
 - [What is planned for the future](#what-is-planned-for-the-future)
-- [Unfinished features](#unfinished-features-in-v112)
+- [Unfinished features](#unfinished-features-in-v200)
 - [Credits](#credits)
 
 ## Information
@@ -16,7 +16,8 @@ The EconomyPlugin is a plugin for Minecraft! It provides features such as
 - Buying items
 - A custom permission system
 - A trade system
-- A discord integration (usable, but in BETA)
+- A discord integration
+- A friend system
 
 ## How to use this plugin
 Using this plugin is pretty simple! Just put it in your server's `plugin` folder and start it.
@@ -36,18 +37,20 @@ DO NOT `/reload` YOUR SERVER! THIS **WILL** CAUSE ISSUES, EVEN IF YOU DON'T NOTI
 ## Commands
 The EconomyPlugin provides many commands:
 
-| Command        | Description                                                                 | Permission                   |
-|----------------|-----------------------------------------------------------------------------|------------------------------|
-| `/createoffer` | Create an offer which other people can buy                                  | create_offer                 |
-| `/canceloffer` | Cancel an offer you created to keep it instead of selling it                | cancel_offer                 |
-| `/buy`         | Buy items other people offered                                              | buy_offer                    |
-| `/givecoins`   | Give yourself or another player coins                                       | give_coins                   |
-| `/takecoins`   | Delete coins from your or another person's bank account                     | take_coins                   |
-| `/setcoins`    | Set the coins on your bank account or on the bank account of another player | set_coins                    |
-| `/permission`  | Manage permissions                                                          | OP                           |
-| `/config`      | Manage config values or reset the config                                    | modify_config / reset_config |
-| `/trade`       | Trade with other players                                                    | trade                        |
-| `/economyhelp` | Displays every EconomyPlugin command available                              | NONE                         |
+| Command        | Description                                                                 | Permission                               |
+|----------------|-----------------------------------------------------------------------------|------------------------------------------|
+| `/createoffer` | Create an offer which other people can buy                                  | create_offer                             |
+| `/canceloffer` | Cancel an offer you created to keep it instead of selling it                | cancel_offer                             |
+| `/buy`         | Buy items other people offered                                              | buy_offer                                |
+| `/givecoins`   | Give yourself or another player coins                                       | give_coins                               |
+| `/takecoins`   | Delete coins from your or another person's bank account                     | take_coins                               |
+| `/setcoins`    | Set the coins on your bank account or on the bank account of another player | set_coins                                |
+| `/permission`  | Manage permissions                                                          | OP                                       |
+| `/config`      | Manage config values or reset the config                                    | modify_config / reset_config             |
+| `/trade`       | Trade with other players                                                    | trade                                    |
+| `/economyhelp` | Displays every EconomyPlugin command available                              | NONE                                     |
+| `/discord`     | Send private messages to players from the discord server                    | discord_search_id / discord_message_user |
+| `/friend`      | Manage your friends                                                         | friend                                   |
 
 Command syntax:
 - /createoffer <minecraft_item_id> \<config:amount> \<config:price>
@@ -60,6 +63,8 @@ Command syntax:
 - /config <interest|itemPrice|itemQuantities|language|reload|reset|startBalance|discord> [\<value>|<minAmount|maxAmount>]
 - /trade \<player> \<accept|deny>
 - /economyhelp
+- /discord (msg|searchId) \<search:query|msg:user_id> [msg:message]
+- /friend (add|remove|list|accept|deny) [player]
 
 Usage:
 - If something is in `[]` that means that this value is (most of the time) optional
@@ -76,6 +81,36 @@ Usage:
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td valign="top"><b>2.0.0</b></td>
+      <td valign="top">1.13 - 1.19</td>
+      <td valign="top">
+        <p>New Features:</p>
+        <ul>
+          <li>Added discord integration</li>
+          <li>Added german language support</li>
+          <li>Added friend system</li>
+          <li>Added update checker</li>
+          <li>Added permission groups</li>
+          <li>Added support for custom permission groups</li>
+          <li>Added cooldowns for features like accepting a friend or trade request</li>
+        </ul>
+        <p>Github changes:</p>
+        <ul>
+          <li>Added issue templates to use when submitting a bug report or a feature request</li>
+        </ul>
+        <p>Plugin changes</p>
+        <ul>
+          <li>Plugin name now contains the plugin version</li>
+          <li>Java version change: 17 => 16</li>
+        </ul>
+        <p>Bug fixes</p>
+        <ul>
+          <li>Cancel offer menu and buy offer menu are filled wrong</li>
+          <li>Fixes <code>NullPointerException</code> that could occur when loading the plugin on a not supported version</li>
+        </ul>
+      </td>
+    </tr>
     <tr>
       <td valign="top"><b>1.1.2</b></td>
       <td valign="top">1.13 - 1.19</td>
@@ -124,10 +159,24 @@ Usage:
 ## What is planned for the future?
 - Further development of the discord integration
 - Still going away from a pure economy plugin
+- Completing the [wiki](https://github.com/DerEchtePilz/EconomyPlugin/wiki)
+  - This should list features and how they work
+  - Current features (that probably have to be added):
+    - Being able to sell items
+    - Being able to cancel an offer
+    - Being able to buy items
+    - Being able to give coins
+    - Being able to take coins
+    - Being able to set coins
+    - Being able to manage permissions
+    - Being able to change config values
+    - Being able to trade with players
+    - Being able to have a discord integration
+    - Being able to have friends
 
-## Unfinished features in v1.1.2
-- Multiple language support => Currently the only language that has translations is English
-- Discord integration
+## Unfinished features in v2.0.0
+- Discord integration (permanent development because of lack of ideas)
+- The wiki... _I should really write it_
 
 ## Credits
 - A huge "thank you" goes to [@JorelAli](https://jorel.dev/) who did not directly contribute to this plugin but created the [CommandAPI](https://github.com/JorelAli/CommandAPI) which is used in this plugin!

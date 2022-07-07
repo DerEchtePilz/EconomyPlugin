@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.playermanager;
+package me.derechtepilz.economy.playermanager.trade;
 
 import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -37,6 +37,7 @@ public class TradeMenu implements Listener, InventoryBase {
             41, 42, 43, 44
     };
 
+    @SuppressWarnings("SpellCheckingInspection")
     private final Character[] inventoryFillableSlots = {
             ' ', ' ', ' ', ' ', 'G', ' ', ' ', ' ', ' ',
             ' ', ' ', ' ', ' ', 'G', ' ', ' ', ' ', ' ',

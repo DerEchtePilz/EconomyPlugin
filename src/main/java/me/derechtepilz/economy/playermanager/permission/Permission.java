@@ -1,4 +1,4 @@
-package me.derechtepilz.economy.playermanager;
+package me.derechtepilz.economy.playermanager.permission;
 
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;
@@ -17,7 +17,10 @@ public enum Permission {
     MODIFY_CONFIG("modify_config", 6),
     RESET_CONFIG("reset_config", 7),
     DELETE_CONFIG("delete_config", 9),
-    TRADE("trade", 8);
+    TRADE("trade", 8),
+    DISCORD_SEARCH_ID("discord_search_id", 10),
+    DISCORD_MESSAGE_USER("discord_message_user", 11),
+    FRIEND("friend", 12);
 
     private final String name;
     private final int id;
@@ -75,6 +78,26 @@ public enum Permission {
             updatedPermissions[i] = Integer.parseInt(permissions.get(i));
         }
         player.getPersistentDataContainer().set(NamespacedKeys.PERMISSION.getKey(), PersistentDataType.INTEGER_ARRAY, updatedPermissions);
+    }
+
+    public static Permission getPermissionFromId(int permissionId) {
+        Permission requestedPermission = null;
+        for (Permission permission : Permission.values()) {
+            if (permission.getId() == permissionId) {
+                requestedPermission = permission;
+            }
+        }
+        return requestedPermission;
+    }
+
+    public static int getPermissionIdFromName(String name) {
+        int requestedPermission = -1;
+        for (Permission permission : Permission.values()) {
+            if (permission.getName().equals(name)) {
+                requestedPermission = permission.getId();
+            }
+        }
+        return requestedPermission;
     }
 
     public static String[] getPermissions(Player player) {

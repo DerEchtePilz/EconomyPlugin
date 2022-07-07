@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.utility.exceptions;
 
+@SuppressWarnings("unused")
 public class InvalidRangeException extends RuntimeException {
     public InvalidRangeException() {
         super();

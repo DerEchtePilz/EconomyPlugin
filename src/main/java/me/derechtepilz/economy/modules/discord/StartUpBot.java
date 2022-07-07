@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 public class StartUpBot implements Listener {
     @EventHandler
     public void onValuesSet(DiscordValuesSetEvent event) {
+        Main.getInstance().stopDiscordBot();
         Main.getInstance().startDiscordBot(Config.get("discordToken"));
     }
 }

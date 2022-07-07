@@ -3,7 +3,7 @@ package me.derechtepilz.economy.itemmanager;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
-import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.RangeValidator;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CreateOfferCommand {
-    public CreateOfferCommand() {
+    public void register() {
         new CommandTree("createoffer")
                 .then(new ItemStackArgument("item")
                         .then(new IntegerArgument("count")
@@ -75,7 +75,7 @@ public class CreateOfferCommand {
                                                     int itemQuantitiesMinAmount = Integer.parseInt(Config.get("itemQuantitiesMinAmount"));
                                                     int itemQuantitiesMaxAmount = Integer.parseInt(Config.get("itemQuantitiesMaxAmount"));
                                                     new RangeValidator(itemQuantitiesMinAmount, itemQuantitiesMaxAmount, amount, "Could not process command because " + ChatFormatter.valueOf(amount) + " was not in the range from " + ChatFormatter.valueOf(itemQuantitiesMinAmount) + " to " + ChatFormatter.valueOf(itemQuantitiesMaxAmount) + "!");
-                                                    
+
                                                     int itemPriceMinAmount = Integer.parseInt(Config.get("itemPriceMinAmount"));
                                                     int itemPriceMaxAmount = Integer.parseInt(Config.get("itemPriceMaxAmount"));
                                                     new RangeValidator(itemPriceMinAmount, itemPriceMaxAmount, price, "Could not process command because " + ChatFormatter.valueOf(price) + " was not in the range from " + ChatFormatter.valueOf(itemPriceMinAmount) + " to " + ChatFormatter.valueOf(itemPriceMaxAmount) + "!");

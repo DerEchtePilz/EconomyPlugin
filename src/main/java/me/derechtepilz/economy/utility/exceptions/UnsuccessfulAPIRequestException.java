@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.utility.exceptions;
 
+@SuppressWarnings("unused")
 public class UnsuccessfulAPIRequestException extends RuntimeException {
     public UnsuccessfulAPIRequestException() {
         super();

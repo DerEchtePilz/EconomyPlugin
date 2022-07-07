@@ -3,7 +3,7 @@ package me.derechtepilz.economy.economymanager;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.playermanager.Permission;
+import me.derechtepilz.economy.playermanager.permission.Permission;
 import me.derechtepilz.economy.utility.Argument;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.NamespacedKeys;
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 public class GiveCoinsCommand {
-    public GiveCoinsCommand() {
+    public void register() {
         new CommandTree("givecoins")
                 .then(new DoubleArgument("amount", 0)
                         .executesPlayer((player, args) -> {
@@ -31,7 +31,7 @@ public class GiveCoinsCommand {
                             BankManager manager = new BankManager(player, amount + balance);
                             player.sendMessage(TranslatableChatComponent.read("giveCoinsCommand.player_executor.give_coins_to_player").replace("%%s", ChatFormatter.valueOf(manager.getBalance())).replace("%s", ChatFormatter.valueOf(amount)));
                         })
-                        .then(new Argument<Player>(Argument.ArgumentType.ONE_PLAYER).getArgument()
+                        .then(new Argument<Player>(Argument.ArgumentType.PLAYER_SINGLE).getArgument()
                                 .executes((sender, args) -> {
                                     if (sender instanceof Player player) {
                                         if (!Permission.hasPermission(player, Permission.GIVE_COINS)) {

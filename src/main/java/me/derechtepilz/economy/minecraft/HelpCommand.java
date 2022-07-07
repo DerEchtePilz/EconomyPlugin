@@ -1,21 +1,22 @@
 package me.derechtepilz.economy.minecraft;
 
-import dev.jorel.commandapi.CommandAPIHandler;
+import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.RegisteredCommand;
 import me.derechtepilz.economy.utility.TranslatableChatComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand {
-    public HelpCommand() {
+    public void register() {
         new CommandTree("economyhelp")
                 .executes((sender, args) -> {
                     sender.sendMessage("§e------- " + TranslatableChatComponent.read("helpCommand.help") + " §e---------------------");
                     List<String> commands = new ArrayList<>();
-                    for (CommandAPIHandler.RegisteredCommand registeredCommand : CommandAPIHandler.getInstance().registeredCommands) {
-                        if (!commands.contains(registeredCommand.command())) {
-                            commands.add(registeredCommand.command());
+                    for (RegisteredCommand registeredCommand : CommandAPI.getRegisteredCommands()) {
+                        if (!commands.contains(registeredCommand.commandName())) {
+                            commands.add(registeredCommand.commandName());
                         }
                     }
                     for (String command : commands) {
