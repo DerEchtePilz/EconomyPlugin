@@ -1,0 +1,4 @@
+name: Economyplugin 1.19
+version: '${project.version}'
+main: me.derechtepilz.economyplugin.nms.NMS_1_19_R1
+api-version: 1.19
