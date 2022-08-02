@@ -1,5 +1,6 @@
 package me.derechtepilz.economy.itemmanagement;
 
+import com.google.gson.JsonObject;
 import me.derechtepilz.economy.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,7 +22,6 @@ public class Item {
     private final UUID seller;
     private final UUID uuid;
     private int duration;
-    private int taskId;
 
     private final NamespacedKey itemPrice;
     private final NamespacedKey itemSeller;
@@ -41,10 +41,25 @@ public class Item {
         this.itemUuid = new NamespacedKey(main, "itemUuid");
 
         main.getRegisteredItemUuids().add(uuid);
-        runTimer();
     }
 
-    public ItemStack getItemStack() {
+    public Item(Main main, Material material, int amount, double price, UUID seller, UUID uuid, int duration) {
+        this.main = main;
+        this.material = material;
+        this.amount = amount;
+        this.price = price;
+        this.seller = seller;
+        this.duration = duration;
+        this.uuid = uuid;
+
+        this.itemPrice = new NamespacedKey(main, "itemPrice");
+        this.itemSeller = new NamespacedKey(main, "itemSeller");
+        this.itemUuid = new NamespacedKey(main, "itemUuid");
+
+        main.getRegisteredItemUuids().add(uuid);
+    }
+
+    private ItemStack getItemStack() {
         ItemStack itemStack = new ItemStack(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.getPersistentDataContainer().set(itemPrice, PersistentDataType.DOUBLE, price);
@@ -61,25 +76,16 @@ public class Item {
         return itemStack;
     }
 
-    private void runTimer() {
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
-            duration -= 1;
-            if (duration == 0) {
-                main.getRegisteredItems().remove(uuid);
-                main.getRegisteredItemUuids().remove(uuid);
-                Bukkit.getScheduler().cancelTask(taskId);
-            }
-            main.getRegisteredItems().put(uuid, getItemStack());
-        }, 20, 20);
-    }
-
-    public void decreaseDuration() {
+    public ItemStack decreaseDurationAndUpdate() {
         if (duration == 0) {
             main.getRegisteredItems().remove(uuid);
             main.getRegisteredItemUuids().remove(uuid);
-            return;
+            main.getExpiredItems().put(seller, new ItemStack(material, amount));
+            return null;
         }
         duration -= 1;
+        main.getRegisteredItems().put(uuid, this);
+        return getItemStack();
     }
 
     private String convertSecondsToTime(int duration) {
@@ -99,6 +105,17 @@ public class Item {
             duration -= 1;
         }
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+    }
+
+    public JsonObject saveItem() {
+        JsonObject item = new JsonObject();
+        item.addProperty("material", material.name());
+        item.addProperty("amount", amount);
+        item.addProperty("price", price);
+        item.addProperty("seller", seller.toString());
+        item.addProperty("uuid", uuid.toString());
+        item.addProperty("duration", duration);
+        return item;
     }
 
 }
