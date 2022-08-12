@@ -5,12 +5,13 @@ import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
+import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.itemmanagement.Item;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permission;
+import org.bukkit.persistence.PersistentDataType;
 
 public class EconomyCommand {
 
@@ -25,7 +26,13 @@ public class EconomyCommand {
                 .then(new LiteralArgument("offers")
                         .then(new LiteralArgument("buy")
                                 .executesPlayer((player, args) -> {
-
+                                    if (!main.getInventoryHandler().isTimerRunning()) {
+                                        player.sendMessage("§cThe auctions are currently paused. Try again later!");
+                                        return;
+                                    }
+                                    player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER, 0);
+                                    player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING, InventoryHandler.InventoryType.BUY_MENU.name());
+                                    player.sendMessage("§aYou opened the buy menu!");
                                 })
                         )
                         .then(new LiteralArgument("create")
@@ -38,12 +45,30 @@ public class EconomyCommand {
                                                                     int amount = (int) args[1];
                                                                     double price = (double) args[2];
                                                                     int duration = (int) args[3];
+                                                                    item.setAmount(amount);
 
-                                                                    // Run checks (does the player have this type, does the player have the amount)
-                                                                    // Remove the offered amount from the inventory
+                                                                    for (int i = 0; i < player.getInventory().getSize(); i++) {
+                                                                        if (player.getInventory().getItem(i) == null) continue;
 
-                                                                    Item offer = new Item(main, item.getType(), amount, price, player.getUniqueId(), duration);
-                                                                    player.sendMessage("§aYou created a new offer! It lasts §6" + duration + " §aseconds!");
+                                                                        ItemStack currentItem = player.getInventory().getItem(i);
+                                                                        assert currentItem != null;
+                                                                        if (currentItem.isSimilar(item)) {
+                                                                            if (currentItem.getAmount() >= amount) {
+                                                                                Item offer = new Item(main, item.getType(), amount, price, player.getUniqueId(), duration);
+                                                                                offer.register();
+
+                                                                                ItemStack updatedItem = currentItem;
+                                                                                updatedItem.setAmount(updatedItem.getAmount() - item.getAmount());
+                                                                                player.getInventory().setItem(i, updatedItem);
+
+                                                                                player.sendMessage("§aYou created a new offer for §6" + amount + " §aitems of type §6minecraft:" + item.getType().name().toLowerCase() + "§a! It will last §6" + duration + " §aseconds!");
+                                                                            } else {
+                                                                                player.sendMessage("§cYou have to few items of type §6minecraft:" + item.getType().name().toLowerCase() + " §cin your inventory to offer §6" + amount + " §citems!");
+                                                                            }
+                                                                            return;
+                                                                        }
+                                                                    }
+                                                                    player.sendMessage("§cYou do not have the specified item in your inventory.");
                                                                 })
                                                         )
                                                 )

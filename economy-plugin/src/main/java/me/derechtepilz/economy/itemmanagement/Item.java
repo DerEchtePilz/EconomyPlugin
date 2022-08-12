@@ -21,7 +21,7 @@ public class Item {
     private final double price;
     private final UUID seller;
     private final UUID uuid;
-    private int duration;
+    public int duration;
 
     private final NamespacedKey itemPrice;
     private final NamespacedKey itemSeller;
@@ -39,8 +39,6 @@ public class Item {
         this.itemPrice = new NamespacedKey(main, "itemPrice");
         this.itemSeller = new NamespacedKey(main, "itemSeller");
         this.itemUuid = new NamespacedKey(main, "itemUuid");
-
-        main.getRegisteredItemUuids().add(uuid);
     }
 
     public Item(Main main, Material material, int amount, double price, UUID seller, UUID uuid, int duration) {
@@ -55,8 +53,11 @@ public class Item {
         this.itemPrice = new NamespacedKey(main, "itemPrice");
         this.itemSeller = new NamespacedKey(main, "itemSeller");
         this.itemUuid = new NamespacedKey(main, "itemUuid");
+    }
 
+    public void register() {
         main.getRegisteredItemUuids().add(uuid);
+        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
     }
 
     private ItemStack getItemStack() {
@@ -67,9 +68,9 @@ public class Item {
         itemMeta.getPersistentDataContainer().set(itemUuid, PersistentDataType.STRING, String.valueOf(uuid));
 
         List<String> lore = new ArrayList<>();
-        lore.add("Seller: " + Bukkit.getOfflinePlayer(seller).getName());
-        lore.add("Price: " + price);
-        lore.add("Expires in: " + convertSecondsToTime(duration));
+        lore.add("§6Seller: §a" + Bukkit.getOfflinePlayer(seller).getName());
+        lore.add("§6Price: §a" + price);
+        lore.add("§6Expires in: §a" + convertSecondsToTime(duration));
 
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
@@ -84,7 +85,7 @@ public class Item {
             return null;
         }
         duration -= 1;
-        main.getRegisteredItems().put(uuid, this);
+        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
         return getItemStack();
     }
 
@@ -118,4 +119,9 @@ public class Item {
         return item;
     }
 
+    @Override
+    public String toString() {
+        return "Auction: [Seller: " + Bukkit.getOfflinePlayer(seller).getName() + ", Material: " + material.name().toLowerCase()
+                + ", Amount: " + amount + ", Price: " + price;
+    }
 }

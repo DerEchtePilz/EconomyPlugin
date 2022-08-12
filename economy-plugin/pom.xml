@@ -4,9 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.derechtepilz</groupId>
+    <parent>
+        <groupId>me.derechtepilz</groupId>
+        <artifactId>economy</artifactId>
+        <version>2.0.0</version>
+    </parent>
+
     <artifactId>economy-plugin</artifactId>
-    <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>economy-plugin</name>
@@ -94,7 +98,7 @@
         <dependency>
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-shade</artifactId>
-            <version>8.5.0</version>
+            <version>${commandapi.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -7,6 +7,7 @@ import dev.jorel.commandapi.RegisteredCommand;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
+import me.derechtepilz.economy.offers.BuyOfferMenu;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,6 +32,7 @@ public final class Main extends JavaPlugin {
 
     // Initialize command classes
     private final EconomyCommand economyCommand = new EconomyCommand(main);
+    private final ConsoleCommands consoleCommands = new ConsoleCommands(main);
 
     // Initialize inventory management classes
     private final ItemUpdater itemUpdater = new ItemUpdater(main);
@@ -67,14 +69,16 @@ public final class Main extends JavaPlugin {
         saveItems();
 
         EconomyAPI.onDisable();
-        CommandAPI.onDisable();
+
         for (RegisteredCommand registeredCommand : CommandAPI.getRegisteredCommands()) {
             CommandAPI.unregister(registeredCommand.commandName());
         }
+        CommandAPI.onDisable();
     }
 
     private void commandRegistration() {
         economyCommand.register();
+        consoleCommands.register();
     }
 
     private void listenerRegistration() {
@@ -121,6 +125,8 @@ public final class Main extends JavaPlugin {
                 int duration = itemObject.get("duration").getAsInt();
 
                 Item item = new Item(main, material, amount, price, seller, uuid, duration);
+                item.register();
+                getLogger().info("Registered auction: " + item);
             }
         } catch (IOException exception) {
             exception.printStackTrace();

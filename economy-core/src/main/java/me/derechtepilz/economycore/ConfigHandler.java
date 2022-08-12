@@ -45,9 +45,17 @@ class ConfigHandler {
         for (String value : values) {
             try {
                 String[] valueSplit = value.split("=");
-                Field variable = Class.forName(ConfigHandler.class.getCanonicalName()).getDeclaredField(valueSplit[0]);
+                String varName = valueSplit[0];
+                Field variable = Class.forName(ConfigHandler.class.getCanonicalName()).getDeclaredField(varName);
                 variable.setAccessible(true);
-                variable.setDouble(ConfigHandler.class, Double.parseDouble(valueSplit[1]));
+
+                if (variable.getType().equals(double.class)) {
+                    variable.setDouble(ConfigHandler.class, Double.parseDouble(valueSplit[1]));
+                }
+                if (variable.getType().equals(int.class)) {
+                    variable.setInt(ConfigHandler.class, Integer.parseInt(valueSplit[1]));
+                }
+
                 variable.setAccessible(false);
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException exception) {
                 exception.printStackTrace();
