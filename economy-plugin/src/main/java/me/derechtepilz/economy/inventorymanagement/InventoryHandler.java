@@ -2,6 +2,7 @@ package me.derechtepilz.economy.inventorymanagement;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.offers.BuyOfferMenu;
+import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -32,8 +33,7 @@ public class InventoryHandler {
         }
         switch (type) {
             case BUY_MENU -> {
-                player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING, type.name());
-                player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER, page);
+                DataHandler.setBuyMenuData(player);
                 buyOfferMenu.openInventory(player, page);
             }
             case NONE -> {

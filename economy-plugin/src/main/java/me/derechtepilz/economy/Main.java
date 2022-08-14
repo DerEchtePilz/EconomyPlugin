@@ -4,14 +4,18 @@ import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.RegisteredCommand;
+import me.derechtepilz.economy.commands.ConsoleCommands;
+import me.derechtepilz.economy.commands.EconomyCommand;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.offers.BuyOfferMenu;
+import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -82,7 +86,8 @@ public final class Main extends JavaPlugin {
     }
 
     private void listenerRegistration() {
-
+        PluginManager manager = Bukkit.getPluginManager();
+        manager.registerEvents(new BuyOfferMenuListener(main), this);
     }
 
     // Store item-related methods

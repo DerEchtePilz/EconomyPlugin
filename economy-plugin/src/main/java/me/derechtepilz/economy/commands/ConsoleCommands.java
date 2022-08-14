@@ -1,8 +1,9 @@
-package me.derechtepilz.economy;
+package me.derechtepilz.economy.commands;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.entity.Player;
 

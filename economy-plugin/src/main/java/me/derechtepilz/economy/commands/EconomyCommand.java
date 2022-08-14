@@ -1,12 +1,14 @@
-package me.derechtepilz.economy;
+package me.derechtepilz.economy.commands;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.itemmanagement.Item;
+import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
@@ -30,8 +32,7 @@ public class EconomyCommand {
                                         player.sendMessage("§cThe auctions are currently paused. Try again later!");
                                         return;
                                     }
-                                    player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER, 0);
-                                    player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING, InventoryHandler.InventoryType.BUY_MENU.name());
+                                    DataHandler.setBuyMenuData(player);
                                     player.sendMessage("§aYou opened the buy menu!");
                                 })
                         )

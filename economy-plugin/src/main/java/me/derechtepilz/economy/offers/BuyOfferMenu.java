@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.offers;
 
 import me.derechtepilz.economy.inventorymanagement.StandardInventoryItems;
+import me.derechtepilz.economy.utility.DataHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -14,28 +15,42 @@ public class BuyOfferMenu {
 
     private final int itemsPerPage = 4 * 9;
     private final int pageSize = 5 * 9;
-    private final List<Inventory> inventories = new ArrayList<>();
+    private final List<ItemStack[]> inventoryPages = new ArrayList<>();
+    private Inventory buyMenu;
 
     public void updateBuyMenu(List<ItemStack> offers) {
         List<ItemStack[]> buyMenuPages = getBuyMenuPages(offers);
         if (buyMenuPages.size() == 0) {
+            if (inventoryPages.size() >= 1) {
+                inventoryPages.clear();
+            }
             return;
         }
-        if (inventories.size() > 0) {
-            inventories.clear();
+        if (inventoryPages.size() > 0) {
+            inventoryPages.clear();
         }
-        for (int i = 0; i < buyMenuPages.size(); i++) {
-            Inventory inventory = Bukkit.createInventory(null, pageSize, "Buy Menu (" + (i + 1) + ")");
-            inventory.setContents(buyMenuPages.get(i));
-            inventories.add(inventory);
-        }
+        inventoryPages.addAll(buyMenuPages);
     }
 
     public void openInventory(Player player, int page) {
-        if (inventories.size() == 0) {
+        if (inventoryPages.size() == 0) {
+            if (player.getOpenInventory().getTitle().contains("Buy Menu (")) {
+                player.closeInventory();
+            }
             return;
         }
-        player.openInventory(inventories.get(page));
+        if (buyMenu == null) {
+            buyMenu = Bukkit.createInventory(null, 5 * 9, "Buy Menu (" + (page + 1) + ")");
+        }
+        buyMenu.setContents(inventoryPages.get(page));
+
+        if (DataHandler.canInventoryOpen(player)) {
+            if (player.getOpenInventory().getTitle().contains("Buy Menu (")) {
+                player.getOpenInventory().getTopInventory().setContents(inventoryPages.get(page));
+                return;
+            }
+            player.openInventory(buyMenu);
+        }
     }
 
     private List<ItemStack[]> getBuyMenuPages(List<ItemStack> offers) {
