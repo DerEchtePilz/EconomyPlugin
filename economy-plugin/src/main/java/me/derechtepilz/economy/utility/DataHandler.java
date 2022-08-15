@@ -20,6 +20,15 @@ public class DataHandler {
         player.getPersistentDataContainer().remove(NamespacedKeys.CAN_INVENTORY_OPEN);
     }
 
+    public static void updateMenuPage(Player player, int newPage) {
+        player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER, newPage);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static int getCurrentPage(Player player) {
+        return player.getPersistentDataContainer().has(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER) ? player.getPersistentDataContainer().get(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER) : 0;
+    }
+
     @SuppressWarnings("ConstantConditions")
     public static boolean canInventoryOpen(Player player) {
         return player.getPersistentDataContainer().get(NamespacedKeys.CAN_INVENTORY_OPEN, PersistentDataType.BYTE) == 1;

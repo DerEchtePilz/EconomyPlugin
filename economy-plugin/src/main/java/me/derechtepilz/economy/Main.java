@@ -11,6 +11,7 @@ import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.offers.BuyOfferMenu;
 import me.derechtepilz.economy.offers.BuyOfferMenuListener;
+import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -103,7 +104,7 @@ public final class Main extends JavaPlugin {
         return expiredItems;
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
     private void loadItems() {
         try {
             File file = new File("./plugins/Economy");
@@ -119,9 +120,12 @@ public final class Main extends JavaPlugin {
                 buildSavedItems.append(line);
             }
 
-            JsonArray itemsArray = JsonParser.parseString(buildSavedItems.toString()).getAsJsonArray();
-            for (int i = 0; i < itemsArray.size(); i++) {
-                JsonObject itemObject = itemsArray.get(i).getAsJsonObject();
+            JsonObject savedItems = JsonParser.parseString(buildSavedItems.toString()).getAsJsonObject();
+            JsonArray runningAuctions = savedItems.get("runningAuctions").getAsJsonArray();
+            JsonArray expiredAuctions = savedItems.get("expiredAuctions").getAsJsonArray();
+
+            for (int i = 0; i < runningAuctions.size(); i++) {
+                JsonObject itemObject = runningAuctions.get(i).getAsJsonObject();
                 Material material = Material.getMaterial(itemObject.get("material").getAsString());
                 int amount = itemObject.get("amount").getAsInt();
                 double price = itemObject.get("price").getAsDouble();
@@ -132,6 +136,16 @@ public final class Main extends JavaPlugin {
                 Item item = new Item(main, material, amount, price, seller, uuid, duration);
                 item.register();
                 getLogger().info("Registered auction: " + item);
+            }
+
+            for (int i = 0; i < expiredAuctions.size(); i++) {
+                JsonObject itemObject = expiredAuctions.get(i).getAsJsonObject();
+                Material material = Material.matchMaterial(itemObject.get("material").getAsString());
+                int amount = itemObject.get("amount").getAsInt();
+                UUID seller = UUID.fromString(itemObject.get("seller").getAsString());
+
+                ItemStack item = new ItemStack(material, amount);
+                getExpiredItems().put(seller, item);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -148,13 +162,27 @@ public final class Main extends JavaPlugin {
             File items = new File(file, "items");
             FileWriter writer = new FileWriter(items);
 
-            JsonArray itemsArray = new JsonArray();
+            JsonObject auctionsObject = new JsonObject();
+
+            JsonArray runningAuctionsArray = new JsonArray();
             for (UUID uuid : getRegisteredItems().keySet()) {
-                itemsArray.add(getRegisteredItems().get(uuid).saveItem());
+                runningAuctionsArray.add(getRegisteredItems().get(uuid).saveItem());
             }
+            auctionsObject.add("runningAuctions", runningAuctionsArray);
+
+            JsonArray expiredAuctionsArray = new JsonArray();
+            for (UUID uuid : getExpiredItems().keySet()) {
+                JsonObject expiredItem = new JsonObject();
+                ItemStack itemStack = getExpiredItems().get(uuid);
+                expiredItem.addProperty("material", itemStack.getType().name());
+                expiredItem.addProperty("amount", itemStack.getAmount());
+                expiredItem.addProperty("seller", String.valueOf(uuid));
+                expiredAuctionsArray.add(expiredItem);
+            }
+            auctionsObject.add("expiredAuctions", expiredAuctionsArray);
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            writer.write(gson.toJson(itemsArray));
+            writer.write(gson.toJson(auctionsObject));
             writer.close();
         } catch (IOException exception) {
             exception.printStackTrace();

@@ -187,18 +187,16 @@ public class EconomyAPI {
      *
      * @param player The player who owns the account
      * @param amount The amount of coins to set on the player's account
+     * @return a boolean whether it was successful
      */
-    public static void setBalance(Player player, double amount) {
+    public static boolean setBalance(Player player, double amount) throws BalanceException {
         if (!BANK_ACCOUNTS.containsKey(player.getUniqueId())) {
             LOGGER.severe("Couldn't set a balance for player '" + player.getName() + "' because they do not have an account!");
-            return;
+            return false;
         }
-        try {
-            Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
-            bank.setBalance(amount);
-        } catch (BalanceException exception) {
-            exception.printStackTrace();
-        }
+        Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
+        bank.setBalance(amount);
+        return true;
     }
 
     /**
@@ -206,18 +204,16 @@ public class EconomyAPI {
      *
      * @param player The player who owns the account
      * @param amount The amount of coins to add to the player's account
+     * @return a boolean whether it was successful
      */
-    public static void addCoinsToBalance(Player player, double amount) {
+    public static boolean addCoinsToBalance(Player player, double amount) throws BalanceException {
         if (!BANK_ACCOUNTS.containsKey(player.getUniqueId())) {
             LOGGER.severe("Couldn't add coins to the balance of player '" + player.getName() + "' because they do not have an account!");
-            return;
+            return false;
         }
-        try {
-            Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
-            bank.addBalance(amount);
-        } catch (BalanceException exception) {
-            exception.printStackTrace();
-        }
+        Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
+        bank.addBalance(amount);
+        return true;
     }
 
     /**
@@ -225,18 +221,16 @@ public class EconomyAPI {
      *
      * @param player The player who owns the account
      * @param amount The amount of coins to remove from the player's bank account
+     * @return a boolean whether it was successful
      */
-    public static void removeCoinsFromBalance(Player player, double amount) {
+    public static boolean removeCoinsFromBalance(Player player, double amount) throws BalanceException {
         if (!BANK_ACCOUNTS.containsKey(player.getUniqueId())) {
             LOGGER.severe("Couldn't remove coins from the balance of player '" + player.getName() + "' because they do not have an account!");
-            return;
+            return false;
         }
-        try {
-            Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
-            bank.removeBalance(amount);
-        } catch (BalanceException exception) {
-            exception.printStackTrace();
-        }
+        Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
+        bank.removeBalance(amount);
+        return true;
     }
 
     /**

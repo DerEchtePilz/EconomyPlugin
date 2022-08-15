@@ -32,7 +32,7 @@ class Bank {
 
     public void setBalance(double amount) throws BalanceException {
         if (amount < startBalance) {
-            throw new BalanceException("It is not possible to set the coins under the amount of the start balance! (You tried to remove: " + amount + ", allowed:" + (this.balance - startBalance) + ")");
+            throw new BalanceException("It is not possible to set the coins under the amount of the start balance! (You tried setting the balance to: " + amount + ", allowed:" + (this.balance - startBalance) + ")");
         }
         this.balance = amount;
         updateAccount();
