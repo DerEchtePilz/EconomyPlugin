@@ -42,8 +42,8 @@ public class InventoryHandler {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void updateOffersAndInventory() {
-        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+    public int updateOffersAndInventory() {
+        return Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
             if (timerRunning) {
                 List<ItemStack> updatedItems = main.getItemUpdater().getUpdatedItems();
                 buyOfferMenu.updateBuyMenu(updatedItems);

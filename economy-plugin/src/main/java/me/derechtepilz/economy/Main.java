@@ -4,6 +4,7 @@ import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.RegisteredCommand;
+import me.derechtepilz.economy.coinmanagement.CoinDisplay;
 import me.derechtepilz.economy.commands.ConsoleCommands;
 import me.derechtepilz.economy.commands.EconomyCommand;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
@@ -30,6 +31,9 @@ public final class Main extends JavaPlugin {
     private boolean isVersionSupported;
     private final Main main = this;
 
+    private int inventoryManagementTaskId;
+    private int coinDisplayTaskId;
+
     // Store item-related fields
     private final List<UUID> registeredItemUuids = new ArrayList<>();
     private final HashMap<UUID, Item> registeredItems = new HashMap<>();
@@ -43,6 +47,9 @@ public final class Main extends JavaPlugin {
     private final ItemUpdater itemUpdater = new ItemUpdater(main);
     private final InventoryHandler inventoryHandler = new InventoryHandler(main);
 
+    // Initialize coin management classes
+    private final CoinDisplay coinDisplay = new CoinDisplay(main);
+
     @Override
     public void onEnable() {
         EconomyAPI.onEnable(main);
@@ -53,7 +60,8 @@ public final class Main extends JavaPlugin {
         }
 
         listenerRegistration();
-        inventoryHandler.updateOffersAndInventory();
+        inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
+        coinDisplayTaskId = coinDisplay.displayCoins();
     }
 
     @Override
@@ -72,6 +80,9 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         saveItems();
+
+        Bukkit.getScheduler().cancelTask(inventoryManagementTaskId);
+        Bukkit.getScheduler().cancelTask(coinDisplayTaskId);
 
         EconomyAPI.onDisable();
 

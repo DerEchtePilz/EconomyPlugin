@@ -246,4 +246,9 @@ public class EconomyAPI {
         Bank bank = new Bank(player, balance, startBalance, lastInterest);
         BANK_ACCOUNTS.put(player.getUniqueId(), bank);
     }
+
+    // Convenience methods to get namespaced keys
+    public static NamespacedKey getPlayerBalance() {
+        return playerBalance;
+    }
 }
