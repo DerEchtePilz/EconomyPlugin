@@ -60,7 +60,7 @@ public class Item {
         main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
     }
 
-    private ItemStack getItemStack() {
+    public ItemStack getItemStack() {
         ItemStack itemStack = new ItemStack(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.getPersistentDataContainer().set(itemPrice, PersistentDataType.DOUBLE, price);
@@ -117,6 +117,10 @@ public class Item {
         item.addProperty("uuid", uuid.toString());
         item.addProperty("duration", duration);
         return item;
+    }
+
+    public UUID getSeller() {
+        return seller;
     }
 
     @Override

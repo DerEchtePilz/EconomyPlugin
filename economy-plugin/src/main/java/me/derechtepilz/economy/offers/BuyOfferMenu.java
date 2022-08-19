@@ -1,6 +1,6 @@
 package me.derechtepilz.economy.offers;
 
-import me.derechtepilz.economy.inventorymanagement.StandardInventoryItems;
+import me.derechtepilz.economy.inventorymanagement.InventoryUtility;
 import me.derechtepilz.economy.utility.DataHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,13 +8,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BuyOfferMenu {
 
     private final int itemsPerPage = 4 * 9;
-    private final int pageSize = 5 * 9;
+    private static final int PAGE_SIZE = 5 * 9;
     private final List<ItemStack[]> inventoryPages = new ArrayList<>();
     private Inventory buyMenu;
 
@@ -58,7 +57,7 @@ public class BuyOfferMenu {
             return new ArrayList<>();
         }
 
-        int maxPages = calculateMaxPages(offers.size(), itemsPerPage);
+        int maxPages = InventoryUtility.Companion.calculateMaxPages(offers.size(), itemsPerPage);
 
         List<ItemStack[]> buyMenuPages = new ArrayList<>();
         while (offers.size() >= itemsPerPage) {
@@ -70,7 +69,7 @@ public class BuyOfferMenu {
                 offers.remove(i);
             }
 
-            buyMenuPages.add(addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages).toArray(new ItemStack[0]));
+            buyMenuPages.add(InventoryUtility.Companion.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
             buyMenuPages.add(buyMenuPage);
             buyMenuPage = new ItemStack[45];
         }
@@ -81,76 +80,9 @@ public class BuyOfferMenu {
             for (int i = 0; i < offers.size(); i++) {
                 buyMenuPage[i] = offers.get(i);
             }
-            buyMenuPages.add(addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages).toArray(new ItemStack[0]));
+            buyMenuPages.add(InventoryUtility.Companion.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
         }
         return buyMenuPages;
-    }
-
-    private List<ItemStack> addBottomMenuRow(ItemStack[] buyMenuPage, int currentPage, int maxPages) {
-        // Only one page exists
-        if (currentPage == 0 && maxPages == 1) {
-            for (int i = 36; i < pageSize; i++) {
-                buyMenuPage[i] = StandardInventoryItems.MENU_GLASS;
-                if (i == 40) {
-                    buyMenuPage[i] = StandardInventoryItems.MENU_CLOSE;
-                }
-            }
-            return Arrays.asList(buyMenuPage);
-        }
-        // More than one page exist, but we are on the first page
-        if (currentPage == 0 && maxPages > 1) {
-            for (int i = 36; i < pageSize; i++) {
-                buyMenuPage[i] = StandardInventoryItems.MENU_GLASS;
-                if (i == 40) {
-                    buyMenuPage[i] = StandardInventoryItems.MENU_CLOSE;
-                }
-                if (i == pageSize - 1) {
-                    buyMenuPage[i] = StandardInventoryItems.ARROW_NEXT;
-                }
-            }
-            return Arrays.asList(buyMenuPage);
-        }
-        // More than one page exist, we are not on the first and not on the last page
-        if (currentPage > 0 && currentPage < maxPages - 1) {
-            for (int i = 36; i < pageSize; i++) {
-                buyMenuPage[i] = StandardInventoryItems.MENU_GLASS;
-                if (i == 36) {
-                    buyMenuPage[i] = StandardInventoryItems.ARROW_PREVIOUS;
-                }
-                if (i == 40) {
-                    buyMenuPage[i] = StandardInventoryItems.MENU_CLOSE;
-                }
-                if (i == pageSize - 1) {
-                    buyMenuPage[i] = StandardInventoryItems.ARROW_NEXT;
-                }
-            }
-            return Arrays.asList(buyMenuPage);
-        }
-        // More than one page exist, and we are on the last page
-        if (currentPage > 0 && currentPage == maxPages - 1) {
-            for (int i = 36; i < pageSize; i++) {
-                buyMenuPage[i] = StandardInventoryItems.MENU_GLASS;
-                if (i == 36) {
-                    buyMenuPage[i] = StandardInventoryItems.ARROW_PREVIOUS;
-                }
-                if (i == 40) {
-                    buyMenuPage[i] = StandardInventoryItems.MENU_CLOSE;
-                }
-            }
-        }
-        return Arrays.asList(buyMenuPage);
-    }
-
-    private int calculateMaxPages(int offers, int itemsPerPage) {
-        int pages = 0;
-        while (offers >= itemsPerPage) {
-            pages += 1;
-            offers -= itemsPerPage;
-        }
-        if (offers > 0) {
-            pages += 1;
-        }
-        return pages;
     }
 
 }

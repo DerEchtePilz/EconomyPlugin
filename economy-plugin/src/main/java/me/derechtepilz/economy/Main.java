@@ -10,9 +10,8 @@ import me.derechtepilz.economy.commands.EconomyCommand;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
-import me.derechtepilz.economy.offers.BuyOfferMenu;
 import me.derechtepilz.economy.offers.BuyOfferMenuListener;
-import me.derechtepilz.economy.utility.ItemBuilder;
+import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,6 +45,7 @@ public final class Main extends JavaPlugin {
     // Initialize inventory management classes
     private final ItemUpdater itemUpdater = new ItemUpdater(main);
     private final InventoryHandler inventoryHandler = new InventoryHandler(main);
+    private final CancelOfferMenu cancelOfferMenu = new CancelOfferMenu(main);
 
     // Initialize coin management classes
     private final CoinDisplay coinDisplay = new CoinDisplay(main);
@@ -100,6 +100,7 @@ public final class Main extends JavaPlugin {
     private void listenerRegistration() {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BuyOfferMenuListener(main), this);
+        manager.registerEvents(cancelOfferMenu, this);
     }
 
     // Store item-related methods
@@ -122,7 +123,7 @@ public final class Main extends JavaPlugin {
             if (!file.exists()) {
                 file.mkdir();
             }
-            File items = new File(file, "items");
+            File items = new File(file, "items.json");
             BufferedReader reader = new BufferedReader(new FileReader(items));
 
             String line;
@@ -170,7 +171,7 @@ public final class Main extends JavaPlugin {
             if (!file.exists()) {
                 file.mkdir();
             }
-            File items = new File(file, "items");
+            File items = new File(file, "items.json");
             FileWriter writer = new FileWriter(items);
 
             JsonObject auctionsObject = new JsonObject();
@@ -207,5 +208,9 @@ public final class Main extends JavaPlugin {
 
     public InventoryHandler getInventoryHandler() {
         return inventoryHandler;
+    }
+
+    public CancelOfferMenu getCancelOfferMenu() {
+        return cancelOfferMenu;
     }
 }

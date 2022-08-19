@@ -11,6 +11,7 @@
 
     <properties>
         <java.version>16</java.version>
+        <kotlin.version>1.7.10</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot.version>1.19-R0.1-SNAPSHOT</spigot.version>
         <paper.version>1.19-R0.1-SNAPSHOT</paper.version>

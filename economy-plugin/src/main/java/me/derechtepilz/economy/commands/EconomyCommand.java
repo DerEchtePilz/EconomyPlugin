@@ -81,7 +81,10 @@ public class EconomyCommand {
                         )
                         .then(new LiteralArgument("cancel")
                                 .executesPlayer((player, args) -> {
-
+                                    boolean openedCancelMenu = main.getCancelOfferMenu().openCancelOfferMenu(player);
+                                    if (!openedCancelMenu) {
+                                        player.sendMessage("§cDidn't open cancel menu because you didn't auction an item!");
+                                    }
                                 })
                         )
                         .then(new LiteralArgument("pause")
