@@ -5,7 +5,7 @@
 # Build script from https://github.com/JorelAli/CommandAPI/blob/master/.github/workflows/build.yml (but slightly changed to fit my project)
 
 name: build
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:

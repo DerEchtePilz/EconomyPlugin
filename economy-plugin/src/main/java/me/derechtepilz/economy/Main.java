@@ -69,6 +69,7 @@ public final class Main extends JavaPlugin {
         EconomyAPI.onLoad();
         loadItems();
 
+
         String version = Bukkit.getBukkitVersion().split("-")[0];
         isVersionSupported = VersionHandler.isVersionSupported(version);
 
@@ -133,6 +134,10 @@ public final class Main extends JavaPlugin {
             }
 
             JsonObject savedItems = JsonParser.parseString(buildSavedItems.toString()).getAsJsonObject();
+
+            boolean auctionRunning = savedItems.get("auctionRunning").getAsBoolean();
+            inventoryHandler.setTimerRunning(auctionRunning);
+
             JsonArray runningAuctions = savedItems.get("runningAuctions").getAsJsonArray();
             JsonArray expiredAuctions = savedItems.get("expiredAuctions").getAsJsonArray();
 
@@ -175,6 +180,7 @@ public final class Main extends JavaPlugin {
             FileWriter writer = new FileWriter(items);
 
             JsonObject auctionsObject = new JsonObject();
+            auctionsObject.addProperty("auctionRunning", inventoryHandler.isTimerRunning());
 
             JsonArray runningAuctionsArray = new JsonArray();
             for (UUID uuid : getRegisteredItems().keySet()) {
