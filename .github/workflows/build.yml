@@ -2,7 +2,7 @@
 # and submitted pull request. This can help catch issues that only occur on
 # certain platforms or Java versions, and provides a first line of defence
 # against bad commits.
-# Build script from https://github.com/JorelAli/CommandAPI/blob/master/.github/workflows/build.yml
+# Build script from https://github.com/JorelAli/CommandAPI/blob/master/.github/workflows/build.yml (but slightly changed to fit my project)
 
 name: build
 on: [push]
@@ -28,12 +28,3 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: build EconomyPlugin using maven
         run: mvn clean package
-      - name: EconomyPlugin artifact
-        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
-        uses: actions/upload-artifact@v2
-        with:
-          name: EconomyPlugin (plugin)
-          path: |
-            economyplugin/target/EconomyPlugin*.jar
-            !economyplugin/target/*sources.jar
-            !economyplugin/target/*javadoc.jar
