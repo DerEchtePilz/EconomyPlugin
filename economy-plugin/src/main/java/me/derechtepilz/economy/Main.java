@@ -13,6 +13,7 @@ import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.offers.CancelOfferMenuListener;
+import me.derechtepilz.economy.offers.ExpiredOfferMenu;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,11 +29,6 @@ import java.util.UUID;
 
 public final class Main extends JavaPlugin {
 
-    // TODO
-    //  1. Implementing purchases
-    //  2. Implementing cancelling items
-    //  3. Implementing claiming back expired items
-
     private boolean isVersionSupported;
     private final Main main = this;
 
@@ -43,7 +39,7 @@ public final class Main extends JavaPlugin {
     private final List<UUID> registeredItemUuids = new ArrayList<>();
     private final List<UUID> offeringPlayerUuids = new ArrayList<>();
     private final HashMap<UUID, Item> registeredItems = new HashMap<>();
-    private final HashMap<UUID, ItemStack> expiredItems = new HashMap<>();
+    private final HashMap<UUID, List<ItemStack>> expiredItems = new HashMap<>();
 
     // Initialize command classes
     private final EconomyCommand economyCommand = new EconomyCommand(main);
@@ -53,6 +49,7 @@ public final class Main extends JavaPlugin {
     private final ItemUpdater itemUpdater = new ItemUpdater(main);
     private final InventoryHandler inventoryHandler = new InventoryHandler(main);
     private final CancelOfferMenu cancelOfferMenu = new CancelOfferMenu(main);
+    private final ExpiredOfferMenu expiredOfferMenu = new ExpiredOfferMenu(main);
 
     // Initialize coin management classes
     private final CoinDisplay coinDisplay = new CoinDisplay(main);
@@ -109,6 +106,7 @@ public final class Main extends JavaPlugin {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BuyOfferMenuListener(main), this);
         manager.registerEvents(new CancelOfferMenuListener(main), this);
+        manager.registerEvents(expiredOfferMenu, this);
     }
 
     // Store item-related methods
@@ -124,7 +122,7 @@ public final class Main extends JavaPlugin {
         return registeredItems;
     }
 
-    public HashMap<UUID, ItemStack> getExpiredItems() {
+    public HashMap<UUID, List<ItemStack>> getExpiredItems() {
         return expiredItems;
     }
 
@@ -172,8 +170,9 @@ public final class Main extends JavaPlugin {
                 int amount = itemObject.get("amount").getAsInt();
                 UUID seller = UUID.fromString(itemObject.get("seller").getAsString());
 
-                ItemStack item = new ItemStack(material, amount);
-                getExpiredItems().put(seller, item);
+                List<ItemStack> expiredItems = (getExpiredItems().containsKey(seller)) ? getExpiredItems().get(seller) : new ArrayList<>();
+                expiredItems.add(new ItemStack(material, amount));
+                getExpiredItems().put(seller, expiredItems);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -201,12 +200,13 @@ public final class Main extends JavaPlugin {
 
             JsonArray expiredAuctionsArray = new JsonArray();
             for (UUID uuid : getExpiredItems().keySet()) {
-                JsonObject expiredItem = new JsonObject();
-                ItemStack itemStack = getExpiredItems().get(uuid);
-                expiredItem.addProperty("material", itemStack.getType().name());
-                expiredItem.addProperty("amount", itemStack.getAmount());
-                expiredItem.addProperty("seller", String.valueOf(uuid));
-                expiredAuctionsArray.add(expiredItem);
+                for (ItemStack itemStack : getExpiredItems().get(uuid)) {
+                    JsonObject expiredItem = new JsonObject();
+                    expiredItem.addProperty("material", itemStack.getType().name());
+                    expiredItem.addProperty("amount", itemStack.getAmount());
+                    expiredItem.addProperty("seller", String.valueOf(uuid));
+                    expiredAuctionsArray.add(expiredItem);
+                }
             }
             auctionsObject.add("expiredAuctions", expiredAuctionsArray);
 
@@ -229,5 +229,9 @@ public final class Main extends JavaPlugin {
 
     public CancelOfferMenu getCancelOfferMenu() {
         return cancelOfferMenu;
+    }
+
+    public ExpiredOfferMenu getExpiredOfferMenu() {
+        return expiredOfferMenu;
     }
 }

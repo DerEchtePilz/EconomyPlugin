@@ -3,16 +3,13 @@ package me.derechtepilz.economy.commands;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.utility.DataHandler;
-import me.derechtepilz.economy.utility.NamespacedKeys;
 import me.derechtepilz.economycore.EconomyAPI;
 import me.derechtepilz.economycore.exceptions.BalanceException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 public class EconomyCommand {
 
@@ -92,6 +89,21 @@ public class EconomyCommand {
                                     }
                                     DataHandler.setCancelMenuData(player);
                                     player.sendMessage("§aYou opened the cancel menu!");
+                                })
+                        )
+                        .then(new LiteralArgument("claim")
+                                .executesPlayer((player, args) -> {
+                                    if (!main.getExpiredItems().containsKey(player.getUniqueId())) {
+                                        player.sendMessage("§cYou cannot claim any items back because no expired auction could be found that you created!");
+                                        return;
+                                    }
+                                    int expiredItems = main.getExpiredItems().get(player.getUniqueId()).size();
+                                    int freeSlots = main.getExpiredOfferMenu().getFreeSlots(player);
+                                    if (freeSlots == 0) {
+                                        player.sendMessage("§cPlease make sure you have at least §6" + expiredItems + " §cslots free!");
+                                        return;
+                                    }
+                                    main.getExpiredOfferMenu().openInventory(player);
                                 })
                         )
                         .then(new LiteralArgument("pause")

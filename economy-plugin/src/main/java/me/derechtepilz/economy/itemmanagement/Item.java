@@ -71,7 +71,11 @@ public class Item {
         if (duration == 0) {
             main.getRegisteredItems().remove(uuid);
             main.getRegisteredItemUuids().remove(uuid);
-            main.getExpiredItems().put(seller, new ItemStack(material, amount));
+
+            List<ItemStack> expiredItems = (main.getExpiredItems().containsKey(seller)) ? main.getExpiredItems().get(seller) : new ArrayList<>();
+            expiredItems.add(new ItemStack(material, amount));
+            main.getExpiredItems().put(seller, expiredItems);
+
             return null;
         }
         duration -= 1;
