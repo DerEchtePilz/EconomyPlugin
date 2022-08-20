@@ -2,6 +2,7 @@ package me.derechtepilz.economy.itemmanagement;
 
 import com.google.gson.JsonObject;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -23,10 +24,6 @@ public class Item {
     private final UUID uuid;
     public int duration;
 
-    private final NamespacedKey itemPrice;
-    private final NamespacedKey itemSeller;
-    private final NamespacedKey itemUuid;
-
     public Item(Main main, Material material, int amount, double price, UUID seller, int duration) {
         this.main = main;
         this.material = material;
@@ -35,10 +32,6 @@ public class Item {
         this.seller = seller;
         this.duration = duration;
         this.uuid = UUID.randomUUID();
-
-        this.itemPrice = new NamespacedKey(main, "itemPrice");
-        this.itemSeller = new NamespacedKey(main, "itemSeller");
-        this.itemUuid = new NamespacedKey(main, "itemUuid");
     }
 
     public Item(Main main, Material material, int amount, double price, UUID seller, UUID uuid, int duration) {
@@ -49,23 +42,20 @@ public class Item {
         this.seller = seller;
         this.duration = duration;
         this.uuid = uuid;
-
-        this.itemPrice = new NamespacedKey(main, "itemPrice");
-        this.itemSeller = new NamespacedKey(main, "itemSeller");
-        this.itemUuid = new NamespacedKey(main, "itemUuid");
     }
 
     public void register() {
         main.getRegisteredItemUuids().add(uuid);
+        main.getOfferingPlayerUuids().add(seller);
         main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
     }
 
     public ItemStack getItemStack() {
         ItemStack itemStack = new ItemStack(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(itemPrice, PersistentDataType.DOUBLE, price);
-        itemMeta.getPersistentDataContainer().set(itemSeller, PersistentDataType.STRING, String.valueOf(seller));
-        itemMeta.getPersistentDataContainer().set(itemUuid, PersistentDataType.STRING, String.valueOf(uuid));
+        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_PRICE, PersistentDataType.DOUBLE, price);
+        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_SELLER, PersistentDataType.STRING, String.valueOf(seller));
+        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, String.valueOf(uuid));
 
         List<String> lore = new ArrayList<>();
         lore.add("§6Seller: §a" + Bukkit.getOfflinePlayer(seller).getName());

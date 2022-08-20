@@ -2,67 +2,40 @@ package me.derechtepilz.economy.offers
 
 import me.derechtepilz.economy.Main
 import me.derechtepilz.economy.inventorymanagement.InventoryUtility
-import me.derechtepilz.economy.inventorymanagement.StandardInventoryItems
 import me.derechtepilz.economy.itemmanagement.Item
+import me.derechtepilz.economy.utility.DataHandler
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-class CancelOfferMenu(private val main: Main) : Listener {
+class CancelOfferMenu(private val main: Main) {
 
     private val pageSize: Int = 36
     private val playerOffers: HashMap<UUID, MutableList<Array<ItemStack>>> = HashMap()
-    private val playerPage: HashMap<UUID, Int> = HashMap()
+    private var cancelMenu: Inventory? = null
 
-    @EventHandler
-    fun onClick(event: InventoryClickEvent) {
-        if (event.view.title == "Cancel your offers") {
-            event.isCancelled = true
-            val player: Player = event.whoClicked as Player
-
-            if (event.currentItem == null) return
-            val item: ItemStack = event.currentItem!!
-            if (item == StandardInventoryItems.MENU_CLOSE) {
+    fun openInventory(player: Player, page: Int) {
+        preparePlayerItems(player)
+        if (playerOffers[player.uniqueId]!!.size == 0) {
+            if (player.openInventory.title == "Cancel your offers") {
                 player.closeInventory()
-                return
             }
-            if (item == StandardInventoryItems.ARROW_PREVIOUS) {
-                var currentPage: Int = playerPage[player.uniqueId]!!
-                currentPage -= 1
-                playerPage[player.uniqueId] = currentPage
-                player.openInventory.topInventory.contents = playerOffers[player.uniqueId]!![currentPage]
-                return
-            }
-            if (item == StandardInventoryItems.ARROW_NEXT) {
-                var currentPage: Int = if (!playerPage.containsKey(player.uniqueId)) 0 else playerPage[player.uniqueId]!!
-                currentPage += 1
-                playerPage[player.uniqueId] = currentPage
-                player.openInventory.topInventory.contents = playerOffers[player.uniqueId]!![currentPage]
-                return
-            }
-            // TODO: Handle cancelling items
+            return
         }
-    }
+        if (cancelMenu == null) {
+            cancelMenu = Bukkit.createInventory(null, pageSize + 9, "Cancel your offers")
+        }
+        cancelMenu!!.contents = playerOffers[player.uniqueId]!![page]
 
-    fun openCancelOfferMenu(player: Player): Boolean {
-        val inventory: Inventory = Bukkit.createInventory(null, pageSize + 9, "Cancel your offers")
-        if (!playerOffers.containsKey(player.uniqueId)) {
-            preparePlayerItems(player)
-        }
-        return if (!playerOffers.containsKey(player.uniqueId)) {
-            false
-        } else {
-            inventory.contents = playerOffers[player.uniqueId]!![0]
-            player.openInventory(inventory)
-            true
+        if (DataHandler.canInventoryOpen(player)) {
+            if (player.openInventory.title == "Cancel your offers") {
+                player.openInventory.topInventory.contents = playerOffers[player.uniqueId]!![page]
+                return
+            }
+            player.openInventory(cancelMenu!!)
         }
     }
 
@@ -75,14 +48,25 @@ class CancelOfferMenu(private val main: Main) : Listener {
             }
             offers.add(item.itemStack)
         }
+
         if (offers.size == 0) {
+            if (playerOffers[player.uniqueId]!!.size >= 1) {
+                playerOffers[player.uniqueId]!!.clear()
+            }
             return
         }
-        playerOffers[player.uniqueId] = formatPages(offers)
+
+        val inventoryPages: MutableList<Array<ItemStack>> = getCancelMenuPages(offers)
+        playerOffers[player.uniqueId] = inventoryPages
     }
 
-    private fun formatPages(list: MutableList<ItemStack>): MutableList<Array<ItemStack>> {
+    private fun getCancelMenuPages(list: MutableList<ItemStack>): MutableList<Array<ItemStack>> {
+        if (list.size == 0) {
+            return mutableListOf()
+        }
+
         val maxPages: Int = InventoryUtility.calculateMaxPages(list.size, pageSize)
+
         val cancelMenuPages: MutableList<Array<ItemStack>> = mutableListOf()
         while (list.size >= pageSize) {
             var cancelMenuPage: MutableList<ItemStack> = ArrayList(45)

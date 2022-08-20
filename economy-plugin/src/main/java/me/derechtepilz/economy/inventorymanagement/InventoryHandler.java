@@ -2,6 +2,7 @@ package me.derechtepilz.economy.inventorymanagement;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.offers.BuyOfferMenu;
+import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
@@ -17,11 +18,13 @@ public class InventoryHandler {
     private final Main main;
     private boolean timerRunning = true;
 
-    // Initialize inventories
-    private final BuyOfferMenu buyOfferMenu = new BuyOfferMenu();
+    private final BuyOfferMenu buyOfferMenu;
+    private final CancelOfferMenu cancelOfferMenu;
 
     public InventoryHandler(Main main) {
         this.main = main;
+        this.buyOfferMenu = new BuyOfferMenu();
+        this.cancelOfferMenu = new CancelOfferMenu(main);
     }
 
     public void openEconomyMenu(Player player, int page, InventoryType type) {
@@ -35,6 +38,10 @@ public class InventoryHandler {
             case BUY_MENU -> {
                 DataHandler.setBuyMenuData(player);
                 buyOfferMenu.openInventory(player, page);
+            }
+            case CANCEL_MENU -> {
+                DataHandler.setCancelMenuData(player);
+                cancelOfferMenu.openInventory(player, page);
             }
             case NONE -> {
             }
@@ -66,6 +73,7 @@ public class InventoryHandler {
 
     public enum InventoryType {
         BUY_MENU,
+        CANCEL_MENU,
         NONE
     }
 }

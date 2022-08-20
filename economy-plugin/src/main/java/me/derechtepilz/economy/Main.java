@@ -12,6 +12,7 @@ import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economy.offers.CancelOfferMenu;
+import me.derechtepilz.economy.offers.CancelOfferMenuListener;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,6 +28,11 @@ import java.util.UUID;
 
 public final class Main extends JavaPlugin {
 
+    // TODO
+    //  1. Implementing purchases
+    //  2. Implementing cancelling items
+    //  3. Implementing claiming back expired items
+
     private boolean isVersionSupported;
     private final Main main = this;
 
@@ -35,6 +41,7 @@ public final class Main extends JavaPlugin {
 
     // Store item-related fields
     private final List<UUID> registeredItemUuids = new ArrayList<>();
+    private final List<UUID> offeringPlayerUuids = new ArrayList<>();
     private final HashMap<UUID, Item> registeredItems = new HashMap<>();
     private final HashMap<UUID, ItemStack> expiredItems = new HashMap<>();
 
@@ -101,12 +108,16 @@ public final class Main extends JavaPlugin {
     private void listenerRegistration() {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BuyOfferMenuListener(main), this);
-        manager.registerEvents(cancelOfferMenu, this);
+        manager.registerEvents(new CancelOfferMenuListener(main), this);
     }
 
     // Store item-related methods
     public List<UUID> getRegisteredItemUuids() {
         return registeredItemUuids;
+    }
+
+    public List<UUID> getOfferingPlayerUuids() {
+        return offeringPlayerUuids;
     }
 
     public HashMap<UUID, Item> getRegisteredItems() {

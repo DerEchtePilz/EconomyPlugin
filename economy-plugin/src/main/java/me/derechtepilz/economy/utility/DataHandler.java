@@ -14,7 +14,13 @@ public class DataHandler {
         player.getPersistentDataContainer().set(NamespacedKeys.CAN_INVENTORY_OPEN, PersistentDataType.BYTE, (byte) 1);
     }
 
-    public static void removeBuyMenuData(Player player) {
+    public static void setCancelMenuData(Player player) {
+        player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER, 0);
+        player.getPersistentDataContainer().set(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING, InventoryHandler.InventoryType.CANCEL_MENU.name());
+        player.getPersistentDataContainer().set(NamespacedKeys.CAN_INVENTORY_OPEN, PersistentDataType.BYTE, (byte) 1);
+    }
+
+    public static void removeMenuData(Player player) {
         player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_PAGE);
         player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_TYPE);
         player.getPersistentDataContainer().remove(NamespacedKeys.CAN_INVENTORY_OPEN);
