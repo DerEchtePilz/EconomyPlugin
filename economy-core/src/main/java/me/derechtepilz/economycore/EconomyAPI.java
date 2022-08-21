@@ -234,6 +234,21 @@ public class EconomyAPI {
     }
 
     /**
+     * This is the API entrypoint for getting a player's balance
+     *
+     * @param player The player who owns the account
+     * @return the player's balance
+     */
+    public static double getBalance(Player player) {
+        if (!BANK_ACCOUNTS.containsKey(player.getUniqueId())) {
+            LOGGER.severe("Couldn't get the balance of player '" + player.getName() + "' because they do not have a bank account!");
+            return -1;
+        }
+        Bank bank = BANK_ACCOUNTS.get(player.getUniqueId());
+        return bank.getBalance();
+    }
+
+    /**
      * This is a private method used in {@link EconomyAPI#onEnable(Plugin)} to load a player's bank account
      *
      * @param player The player who owns the account

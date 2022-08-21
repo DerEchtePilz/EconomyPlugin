@@ -48,7 +48,7 @@ class Bank {
 
     public void removeBalance(double amount) throws BalanceException {
         if (this.balance - amount < startBalance) {
-            throw new BalanceException("It is not possible to remove so many coins that the player does not have the start balance anymore! (You tried to remove: " + amount + ", allowed:" + (this.balance - startBalance) + ")");
+            throw new BalanceException("It is not possible to remove so many coins that the player does not have the start balance anymore! (You tried to remove: " + amount + ", allowed: " + (this.balance - startBalance) + ")");
         }
         this.balance = this.balance - amount;
         updateAccount();
@@ -62,9 +62,11 @@ class Bank {
         long days = ChronoUnit.DAYS.between(new Date(lastPlayerInterest).toInstant(), new Date(currentInterest).toInstant());
         boolean isInterestDue = days >= ConfigHandler.getMinimumDaysForInterest();
         if (isInterestDue) {
+            double balanceBeforeInterest = balance;
             for (long l = 0; l <= days; l++) {
                 balance = balance * (1 + interest / 100);
             }
+            player.sendMessage("§aYou received §6" + (balance - balanceBeforeInterest) + " coins §aas interest");
         }
         lastInterest = currentInterest;
         updateAccount();

@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.RegisteredCommand;
 import me.derechtepilz.economy.coinmanagement.CoinDisplay;
+import me.derechtepilz.economy.coinmanagement.JoinCoinManagement;
 import me.derechtepilz.economy.commands.ConsoleCommands;
 import me.derechtepilz.economy.commands.EconomyCommand;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
@@ -50,6 +51,9 @@ public final class Main extends JavaPlugin {
     private final InventoryHandler inventoryHandler = new InventoryHandler(main);
     private final CancelOfferMenu cancelOfferMenu = new CancelOfferMenu(main);
     private final ExpiredOfferMenu expiredOfferMenu = new ExpiredOfferMenu(main);
+
+    // Initialize coin management fields
+    private final HashMap<UUID, Double> earnedCoins = new HashMap<>();
 
     // Initialize coin management classes
     private final CoinDisplay coinDisplay = new CoinDisplay(main);
@@ -106,6 +110,7 @@ public final class Main extends JavaPlugin {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BuyOfferMenuListener(main), this);
         manager.registerEvents(new CancelOfferMenuListener(main), this);
+        manager.registerEvents(new JoinCoinManagement(main), this);
         manager.registerEvents(expiredOfferMenu, this);
     }
 
@@ -233,5 +238,11 @@ public final class Main extends JavaPlugin {
 
     public ExpiredOfferMenu getExpiredOfferMenu() {
         return expiredOfferMenu;
+    }
+
+
+    // Store coin management-related methods
+    public HashMap<UUID, Double> getEarnedCoins() {
+        return earnedCoins;
     }
 }

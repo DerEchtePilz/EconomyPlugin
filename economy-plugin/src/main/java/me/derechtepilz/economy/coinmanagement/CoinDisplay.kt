@@ -11,7 +11,7 @@ import org.bukkit.persistence.PersistentDataType
 
 class CoinDisplay(val main: Main) {
 
-    private val chatFormatter: ChatFormatter = ChatFormatter();
+    private val chatFormatter: ChatFormatter = ChatFormatter()
 
     fun displayCoins(): Int {
         val taskId: Int = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, {
