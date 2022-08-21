@@ -3,12 +3,15 @@ package me.derechtepilz.economy.offers
 import me.derechtepilz.economy.Main
 import me.derechtepilz.economy.inventorymanagement.StandardInventoryItems
 import me.derechtepilz.economy.utility.DataHandler
+import me.derechtepilz.economy.utility.NamespacedKeys
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+import java.util.UUID
 
 class CancelOfferMenuListener(private val main: Main) : Listener {
 
@@ -32,7 +35,13 @@ class CancelOfferMenuListener(private val main: Main) : Listener {
                 DataHandler.updateMenuPage(player, DataHandler.getCurrentPage(player) + 1)
                 return
             }
-            // TODO: Handle cancelling items
+            if (item.itemMeta?.persistentDataContainer?.has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING) == false) return
+            val itemUuid: UUID = UUID.fromString(item.itemMeta?.persistentDataContainer?.get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
+            main.registeredItems.remove(itemUuid)
+            main.registeredItemUuids.remove(itemUuid)
+            main.offeringPlayerUuids.remove(player.uniqueId)
+
+            player.inventory.addItem(ItemStack(item.type, item.amount))
         }
     }
 
