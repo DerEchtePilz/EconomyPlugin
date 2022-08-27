@@ -5,7 +5,6 @@ import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;

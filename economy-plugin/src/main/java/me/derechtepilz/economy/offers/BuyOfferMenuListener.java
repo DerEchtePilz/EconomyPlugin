@@ -2,6 +2,7 @@ package me.derechtepilz.economy.offers;
 
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.inventorymanagement.StandardInventoryItems;
+import me.derechtepilz.economy.permissionmanagement.Permission;
 import me.derechtepilz.economy.utility.ChatFormatter;
 import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.utility.ItemBuilder;
@@ -29,6 +30,7 @@ public class BuyOfferMenuListener implements Listener {
     private final ChatFormatter chatFormatter = new ChatFormatter();
 
     private final Main main;
+
     public BuyOfferMenuListener(Main main) {
         this.main = main;
     }
@@ -58,7 +60,8 @@ public class BuyOfferMenuListener implements Listener {
             if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
                 return;
             }
-            if (item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) return;
+            if (item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
+                return;
             UUID itemUuid = UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING));
             OfflinePlayer seller = Bukkit.getOfflinePlayer(UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ITEM_SELLER, PersistentDataType.STRING)));
 
@@ -90,18 +93,18 @@ public class BuyOfferMenuListener implements Listener {
                 }
 
                 // Give coins to seller
-                    if (!seller.isOnline()) {
-                        double coinsEarned = main.getEarnedCoins().getOrDefault(seller.getUniqueId(), (double) 0);
-                        coinsEarned += price;
-                        main.getEarnedCoins().put(seller.getUniqueId(), coinsEarned);
-                    } else {
-                        seller.getPlayer().sendMessage("§aYou earned §6" + chatFormatter.valueOf(price) + " coins §afrom selling items!");
-                        try {
-                            EconomyAPI.addCoinsToBalance(player, price);
-                        } catch (BalanceException e) {
-                            player.sendMessage("§cSomething unexpected happened: " + e.getMessage());
-                        }
+                if (!seller.isOnline()) {
+                    double coinsEarned = main.getEarnedCoins().getOrDefault(seller.getUniqueId(), (double) 0);
+                    coinsEarned += price;
+                    main.getEarnedCoins().put(seller.getUniqueId(), coinsEarned);
+                } else {
+                    seller.getPlayer().sendMessage("§aYou earned §6" + chatFormatter.valueOf(price) + " coins §afrom selling items!");
+                    try {
+                        EconomyAPI.addCoinsToBalance(player, price);
+                    } catch (BalanceException e) {
+                        player.sendMessage("§cSomething unexpected happened: " + e.getMessage());
                     }
+                }
 
                 // Take coins from customer
                 try {
@@ -123,6 +126,7 @@ public class BuyOfferMenuListener implements Listener {
         Player player = (Player) event.getPlayer();
         if (event.getView().getTitle().contains("Buy Menu (")) {
             DataHandler.removeMenuData(player);
+
         }
     }
 }
