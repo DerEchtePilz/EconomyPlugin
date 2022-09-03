@@ -5,20 +5,24 @@ import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
 
-enum class Permission(private val permission: String, private val id: Int) {
-    GIVE_COINS("give_coins", 0),
-    SET_COINS("set_coins", 1),
-    TAKE_COINS("take_coins", 2),
-    MODIFY_CONFIG("modify_config", 3),
-    RESET_CONFIG("reset_config", 4),
-    PAUSE_RESUME_AUCTIONS("pause_resume_auctions", 5);
+enum class Permission(private val permission: String, private val id: Int, private val id200: Int) {
+    GIVE_COINS("give_coins", 0, 0),
+    SET_COINS("set_coins", 1, 1),
+    TAKE_COINS("take_coins", 2, 2),
+    MODIFY_CONFIG("modify_config", 3, 6),
+    RESET_CONFIG("reset_config", 4, 7),
+    PAUSE_RESUME_AUCTIONS("pause_resume_auctions", 5, -1);
 
     fun getPermission(): String {
-        return name
+        return permission
     }
 
     fun getId(): Int {
-        return id;
+        return id
+    }
+
+    private fun getId200(): Int {
+        return id200
     }
 
     companion object {
@@ -26,6 +30,28 @@ enum class Permission(private val permission: String, private val id: Int) {
         fun clearPermissions(player: Player) {
             if (player.persistentDataContainer.has(NamespacedKeys.PERMISSION, PersistentDataType.INTEGER_ARRAY)) {
                 player.persistentDataContainer.remove(NamespacedKeys.PERMISSION)
+            }
+        }
+
+        @JvmStatic
+        fun updatePermissions(player: Player) {
+            if (getPermissions(player).isEmpty()) {
+                return
+            }
+            if (!player.persistentDataContainer.has(NamespacedKeys.PERMISSION_CONVERSION_300, PersistentDataType.BYTE)) {
+                val oldPermissions: IntArray = player.persistentDataContainer.get(NamespacedKeys.PERMISSION, PersistentDataType.INTEGER_ARRAY)!!
+                val newPermissions: MutableList<Int> = mutableListOf()
+                for (permission in Permission.values()) {
+                    if (oldPermissions.contains(permission.getId200())) {
+                        newPermissions.add(permission.getId())
+                    }
+                }
+                val playerPermissions = IntArray(newPermissions.size)
+                for (i in newPermissions.indices) {
+                    playerPermissions[i] = newPermissions[i]
+                }
+                player.persistentDataContainer.set(NamespacedKeys.PERMISSION_CONVERSION_300, PersistentDataType.BYTE, 1)
+                player.persistentDataContainer.set(NamespacedKeys.PERMISSION, PersistentDataType.INTEGER_ARRAY, playerPermissions)
             }
         }
 

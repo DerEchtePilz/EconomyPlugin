@@ -15,9 +15,13 @@ import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.offers.CancelOfferMenuListener;
 import me.derechtepilz.economy.offers.ExpiredOfferMenu;
+import me.derechtepilz.economy.permissionmanagement.Permission;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -112,6 +116,13 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new CancelOfferMenuListener(main), this);
         manager.registerEvents(new JoinCoinManagement(main), this);
         manager.registerEvents(expiredOfferMenu, this);
+
+        manager.registerEvents(new Listener() {
+            @EventHandler
+            public void onJoin(PlayerJoinEvent event) {
+                Permission.updatePermissions(event.getPlayer());
+            }
+        }, this);
     }
 
     // Store item-related methods
