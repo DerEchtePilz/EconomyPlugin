@@ -16,8 +16,10 @@ class EconomyAPIVersionHandler {
         List<String> versionList = new ArrayList<>(Arrays.asList(versionNumber));
         if (!(versionList.size() == 3)) {
             versionList.add("x");
+        } else {
+            versionList.set(2, "x");
         }
-        versionNumber = versionList.toArray(new String[0]);
+        versionNumber = versionList.toArray(String[]::new);
         String finalVersionNumber = versionNumber[0] + "." + versionNumber[1] + "." + versionNumber[2];
         for (String supportedVersion : supportedVersions) {
             if (supportedVersion.equals(finalVersionNumber)) {

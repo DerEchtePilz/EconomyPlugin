@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.ServerOperator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -235,125 +236,156 @@ public class EconomyCommand {
                 .then(new LiteralArgument("permission")
                         .withRequirement(ServerOperator::isOp)
                         .then(new LiteralArgument("clear")
-                                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> {
-                                                    List<String> players = new ArrayList<>();
-                                                    Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getName()));
-                                                    return players.toArray(new String[0]);
-                                                }))
-                                                .executesPlayer((player, args) -> {
-                                                    Permission.clearPermissions((Player) args[0]);
-                                                    player.sendMessage("§cYou removed every permission from §b" + ((Player) args[0]).getName() + "§c!");
-                                                })
+                                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                        .executesPlayer((player, args) -> {
+                                            Permission.clearPermissions((Player) args[0]);
+                                            player.sendMessage("§cYou removed every permission from §b" + ((Player) args[0]).getName() + "§c!");
+                                        })
                                 )
                         )
                         .then(new LiteralArgument("single")
                                 .then(new LiteralArgument("set")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> {
-                                                            List<String> players = new ArrayList<>();
-                                                            Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getName()));
-                                                            return players.toArray(new String[0]);
-                                                        }))
-                                                        .then(singlePermissionArgument
-                                                                .withRequirement(ServerOperator::isOp)
-                                                                .executesPlayer((player, args) -> {
-                                                                    Player target = (Player) args[0];
-                                                                    List<String> permissions = (List<String>) args[1];
-                                                                    for (String permissionName : permissions) {
-                                                                        Permission permissionToAssign = null;
-                                                                        for (Permission permission : Permission.values()) {
-                                                                            if (permission.getPermission().equals(permissionName)) {
-                                                                                permissionToAssign = permission;
-                                                                            }
-                                                                        }
-                                                                        if (permissionToAssign == null) {
-                                                                            player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
-                                                                            if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                                continue;
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                        if (Permission.hasPermission(target, permissionToAssign)) {
-                                                                            player.sendMessage("§cThe player §b" + target.getName() + " §calready has the permission §6" + permissionName + "§c!");
-                                                                            if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                                continue;
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                        Permission.addPermission(target, permissionToAssign);
-                                                                        if (target.equals(player)) {
-                                                                            player.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
-                                                                        } else {
-                                                                            target.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
-                                                                            player.sendMessage("§aSUCCESS! The permission §6" + permissionToAssign.getPermission() + " &awas given to §b" + target.getName() + "§a!");
-                                                                        }
+                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                                .then(singlePermissionArgument
+                                                        .withRequirement(ServerOperator::isOp)
+                                                        .executesPlayer((player, args) -> {
+                                                            Player target = (Player) args[0];
+                                                            List<String> permissions = (List<String>) args[1];
+                                                            for (String permissionName : permissions) {
+                                                                Permission permissionToAssign = null;
+                                                                for (Permission permission : Permission.values()) {
+                                                                    if (permission.getPermission().equals(permissionName)) {
+                                                                        permissionToAssign = permission;
                                                                     }
-                                                                })
-                                                        )
+                                                                }
+                                                                if (permissionToAssign == null) {
+                                                                    player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
+                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                                        continue;
+                                                                    }
+                                                                    return;
+                                                                }
+                                                                if (Permission.hasPermission(target, permissionToAssign)) {
+                                                                    player.sendMessage("§cThe player §b" + target.getName() + " §calready has the permission §6" + permissionName + "§c!");
+                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                                        continue;
+                                                                    }
+                                                                    return;
+                                                                }
+                                                                Permission.addPermission(target, permissionToAssign);
+                                                                if (target.equals(player)) {
+                                                                    player.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
+                                                                } else {
+                                                                    target.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
+                                                                    player.sendMessage("§aSUCCESS! The permission §6" + permissionToAssign.getPermission() + " &awas given to §b" + target.getName() + "§a!");
+                                                                }
+                                                            }
+                                                        })
+                                                )
                                         )
                                 )
                                 .then(new LiteralArgument("remove")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> {
-                                                            List<String> players = new ArrayList<>();
-                                                            Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getName()));
-                                                            return players.toArray(new String[0]);
-                                                        }))
-                                                        .then(singlePermissionArgument
-                                                                .withRequirement(ServerOperator::isOp)
-                                                                .executesPlayer((player, args) -> {
-                                                                    Player target = (Player) args[0];
-                                                                    List<String> permissions = (List<String>) args[1];
-                                                                    for (String permissionName : permissions) {
-                                                                        Permission permissionToRemove = null;
-                                                                        for (Permission permission : Permission.values()) {
-                                                                            if (permission.getPermission().equals(permissionName)) {
-                                                                                permissionToRemove = permission;
-                                                                            }
-                                                                        }
-                                                                        if (permissionToRemove == null) {
-                                                                            player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
-                                                                            if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                                continue;
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                        if (!Permission.hasPermission(target, permissionToRemove)) {
-                                                                            player.sendMessage("§cThe player §b" + target.getName() + " §cdoes not have the permission §6" + permissionName + "§c!");
-                                                                            if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                                continue;
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                        Permission.removePermission(player, permissionToRemove);
-                                                                        if (target.equals(player)) {
-                                                                            player.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
-                                                                        } else {
-                                                                            target.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
-                                                                            player.sendMessage("§cThe permission §6" + permissionToRemove.getPermission() + " §cwas taken from §b" + target.getName() + "§c!");
-                                                                        }
+                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                                .then(singlePermissionArgument
+                                                        .withRequirement(ServerOperator::isOp)
+                                                        .executesPlayer((player, args) -> {
+                                                            Player target = (Player) args[0];
+                                                            List<String> permissions = (List<String>) args[1];
+                                                            for (String permissionName : permissions) {
+                                                                Permission permissionToRemove = null;
+                                                                for (Permission permission : Permission.values()) {
+                                                                    if (permission.getPermission().equals(permissionName)) {
+                                                                        permissionToRemove = permission;
                                                                     }
-                                                                })
-                                                        )
+                                                                }
+                                                                if (permissionToRemove == null) {
+                                                                    player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
+                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                                        continue;
+                                                                    }
+                                                                    return;
+                                                                }
+                                                                if (!Permission.hasPermission(target, permissionToRemove)) {
+                                                                    player.sendMessage("§cThe player §b" + target.getName() + " §cdoes not have the permission §6" + permissionName + "§c!");
+                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
+                                                                        continue;
+                                                                    }
+                                                                    return;
+                                                                }
+                                                                Permission.removePermission(player, permissionToRemove);
+                                                                if (target.equals(player)) {
+                                                                    player.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
+                                                                } else {
+                                                                    target.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
+                                                                    player.sendMessage("§cThe permission §6" + permissionToRemove.getPermission() + " §cwas taken from §b" + target.getName() + "§c!");
+                                                                }
+                                                            }
+                                                        })
+                                                )
                                         )
                                 )
                                 .then(new LiteralArgument("get")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> {
-                                                            List<String> players = new ArrayList<>();
-                                                            Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getName()));
-                                                            return players.toArray(new String[0]);
-                                                        }))
-                                                        .then(singlePermissionArgument
-                                                                .withRequirement(ServerOperator::isOp)
-                                                                .executesPlayer((player, args) -> {
-                                                                    Player target = (Player) args[0];
-                                                                    String[] permissions = Permission.getPermissions(target);
-                                                                    player.sendMessage("§b" + target.getName() + " §ahas the following permissions:");
-                                                                    for (String permission : permissions) {
-                                                                        player.sendMessage("§6- §a" + permission);
-                                                                    }
-                                                                })
-                                                        )
+                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                                .then(singlePermissionArgument
+                                                        .withRequirement(ServerOperator::isOp)
+                                                        .executesPlayer((player, args) -> {
+                                                            Player target = (Player) args[0];
+                                                            String[] permissions = Permission.getPermissions(target);
+                                                            player.sendMessage("§b" + target.getName() + " §ahas the following permissions:");
+                                                            for (String permission : permissions) {
+                                                                player.sendMessage("§6- §a" + permission);
+                                                            }
+                                                        })
+                                                )
                                         )
                                 )
+                        )
+                )
+                .then(new LiteralArgument("config")
+                        .then(new LiteralArgument("allowDirectDownloads")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG);
+                                    }
+                                    return false;
+                                })
+                                .then(new BooleanArgument("allowDirectDownloads")
+                                        .executesPlayer((player, args) -> {
+                                            boolean allowDirectDownloads = (boolean) args[0];
+                                            main.getPluginConfig().set("allowDirectDownloads", String.valueOf(allowDirectDownloads));
+
+                                            player.sendMessage("§7You just set §6allowDirectDownloads §7to §6" + allowDirectDownloads + "§7!");
+                                            if (allowDirectDownloads) {
+                                                player.sendMessage("§7If a new update is available, the plugin will be automatically updated!");
+                                                return;
+                                            }
+                                            player.sendMessage("§7If a new update is available, you will have to download it yourself!");
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("reset")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.RESET_CONFIG);
+                                    }
+                                    return false;
+                                })
+                                .executesPlayer((player, args) -> {
+                                    main.getPluginConfig().resetConfig();
+                                    player.sendMessage("§7The config has been reset!");
+                                })
+                        )
+                        .then(new LiteralArgument("reload")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.RESET_CONFIG);
+                                    }
+                                    return false;
+                                })
+                                .executesPlayer((player, args) -> {
+                                    main.getPluginConfig().reloadConfig();
+                                    player.sendMessage("§7The config has been reloaded!");
+                                })
                         )
                 )
                 .register();

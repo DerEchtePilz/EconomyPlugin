@@ -16,6 +16,10 @@ import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.offers.CancelOfferMenuListener;
 import me.derechtepilz.economy.offers.ExpiredOfferMenu;
 import me.derechtepilz.economy.permissionmanagement.Permission;
+import me.derechtepilz.economy.updatemanagement.UpdateChecker;
+import me.derechtepilz.economy.updatemanagement.UpdateDownload;
+import me.derechtepilz.economy.updatemanagement.UpdateInformation;
+import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -36,6 +40,7 @@ public final class Main extends JavaPlugin {
 
     private boolean isVersionSupported;
     private final Main main = this;
+    private String updatedPluginName = "";
 
     private int inventoryManagementTaskId;
     private int coinDisplayTaskId;
@@ -62,8 +67,19 @@ public final class Main extends JavaPlugin {
     // Initialize coin management classes
     private final CoinDisplay coinDisplay = new CoinDisplay(main);
 
+    // Utility classes
+    private final Config config = new Config(main);
+
+    // Update stuff
+    private boolean shouldRegisterUpdateInformation = false;
+    private final UpdateDownload updateDownload = new UpdateDownload(main);
+
     @Override
     public void onEnable() {
+        if (!updatedPluginName.equals("")) {
+            updateDownload.enablePlugin(updatedPluginName);
+        }
+        updateDownload.disableAndDeleteOutdatedPlugin();
         EconomyAPI.onEnable(main);
 
         if (isVersionSupported) {
@@ -80,13 +96,28 @@ public final class Main extends JavaPlugin {
     public void onLoad() {
         EconomyAPI.onLoad();
         loadItems();
-
+        try {
+            config.loadConfig();
+        } catch (FileNotFoundException e) {
+            getLogger().severe("The config is not present! Please report this!");
+        }
 
         String version = Bukkit.getBukkitVersion().split("-")[0];
         isVersionSupported = VersionHandler.isVersionSupported(version);
 
         if (isVersionSupported) {
             CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
+        }
+
+        boolean isNewUpdateAvailable = new UpdateChecker().isUpdateAvailable();
+        boolean isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
+        if (isNewUpdateAvailable && !isDirectDownload) {
+            getLogger().info("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest");
+            shouldRegisterUpdateInformation = true;
+        }
+        if (isNewUpdateAvailable && isDirectDownload) {
+            getLogger().info("A new update is available for the EconomyPlugin! Downloading now...");
+            updatedPluginName = updateDownload.downloadUpdate();
         }
     }
 
@@ -116,6 +147,11 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new CancelOfferMenuListener(main), this);
         manager.registerEvents(new JoinCoinManagement(main), this);
         manager.registerEvents(expiredOfferMenu, this);
+
+        if (shouldRegisterUpdateInformation) {
+            manager.registerEvents(new UpdateInformation(main), this);
+            shouldRegisterUpdateInformation = false;
+        }
 
         manager.registerEvents(new Listener() {
             @EventHandler
@@ -251,9 +287,13 @@ public final class Main extends JavaPlugin {
         return expiredOfferMenu;
     }
 
-
     // Store coin management-related methods
     public HashMap<UUID, Double> getEarnedCoins() {
         return earnedCoins;
+    }
+
+    // Store utility methods
+    public Config getPluginConfig() {
+        return config;
     }
 }
