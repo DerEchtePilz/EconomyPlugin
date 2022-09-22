@@ -5,7 +5,6 @@ import com.google.gson.JsonParser
 import me.derechtepilz.economy.Main
 import me.derechtepilz.economy.utility.APIRequest
 import org.bukkit.Bukkit
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.File
 import java.net.URL
@@ -14,22 +13,29 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 class UpdateDownload(private val main: Main) {
-    private val checkUpdate: UpdateChecker = UpdateChecker()
+    private val checkUpdate: UpdateChecker = UpdateChecker(main)
 
     fun downloadUpdate(): String {
         if (!checkUpdate.isUpdateAvailable()) {
             return ""
         }
+        /*
         val releases: JsonArray = JsonParser.parseString(APIRequest("https://api.github.com/repos/DerEchtePilz/EconomyPlugin/releases").request()).asJsonArray
         val releaseName: String = releases.get(0).asJsonObject.get("assets").asJsonArray.get(0).asJsonObject["name"].asString
         val releaseTag: String = releases.get(0).asJsonObject.get("tag_name").asString
         val directDownloadLatestRelease = "https://github.com/DerEchtePilz/EconomyPlugin/releases/download/$releaseTag/$releaseName"
         URL(directDownloadLatestRelease).openStream().use { stream -> Files.copy(stream, Paths.get("./plugins/$releaseName"), StandardCopyOption.REPLACE_EXISTING) }
         return releaseName
+
+         */
+        val updatedPlugin = File("F:/Java Zeugs/Projects (NEVER TOUCH)/EconomyPlugin/economy-plugin/target/EconomyPlugin-3.0.0.jar")
+        updatedPlugin.copyTo(File("F:/Minecraft-Related/Minecraft Servers/Server EconomyPlugin/plugins/EconomyPlugin-3.0.0.jar"), true)
+        return "EconomyPlugin-3.0.0.jar"
     }
 
     fun enablePlugin(pluginName: String) {
-        val plugin = Bukkit.getPluginManager().loadPlugin(File("./plugins/$pluginName"))
+        val pluginFile = File("./plugins/$pluginName")
+        val plugin = Bukkit.getPluginManager().loadPlugin(pluginFile)
         if (plugin != null) {
             Bukkit.getPluginManager().enablePlugin(plugin)
         }
@@ -46,10 +52,15 @@ class UpdateDownload(private val main: Main) {
             val pluginAuthor: String = descriptionFile.authors[0]
             if (pluginName == "Economy" && pluginAuthor == "DerEchtePilz") {
                 if (pluginVersion == previousReleaseTag) {
+                    while (!plugin.isEnabled) {
+                        main.logger.info("Waiting for enabled old version!")
+                    }
+                    plugin.onDisable()
                     Bukkit.getPluginManager().disablePlugin(plugin)
+                    main.logger.info("Disabling outdated plugin: EconomyPlugin-$previousReleaseTag.jar")
                     val pluginFile = File("./plugins/EconomyPlugin-$previousReleaseTag.jar")
                     if (!pluginFile.exists()) {
-                        main.logger.warning("Cannot delete plugin §6$pluginName §ewith version §6$pluginVersion §ebecause the file §6EconomyPlugin-$previousReleaseTag.jar §edoes not exist but should!")
+                        main.logger.warning("Cannot delete plugin $pluginName with version $pluginVersion because the file EconomyPlugin-$previousReleaseTag.jar does not exist but should!")
                         main.logger.warning("You should be able to delete the old version though!")
                         return
                     }

@@ -72,15 +72,20 @@ public final class Main extends JavaPlugin {
 
     // Update stuff
     private boolean shouldRegisterUpdateInformation = false;
+    private boolean isNewUpdateAvailable = false;
+    private boolean isDirectDownload = false;
     private final UpdateDownload updateDownload = new UpdateDownload(main);
+    private final UpdateChecker updateChecker = new UpdateChecker(main);
 
     @Override
     public void onEnable() {
         if (!updatedPluginName.equals("")) {
             updateDownload.enablePlugin(updatedPluginName);
         }
-        updateDownload.disableAndDeleteOutdatedPlugin();
         EconomyAPI.onEnable(main);
+        if (updateChecker.isLatestVersion()) {
+            updateDownload.disableAndDeleteOutdatedPlugin();
+        }
 
         if (isVersionSupported) {
             CommandAPI.onEnable(main);
@@ -90,6 +95,8 @@ public final class Main extends JavaPlugin {
         listenerRegistration();
         inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
         coinDisplayTaskId = coinDisplay.displayCoins();
+
+        getLogger().info("You are on version " + getDescription().getVersion());
     }
 
     @Override
@@ -109,8 +116,8 @@ public final class Main extends JavaPlugin {
             CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
         }
 
-        boolean isNewUpdateAvailable = new UpdateChecker().isUpdateAvailable();
-        boolean isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
+        isNewUpdateAvailable = new UpdateChecker(main).isUpdateAvailable();
+        isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
         if (isNewUpdateAvailable && !isDirectDownload) {
             getLogger().info("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest");
             shouldRegisterUpdateInformation = true;
@@ -129,11 +136,9 @@ public final class Main extends JavaPlugin {
         Bukkit.getScheduler().cancelTask(coinDisplayTaskId);
 
         EconomyAPI.onDisable();
-
-        for (RegisteredCommand registeredCommand : CommandAPI.getRegisteredCommands()) {
-            CommandAPI.unregister(registeredCommand.commandName());
-        }
         CommandAPI.onDisable();
+
+        getLogger().info("You are on version " + getDescription().getVersion());
     }
 
     private void commandRegistration() {
