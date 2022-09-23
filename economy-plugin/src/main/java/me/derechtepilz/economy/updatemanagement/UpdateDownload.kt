@@ -19,24 +19,19 @@ class UpdateDownload(private val main: Main) {
         if (!checkUpdate.isUpdateAvailable()) {
             return ""
         }
-        /*
         val releases: JsonArray = JsonParser.parseString(APIRequest("https://api.github.com/repos/DerEchtePilz/EconomyPlugin/releases").request()).asJsonArray
         val releaseName: String = releases.get(0).asJsonObject.get("assets").asJsonArray.get(0).asJsonObject["name"].asString
         val releaseTag: String = releases.get(0).asJsonObject.get("tag_name").asString
         val directDownloadLatestRelease = "https://github.com/DerEchtePilz/EconomyPlugin/releases/download/$releaseTag/$releaseName"
         URL(directDownloadLatestRelease).openStream().use { stream -> Files.copy(stream, Paths.get("./plugins/$releaseName"), StandardCopyOption.REPLACE_EXISTING) }
         return releaseName
-
-         */
-        val updatedPlugin = File("F:/Java Zeugs/Projects (NEVER TOUCH)/EconomyPlugin/economy-plugin/target/EconomyPlugin-3.0.0.jar")
-        updatedPlugin.copyTo(File("F:/Minecraft-Related/Minecraft Servers/Server EconomyPlugin/plugins/EconomyPlugin-3.0.0.jar"), true)
-        return "EconomyPlugin-3.0.0.jar"
     }
 
     fun enablePlugin(pluginName: String) {
-        val pluginFile = File("./plugins/$pluginName")
+        val pluginFile = File(main.server.worldContainer.absolutePath + "/plugins/$pluginName")
         val plugin = Bukkit.getPluginManager().loadPlugin(pluginFile)
         if (plugin != null) {
+            plugin.onLoad()
             Bukkit.getPluginManager().enablePlugin(plugin)
         }
     }
@@ -52,9 +47,6 @@ class UpdateDownload(private val main: Main) {
             val pluginAuthor: String = descriptionFile.authors[0]
             if (pluginName == "Economy" && pluginAuthor == "DerEchtePilz") {
                 if (pluginVersion == previousReleaseTag) {
-                    while (!plugin.isEnabled) {
-                        main.logger.info("Waiting for enabled old version!")
-                    }
                     plugin.onDisable()
                     Bukkit.getPluginManager().disablePlugin(plugin)
                     main.logger.info("Disabling outdated plugin: EconomyPlugin-$previousReleaseTag.jar")

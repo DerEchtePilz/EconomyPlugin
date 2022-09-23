@@ -3,7 +3,6 @@ package me.derechtepilz.economy;
 import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import dev.jorel.commandapi.RegisteredCommand;
 import me.derechtepilz.economy.coinmanagement.CoinDisplay;
 import me.derechtepilz.economy.coinmanagement.JoinCoinManagement;
 import me.derechtepilz.economy.commands.ConsoleCommands;
@@ -73,7 +72,6 @@ public final class Main extends JavaPlugin {
     // Update stuff
     private boolean shouldRegisterUpdateInformation = false;
     private boolean isNewUpdateAvailable = false;
-    private boolean isDirectDownload = false;
     private final UpdateDownload updateDownload = new UpdateDownload(main);
     private final UpdateChecker updateChecker = new UpdateChecker(main);
 
@@ -82,42 +80,36 @@ public final class Main extends JavaPlugin {
         if (!updatedPluginName.equals("")) {
             updateDownload.enablePlugin(updatedPluginName);
         }
-        EconomyAPI.onEnable(main);
-        if (updateChecker.isLatestVersion()) {
+        if (updateChecker.isLatestVersion() && updateChecker.isPreviousVersionPresent()) {
             updateDownload.disableAndDeleteOutdatedPlugin();
         }
 
-        if (isVersionSupported) {
-            CommandAPI.onEnable(main);
-            commandRegistration();
+        if (!isNewUpdateAvailable) {
+            EconomyAPI.onEnable(main);
+
+            if (isVersionSupported) {
+                CommandAPI.onEnable(main);
+                commandRegistration();
+            }
+
+            listenerRegistration();
+            inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
+            coinDisplayTaskId = coinDisplay.displayCoins();
+
+            getLogger().info("You are on version " + getDescription().getVersion());
         }
-
-        listenerRegistration();
-        inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
-        coinDisplayTaskId = coinDisplay.displayCoins();
-
-        getLogger().info("You are on version " + getDescription().getVersion());
     }
 
     @Override
     public void onLoad() {
-        EconomyAPI.onLoad();
-        loadItems();
         try {
             config.loadConfig();
         } catch (FileNotFoundException e) {
             getLogger().severe("The config is not present! Please report this!");
         }
 
-        String version = Bukkit.getBukkitVersion().split("-")[0];
-        isVersionSupported = VersionHandler.isVersionSupported(version);
-
-        if (isVersionSupported) {
-            CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
-        }
-
         isNewUpdateAvailable = new UpdateChecker(main).isUpdateAvailable();
-        isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
+        boolean isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
         if (isNewUpdateAvailable && !isDirectDownload) {
             getLogger().info("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest");
             shouldRegisterUpdateInformation = true;
@@ -126,19 +118,30 @@ public final class Main extends JavaPlugin {
             getLogger().info("A new update is available for the EconomyPlugin! Downloading now...");
             updatedPluginName = updateDownload.downloadUpdate();
         }
+        if (!isNewUpdateAvailable) {
+            EconomyAPI.onLoad();
+            loadItems();
+
+            String version = Bukkit.getBukkitVersion().split("-")[0];
+            isVersionSupported = VersionHandler.isVersionSupported(version);
+
+            if (isVersionSupported) {
+                CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
+            }
+        }
     }
 
     @Override
     public void onDisable() {
-        saveItems();
+        if (!isNewUpdateAvailable) {
+            saveItems();
 
-        Bukkit.getScheduler().cancelTask(inventoryManagementTaskId);
-        Bukkit.getScheduler().cancelTask(coinDisplayTaskId);
+            Bukkit.getScheduler().cancelTask(inventoryManagementTaskId);
+            Bukkit.getScheduler().cancelTask(coinDisplayTaskId);
 
-        EconomyAPI.onDisable();
-        CommandAPI.onDisable();
-
-        getLogger().info("You are on version " + getDescription().getVersion());
+            EconomyAPI.onDisable();
+            CommandAPI.onDisable();
+        }
     }
 
     private void commandRegistration() {
