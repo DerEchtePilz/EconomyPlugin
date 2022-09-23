@@ -25,6 +25,17 @@ The EconomyPlugin is a plugin for Minecraft! It provides these features:
   </thead>
   <tbody>
     <tr>
+      <td valign="top"><b>3.0.1</b></td>
+      <td valign="top">1.13 - 1.19.2</td>
+      <td valign="top">
+        <p>Bug Fixes</p>
+        <ul>
+            <li>Fixed the update system -> now checks for the correct version and throws no errors</li>
+            <li>Nothing else :) Will continue with more 2.0.0 features when I have the time</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td valign="top"><b>3.0.0</b></td>
       <td valign="top">1.13 - 1.19.2</td>
       <td valign="top">
