@@ -5,7 +5,6 @@ import com.google.gson.JsonParser
 import me.derechtepilz.economy.Main
 import me.derechtepilz.economy.utility.APIRequest
 import org.bukkit.Bukkit
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.File
 import java.net.URL
@@ -14,7 +13,7 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 class UpdateDownload(private val main: Main) {
-    private val checkUpdate: UpdateChecker = UpdateChecker()
+    private val checkUpdate: UpdateChecker = UpdateChecker(main)
 
     fun downloadUpdate(): String {
         if (!checkUpdate.isUpdateAvailable()) {
@@ -29,8 +28,10 @@ class UpdateDownload(private val main: Main) {
     }
 
     fun enablePlugin(pluginName: String) {
-        val plugin = Bukkit.getPluginManager().loadPlugin(File("./plugins/$pluginName"))
+        val pluginFile = File(main.server.worldContainer.absolutePath + "/plugins/$pluginName")
+        val plugin = Bukkit.getPluginManager().loadPlugin(pluginFile)
         if (plugin != null) {
+            plugin.onLoad()
             Bukkit.getPluginManager().enablePlugin(plugin)
         }
     }
@@ -46,10 +47,12 @@ class UpdateDownload(private val main: Main) {
             val pluginAuthor: String = descriptionFile.authors[0]
             if (pluginName == "Economy" && pluginAuthor == "DerEchtePilz") {
                 if (pluginVersion == previousReleaseTag) {
+                    plugin.onDisable()
                     Bukkit.getPluginManager().disablePlugin(plugin)
+                    main.logger.info("Disabling outdated plugin: EconomyPlugin-$previousReleaseTag.jar")
                     val pluginFile = File("./plugins/EconomyPlugin-$previousReleaseTag.jar")
                     if (!pluginFile.exists()) {
-                        main.logger.warning("Cannot delete plugin §6$pluginName §ewith version §6$pluginVersion §ebecause the file §6EconomyPlugin-$previousReleaseTag.jar §edoes not exist but should!")
+                        main.logger.warning("Cannot delete plugin $pluginName with version $pluginVersion because the file EconomyPlugin-$previousReleaseTag.jar does not exist but should!")
                         main.logger.warning("You should be able to delete the old version though!")
                         return
                     }
