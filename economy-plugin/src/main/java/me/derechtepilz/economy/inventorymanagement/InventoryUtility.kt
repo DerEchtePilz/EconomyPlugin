@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack
 class InventoryUtility {
 
     companion object {
+        @JvmStatic
         fun addBottomMenuRow(buyMenuPage: Array<ItemStack>, currentPage: Int, maxPages: Int, pageSize: Int): List<ItemStack> {
             // Only one page exists
             if (currentPage == 0 && maxPages == 1) {
@@ -60,6 +61,7 @@ class InventoryUtility {
             return listOf(*buyMenuPage)
         }
 
+        @JvmStatic
         fun calculateMaxPages(offers: Int, itemsPerPage: Int): Int {
             var offers = offers
             var pages = 0

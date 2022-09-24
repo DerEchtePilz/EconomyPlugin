@@ -9,6 +9,7 @@ public class NamespacedKeys {
     public static final NamespacedKey INVENTORY_TYPE = new NamespacedKey(Main.getPlugin(Main.class), "inventoryType");
     public static final NamespacedKey INVENTORY_PAGE = new NamespacedKey(Main.getPlugin(Main.class), "inventoryPage");
     public static final NamespacedKey CAN_INVENTORY_OPEN = new NamespacedKey(Main.getPlugin(Main.class), "canInventoryOpen");
+    public static final NamespacedKey ITEM_FILTER = new NamespacedKey(Main.getPlugin(Main.class), "itemFilter");
 
     // Permission namespaces
     public static final NamespacedKey PERMISSION = new NamespacedKey(Main.getPlugin(Main.class), "permissions");

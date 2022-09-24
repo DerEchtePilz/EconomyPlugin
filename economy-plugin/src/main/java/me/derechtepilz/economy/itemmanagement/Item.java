@@ -66,7 +66,7 @@ public class Item {
         return itemStack;
     }
 
-    public ItemStack decreaseDurationAndUpdate() {
+    public void decreaseDurationAndUpdate() {
         if (duration == 0) {
             main.getRegisteredItems().remove(uuid);
             main.getRegisteredItemUuids().remove(uuid);
@@ -75,11 +75,10 @@ public class Item {
             expiredItems.add(new ItemStack(material, amount));
             main.getExpiredItems().put(seller, expiredItems);
 
-            return null;
+            return;
         }
         duration -= 1;
         main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
-        return getItemStack();
     }
 
     private String convertSecondsToTime(int duration) {

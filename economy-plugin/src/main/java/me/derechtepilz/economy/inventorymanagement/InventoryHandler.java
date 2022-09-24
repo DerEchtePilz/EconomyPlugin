@@ -23,7 +23,7 @@ public class InventoryHandler {
 
     public InventoryHandler(Main main) {
         this.main = main;
-        this.buyOfferMenu = new BuyOfferMenu();
+        this.buyOfferMenu = new BuyOfferMenu(main);
         this.cancelOfferMenu = new CancelOfferMenu(main);
     }
 
@@ -52,8 +52,7 @@ public class InventoryHandler {
     public int updateOffersAndInventory() {
         return Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
             if (timerRunning) {
-                List<ItemStack> updatedItems = main.getItemUpdater().getUpdatedItems();
-                buyOfferMenu.updateBuyMenu(updatedItems);
+                main.getItemUpdater().getUpdatedItems();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     int page = (player.getPersistentDataContainer().has(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER)) ? player.getPersistentDataContainer().get(NamespacedKeys.INVENTORY_PAGE, PersistentDataType.INTEGER) : 0;
                     InventoryType type = (player.getPersistentDataContainer().has(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING)) ? InventoryType.valueOf(player.getPersistentDataContainer().get(NamespacedKeys.INVENTORY_TYPE, PersistentDataType.STRING)) : InventoryType.NONE;

@@ -4,8 +4,8 @@ import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.itemmanagement.Item;
-import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.permissionmanagement.Permission;
+import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economycore.EconomyAPI;
 import me.derechtepilz.economycore.exceptions.BalanceException;
 import org.bukkit.Bukkit;
@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.ServerOperator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -38,6 +36,17 @@ public class EconomyCommand {
                                     DataHandler.setBuyMenuData(player);
                                     player.sendMessage("§aYou opened the buy menu!");
                                 })
+                                .then(new ItemStackArgument("filter")
+                                        .executesPlayer((player, args) -> {
+                                            if (!main.getInventoryHandler().isTimerRunning()) {
+                                                player.sendMessage("§cThe auctions are currently paused. Try again later!");
+                                                return;
+                                            }
+                                            ItemStack filter = (ItemStack) args[0];
+                                            DataHandler.setBuyMenuData(player, filter);
+                                            player.sendMessage("§aYou opened the buy menu!");
+                                        })
+                                )
                         )
                         .then(new LiteralArgument("create")
                                 .then(new ItemStackArgument("item")
@@ -54,9 +63,9 @@ public class EconomyCommand {
                                                                                     item.setAmount(amount);
 
                                                                                     for (int i = 0; i < player.getInventory().getSize(); i++) {
-                                                                                        if (player.getInventory().getItem(i) == null)
+                                                                                        if (player.getInventory().getItem(i) == null) {
                                                                                             continue;
-
+                                                                                        }
                                                                                         ItemStack currentItem = player.getInventory().getItem(i);
                                                                                         assert currentItem != null;
                                                                                         if (currentItem.isSimilar(item)) {
@@ -117,7 +126,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("pause")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS);
+                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -133,7 +142,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("resume")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS);
+                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -151,7 +160,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("give")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.GIVE_COINS);
+                                        return Permission.hasPermission(player, Permission.GIVE_COINS) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -179,7 +188,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("take")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.TAKE_COINS);
+                                        return Permission.hasPermission(player, Permission.TAKE_COINS) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -207,7 +216,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("set")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.SET_COINS);
+                                        return Permission.hasPermission(player, Permission.SET_COINS) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -345,7 +354,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("allowDirectDownloads")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG);
+                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -366,7 +375,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("reset")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.RESET_CONFIG);
+                                        return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
                                     }
                                     return false;
                                 })
@@ -378,7 +387,7 @@ public class EconomyCommand {
                         .then(new LiteralArgument("reload")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.RESET_CONFIG);
+                                        return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
                                     }
                                     return false;
                                 })

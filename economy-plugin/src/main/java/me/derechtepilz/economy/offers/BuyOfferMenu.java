@@ -1,38 +1,38 @@
 package me.derechtepilz.economy.offers;
 
+import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.inventorymanagement.InventoryUtility;
+import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.utility.DataHandler;
+import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class BuyOfferMenu {
 
     private final int itemsPerPage = 4 * 9;
     private static final int PAGE_SIZE = 5 * 9;
-    private final List<ItemStack[]> inventoryPages = new ArrayList<>();
+    private final HashMap<UUID, List<ItemStack[]>> inventoryPages = new HashMap<>();
     private Inventory buyMenu;
 
-    public void updateBuyMenu(List<ItemStack> offers) {
-        List<ItemStack[]> buyMenuPages = getBuyMenuPages(offers);
-        if (buyMenuPages.size() == 0) {
-            if (inventoryPages.size() >= 1) {
-                inventoryPages.clear();
-            }
-            return;
-        }
-        if (inventoryPages.size() > 0) {
-            inventoryPages.clear();
-        }
-        inventoryPages.addAll(buyMenuPages);
+    private final Main main;
+
+    public BuyOfferMenu(Main main) {
+        this.main = main;
     }
 
     public void openInventory(Player player, int page) {
-        if (inventoryPages.size() == 0) {
+        preparePlayerItems(player);
+        if (inventoryPages.get(player.getUniqueId()).size() == 0) {
             if (player.getOpenInventory().getTitle().contains("Buy Menu (")) {
                 player.closeInventory();
             }
@@ -41,15 +41,51 @@ public class BuyOfferMenu {
         if (buyMenu == null) {
             buyMenu = Bukkit.createInventory(null, 5 * 9, "Buy Menu (" + (page + 1) + ")");
         }
-        buyMenu.setContents(inventoryPages.get(page));
+        buyMenu.setContents(inventoryPages.get(player.getUniqueId()).get(page));
 
         if (DataHandler.canInventoryOpen(player)) {
             if (player.getOpenInventory().getTitle().contains("Buy Menu (")) {
-                player.getOpenInventory().getTopInventory().setContents(inventoryPages.get(page));
+                player.getOpenInventory().getTopInventory().setContents(inventoryPages.get(player.getUniqueId()).get(page));
                 return;
             }
             player.openInventory(buyMenu);
         }
+    }
+
+    private void preparePlayerItems(Player player) {
+        List<ItemStack> offers = new ArrayList<>();
+        String filterMaterialName = player.getPersistentDataContainer().get(NamespacedKeys.ITEM_FILTER, PersistentDataType.STRING);
+        if (filterMaterialName == null) {
+            for (UUID uuid : main.getRegisteredItems().keySet()) {
+                Item item = main.getRegisteredItems().get(uuid);
+                if (item == null) {
+                    continue;
+                }
+                offers.add(item.getItemStack());
+            }
+        } else {
+            Material filterMaterial = Material.matchMaterial(filterMaterialName);
+            for (UUID uuid : main.getRegisteredItems().keySet()) {
+                Item item = main.getRegisteredItems().get(uuid);
+                if (item == null) {
+                    continue;
+                }
+                if (!item.getItemStack().getType().equals(filterMaterial)) {
+                    continue;
+                }
+                offers.add(item.getItemStack());
+            }
+        }
+
+        if (offers.size() == 0) {
+            if (inventoryPages.get(player.getUniqueId()).size() >= 1) {
+                inventoryPages.get(player.getUniqueId()).clear();
+            }
+            return;
+        }
+
+        List<ItemStack[]> inventoryPages = getBuyMenuPages(offers);
+        this.inventoryPages.put(player.getUniqueId(), inventoryPages);
     }
 
     private List<ItemStack[]> getBuyMenuPages(List<ItemStack> offers) {
@@ -57,7 +93,7 @@ public class BuyOfferMenu {
             return new ArrayList<>();
         }
 
-        int maxPages = InventoryUtility.Companion.calculateMaxPages(offers.size(), itemsPerPage);
+        int maxPages = InventoryUtility.calculateMaxPages(offers.size(), itemsPerPage);
 
         List<ItemStack[]> buyMenuPages = new ArrayList<>();
         while (offers.size() >= itemsPerPage) {
@@ -69,7 +105,7 @@ public class BuyOfferMenu {
                 offers.remove(i);
             }
 
-            buyMenuPages.add(InventoryUtility.Companion.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
+            buyMenuPages.add(InventoryUtility.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
             buyMenuPages.add(buyMenuPage);
             buyMenuPage = new ItemStack[45];
         }
@@ -80,7 +116,7 @@ public class BuyOfferMenu {
             for (int i = 0; i < offers.size(); i++) {
                 buyMenuPage[i] = offers.get(i);
             }
-            buyMenuPages.add(InventoryUtility.Companion.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
+            buyMenuPages.add(InventoryUtility.addBottomMenuRow(buyMenuPage, buyMenuPages.size(), maxPages, PAGE_SIZE).toArray(new ItemStack[0]));
         }
         return buyMenuPages;
     }
