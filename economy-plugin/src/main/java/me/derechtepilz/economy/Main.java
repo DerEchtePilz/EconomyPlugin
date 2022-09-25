@@ -28,12 +28,17 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
+
+import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.AnsiColors.*;
 
 public final class Main extends JavaPlugin {
 
@@ -43,6 +48,16 @@ public final class Main extends JavaPlugin {
 
     private int inventoryManagementTaskId;
     private int coinDisplayTaskId;
+
+    private Logger logger;
+
+    @NotNull
+    public Logger getLogger() {
+        if (logger == null) {
+            logger = new EconomyPluginLogger();
+        }
+        return logger;
+    }
 
     // Store item-related fields
     private final List<UUID> registeredItemUuids = new ArrayList<>();
@@ -96,7 +111,7 @@ public final class Main extends JavaPlugin {
             inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
             coinDisplayTaskId = coinDisplay.displayCoins();
 
-            getLogger().info("You are on version " + getDescription().getVersion());
+            getLogger().info(ansi().fgGreen().a("You are on version ").fgYellow().a("v" + getDescription().getVersion()).toString());
         }
     }
 
@@ -105,17 +120,17 @@ public final class Main extends JavaPlugin {
         try {
             config.loadConfig();
         } catch (FileNotFoundException e) {
-            getLogger().severe("The config is not present! Please report this!");
+            getLogger().info(ansi().fgRed().a("The config is not present! Please report this!").toString());
         }
 
         isNewUpdateAvailable = new UpdateChecker(main).isUpdateAvailable();
         boolean isDirectDownload = Boolean.parseBoolean(config.get("allowDirectDownloads"));
         if (isNewUpdateAvailable && !isDirectDownload) {
-            getLogger().info("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest");
+            getLogger().info(ansi().fgYellow().a("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest").toString());
             shouldRegisterUpdateInformation = true;
         }
         if (isNewUpdateAvailable && isDirectDownload) {
-            getLogger().info("A new update is available for the EconomyPlugin! Downloading now...");
+            getLogger().info(ansi().fgYellow().a("A new update is available for the EconomyPlugin! Downloading now...").toString());
             updatedPluginName = updateDownload.downloadUpdate();
         }
         if (!isNewUpdateAvailable) {
