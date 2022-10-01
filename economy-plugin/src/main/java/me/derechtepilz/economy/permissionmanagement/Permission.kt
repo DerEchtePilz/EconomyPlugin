@@ -1,7 +1,6 @@
 package me.derechtepilz.economy.permissionmanagement
 
 import me.derechtepilz.economy.utility.NamespacedKeys
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 import kotlin.collections.ArrayList
@@ -43,8 +42,6 @@ enum class Permission(private val permission: String, private val id: Int, priva
             if (!player.persistentDataContainer.has(NamespacedKeys.PERMISSION_CONVERSION_300, PersistentDataType.BYTE)) {
                 val oldPermissions: IntArray = player.persistentDataContainer.get(NamespacedKeys.PERMISSION, PersistentDataType.INTEGER_ARRAY)!!
 
-                Bukkit.broadcastMessage(oldPermissions.contentToString())
-
                 val newPermissions: MutableList<Int> = mutableListOf()
                 for (permission in Permission.values()) {
                     if (oldPermissions.contains(permission.getId200())) {
@@ -55,8 +52,6 @@ enum class Permission(private val permission: String, private val id: Int, priva
                 for (i in newPermissions.indices) {
                     playerPermissions[i] = newPermissions[i]
                 }
-
-                Bukkit.broadcastMessage(playerPermissions.contentToString())
 
                 player.persistentDataContainer.set(NamespacedKeys.PERMISSION_CONVERSION_300, PersistentDataType.BYTE, 1)
                 player.persistentDataContainer.set(NamespacedKeys.PERMISSION, PersistentDataType.INTEGER_ARRAY, playerPermissions)

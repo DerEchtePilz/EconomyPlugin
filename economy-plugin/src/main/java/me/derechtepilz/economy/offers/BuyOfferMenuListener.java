@@ -100,7 +100,7 @@ public class BuyOfferMenuListener implements Listener {
                 } else {
                     seller.getPlayer().sendMessage("§aYou earned §6" + chatFormatter.valueOf(price) + " coins §afrom selling items!");
                     try {
-                        EconomyAPI.addCoinsToBalance(player, price);
+                        EconomyAPI.addCoinsToBalance(seller.getPlayer(), price);
                     } catch (BalanceException e) {
                         player.sendMessage("§cSomething unexpected happened: " + e.getMessage());
                     }
@@ -126,7 +126,6 @@ public class BuyOfferMenuListener implements Listener {
         Player player = (Player) event.getPlayer();
         if (event.getView().getTitle().contains("Buy Menu (")) {
             DataHandler.removeMenuData(player);
-
         }
     }
 }

@@ -3,6 +3,7 @@ package me.derechtepilz.economy.utility
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import me.derechtepilz.economy.Main
+import org.fusesource.jansi.Ansi
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,7 +21,7 @@ class Config(private val main: Main) {
     @Throws(FileNotFoundException::class)
     fun loadConfig() {
         if (isLoaded) {
-            main.logger.severe("§cThe config is already loaded! Please do not call the loadConfig() method twice!")
+            main.logger.info(Ansi().fgRed().a("The config is already loaded! Please do not call the loadConfig() method twice!").toString())
             return
         }
         if (!configFile.exists()) {
@@ -65,7 +66,11 @@ class Config(private val main: Main) {
 
     private fun save(configValues: String) {
         try {
-            val config = File(File("./plugins/Economy"), "config.json")
+            val pluginFolder = File("./plugins/Economy")
+            if (!pluginFolder.exists()) {
+                pluginFolder.mkdir()
+            }
+            val config = File(pluginFolder, "config.json")
             if (!config.exists()) {
                 config.createNewFile()
             }

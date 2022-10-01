@@ -2,6 +2,7 @@ package me.derechtepilz.economy.commands;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
+import me.derechtepilz.database.Database;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.permissionmanagement.Permission;
@@ -9,11 +10,13 @@ import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economycore.EconomyAPI;
 import me.derechtepilz.economycore.exceptions.BalanceException;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.ServerOperator;
 
-import java.util.List;
+import java.sql.Connection;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class EconomyCommand {
@@ -240,6 +243,20 @@ public class EconomyCommand {
                                                 })
                                         )
                                 )
+                        )
+                        .then(new LiteralArgument("baltop")
+                                .executesPlayer((player, args) -> {
+                                    Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                                        player.sendMessage("§7Loading baltop... Please wait!");
+                                        Map<Double, UUID> playerBalances = main.getDatabase().getServerBalances(main.getDatabase().getConnection());
+                                        List<Double> balances = main.getDatabase().getBalances(main.getDatabase().getConnection());
+                                        balances.sort(Comparator.naturalOrder());
+                                        player.sendMessage("§6This is the current baltop list:");
+                                        for (int i = 0; i < balances.size() && i <= 9; i++) {
+                                            player.sendMessage("§6" + (i + 1) + ". §7- §a" + playerBalances.get(balances.get(i)));
+                                        }
+                                    });
+                                })
                         )
                 )
                 .then(new LiteralArgument("permission")

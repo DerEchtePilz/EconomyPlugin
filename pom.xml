@@ -9,6 +9,8 @@
     <version>3.0.1</version>
     <packaging>pom</packaging>
 
+    <name>Economy</name>
+
     <properties>
         <java.version>16</java.version>
         <kotlin.version>1.7.10</kotlin.version>
@@ -24,6 +26,7 @@
     <modules>
         <module>economy-core</module>
         <module>economy-plugin</module>
+        <module>economy-database</module>
     </modules>
 
 </project>

@@ -3,6 +3,7 @@ package me.derechtepilz.economy;
 import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import me.derechtepilz.database.Database;
 import me.derechtepilz.economy.coinmanagement.CoinDisplay;
 import me.derechtepilz.economy.coinmanagement.JoinCoinManagement;
 import me.derechtepilz.economy.commands.ConsoleCommands;
@@ -38,7 +39,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.AnsiColors.*;
 
 public final class Main extends JavaPlugin {
 
@@ -90,6 +90,9 @@ public final class Main extends JavaPlugin {
     private final UpdateDownload updateDownload = new UpdateDownload(main);
     private final UpdateChecker updateChecker = new UpdateChecker(main);
 
+    // Database stuff (if I need it)
+    private Database database;
+
     @Override
     public void onEnable() {
         if (!updatedPluginName.equals("")) {
@@ -100,7 +103,7 @@ public final class Main extends JavaPlugin {
         }
 
         if (!isNewUpdateAvailable) {
-            EconomyAPI.onEnable(main);
+            database = EconomyAPI.onEnable(main);
 
             if (isVersionSupported) {
                 CommandAPI.onEnable(main);
@@ -318,5 +321,9 @@ public final class Main extends JavaPlugin {
     // Store utility methods
     public Config getPluginConfig() {
         return config;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 }

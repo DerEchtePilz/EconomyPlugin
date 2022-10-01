@@ -1,89 +1,100 @@
 package me.derechtepilz.economycore;
 
+import me.derechtepilz.database.DatabaseQueryBuilder;
 import me.derechtepilz.economycore.exceptions.BalanceException;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 class Bank {
 
-    private final Player player;
-    private double balance;
-    private final double startBalance;
-    private long lastInterest;
-
-    public Bank(Player player) {
-        this.player = player;
-        this.startBalance = ConfigHandler.getStartBalance();
-        this.lastInterest = System.currentTimeMillis();
-        this.player.getPersistentDataContainer().set(EconomyAPI.lastInterestKey, PersistentDataType.LONG, lastInterest);
-        this.player.getPersistentDataContainer().set(EconomyAPI.playerBalance, PersistentDataType.DOUBLE, balance);
-        this.player.getPersistentDataContainer().set(EconomyAPI.playerStartBalance, PersistentDataType.DOUBLE, startBalance);
-    }
-
-    public Bank(Player player, double balance, double startBalance, long lastInterest) {
-        this.player = player;
-        this.balance = balance;
-        this.startBalance = startBalance;
-        this.lastInterest = lastInterest;
-    }
-
-    public void setBalance(double amount) throws BalanceException {
+    public void setBalance(Player player, double amount) throws BalanceException {
+        double balance = getBalance(player);
+        double startBalance = getStartBalance(player);
         if (amount < startBalance) {
-            throw new BalanceException("It is not possible to set the coins under the amount of the start balance! (You tried setting the balance to: " + amount + ", allowed:" + (this.balance - startBalance) + ")");
+            throw new BalanceException("It is not possible to set the coins under the amount of the start balance! (You tried setting the balance to: " + amount + ", allowed:" + (balance - startBalance) + ")");
         }
-        this.balance = amount;
-        updateAccount();
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> new DatabaseQueryBuilder(EconomyAPI.DATABASE).updateBalance(player.getUniqueId(), amount).commit());
+        player.getPersistentDataContainer().set(EconomyAPI.PLAYER_BALANCE, PersistentDataType.DOUBLE, amount);
     }
 
-    public void addBalance(double amount) throws BalanceException {
+    public void addBalance(Player player, double amount) throws BalanceException {
         if (amount < 0) {
             throw new BalanceException("It is not possible to add a negative amount of coins!");
         }
-        this.balance = this.balance + amount;
-        updateAccount();
+        double balance = getBalance(player);
+        balance += amount;
+        double finalBalance = balance;
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> new DatabaseQueryBuilder(EconomyAPI.DATABASE).updateBalance(player.getUniqueId(), finalBalance).commit());
+        player.getPersistentDataContainer().set(EconomyAPI.PLAYER_BALANCE, PersistentDataType.DOUBLE, finalBalance);
     }
 
-    public void removeBalance(double amount) throws BalanceException {
-        if (this.balance - amount < startBalance) {
-            throw new BalanceException("It is not possible to remove so many coins that the player does not have the start balance anymore! (You tried to remove: " + amount + ", allowed: " + (this.balance - startBalance) + ")");
+    public void removeBalance(Player player, double amount) throws BalanceException {
+        double balance = getBalance(player);
+        double startBalance = getStartBalance(player);
+        if (balance - amount < startBalance) {
+            throw new BalanceException("It is not possible to remove so many coins that the player does not have the start balance anymore! (You tried to remove: " + amount + ", allowed: " + (balance - startBalance) + ")");
         }
-        this.balance = this.balance - amount;
-        updateAccount();
+        balance = balance - amount;
+        double finalBalance = balance;
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> new DatabaseQueryBuilder(EconomyAPI.DATABASE).updateBalance(player.getUniqueId(), finalBalance).commit());
+        player.getPersistentDataContainer().set(EconomyAPI.PLAYER_BALANCE, PersistentDataType.DOUBLE, finalBalance);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public void calculateInterest() {
-        double interest = ConfigHandler.getInterest();
-        long lastPlayerInterest = player.getPersistentDataContainer().get(EconomyAPI.lastInterestKey, PersistentDataType.LONG);
-        long currentInterest = System.currentTimeMillis();
-        long days = ChronoUnit.DAYS.between(new Date(lastPlayerInterest).toInstant(), new Date(currentInterest).toInstant());
-        boolean isInterestDue = days >= ConfigHandler.getMinimumDaysForInterest();
-        if (isInterestDue) {
-            double balanceBeforeInterest = balance;
-            for (long l = 0; l <= days; l++) {
-                balance = balance * (1 + interest / 100);
+    public void fixStartBalance(Player player) {
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> {
+            double playerBalance = getBalance(player);
+            double playerStartBalance = getStartBalance(player);
+            double currentStartBalance = ConfigHandler.getStartBalance();
+            if (currentStartBalance > playerStartBalance) {
+                double startBalanceDifference = currentStartBalance - playerStartBalance;
+                playerBalance = playerBalance + startBalanceDifference;
+                new DatabaseQueryBuilder(EconomyAPI.DATABASE).updateBalance(player.getUniqueId(), playerBalance).commit();
+                player.getPersistentDataContainer().set(EconomyAPI.PLAYER_BALANCE, PersistentDataType.DOUBLE, playerBalance);
             }
-            player.sendMessage("§aYou received §6" + (balance - balanceBeforeInterest) + " coins §aas interest");
-        }
-        lastInterest = currentInterest;
-        updateAccount();
+        });
     }
 
-    public void updateAccount() {
-        player.getPersistentDataContainer().set(EconomyAPI.lastInterestKey, PersistentDataType.LONG, lastInterest);
-        player.getPersistentDataContainer().set(EconomyAPI.playerBalance, PersistentDataType.DOUBLE, balance);
+    public void calculateInterest(Player player) {
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> {
+            long lastInterest = getLastInterest(player);
+            double balance = getBalance(player);
+            double interestRate = ConfigHandler.getInterest();
+            long currentInterest = System.currentTimeMillis();
+            long passedDays = ChronoUnit.DAYS.between(new Date(lastInterest).toInstant(), new Date(currentInterest).toInstant());
+            if (passedDays >= ConfigHandler.getMinimumDaysForInterest()) {
+                double balanceBeforeInterest = balance;
+                for (long l = 0; l < passedDays; l++) {
+                    balance = balance * (1 + interestRate / 100);
+                }
+                player.sendMessage("§aYou received §6" + (balance - balanceBeforeInterest) + " coins §aas interest");
+            }
+            lastInterest = currentInterest;
+            new DatabaseQueryBuilder(EconomyAPI.DATABASE).updateBalance(player.getUniqueId(), balance).updateLastInterest(player.getUniqueId(), lastInterest).commit();
+            player.getPersistentDataContainer().set(EconomyAPI.PLAYER_BALANCE, PersistentDataType.DOUBLE, balance);
+        });
     }
 
-    @Override
-    public String toString() {
-        return "Bank=[player=" + player.getName() + ", balance=" + balance + ", startBalance=" + startBalance + ", lastInterest=" + lastInterest + "]";
+    private double getStartBalance(Player player) {
+        AtomicReference<Double> startBalance = new AtomicReference<>((double) 0);
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> startBalance.set(EconomyAPI.DATABASE.getStartBalance(EconomyAPI.DATABASE.getConnection(), player.getUniqueId())));
+        return startBalance.get();
     }
 
-    double getBalance() {
-        return balance;
+    private long getLastInterest(Player player) {
+        AtomicReference<Long> lastInterest = new AtomicReference<>((long) 0);
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> lastInterest.set(EconomyAPI.DATABASE.getLastInterest(EconomyAPI.DATABASE.getConnection(), player.getUniqueId())));
+        return lastInterest.get();
+    }
+
+    private double getBalance(Player player) {
+        AtomicReference<Double> balance = new AtomicReference<>((double) 0);
+        Bukkit.getScheduler().runTaskAsynchronously(EconomyAPI.PLUGIN, () -> balance.set(EconomyAPI.DATABASE.getBalance(EconomyAPI.DATABASE.getConnection(), player.getUniqueId())));
+        return balance.get();
     }
 
 }
