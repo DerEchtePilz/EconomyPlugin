@@ -8,6 +8,10 @@ class ConfigHandler {
     private static double interest = 1.0;
     private static int minimumDaysForInterest = 1;
 
+    private static final double defaultStartBalance = 50.0;
+    private static final double defaultInterest = 1.0;
+    private static final int defaultMinimumDaysForInterest = 1;
+
     private ConfigHandler() {
 
     }
@@ -34,6 +38,12 @@ class ConfigHandler {
 
     public static void setMinimumDaysForInterest(int minimumDaysForInterest) {
         ConfigHandler.minimumDaysForInterest = minimumDaysForInterest;
+    }
+
+    public static void resetConfigValues() {
+        startBalance = defaultStartBalance;
+        interest = defaultInterest;
+        minimumDaysForInterest = defaultMinimumDaysForInterest;
     }
 
     public static String getStringValue() {

@@ -69,22 +69,7 @@ public class EconomyAPI {
         }
 
         EconomyAPIVersionHandler.checkDependencies();
-
-        File file = new File("./plugins/EconomyAPI/config");
-        try {
-            if (file.exists()) {
-                BufferedReader fileReader = new BufferedReader(new FileReader(file));
-                String line;
-                StringBuilder builder = new StringBuilder();
-                while ((line = fileReader.readLine()) != null) {
-                    builder.append(line);
-                }
-                ConfigHandler.loadValues(builder.toString());
-            }
-        } catch (IOException exception) {
-            getLogger().severe("Could not load API-specific values! Using default values until new values are provided.");
-            exception.printStackTrace();
-        }
+        loadConfigValues();
     }
 
     /**
@@ -92,25 +77,8 @@ public class EconomyAPI {
      * <p>
      * While this can be called everywhere at any time, you should only call this in your plugin's onDisable() method
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void onDisable() {
-        try {
-            File dir = new File("./plugins/EconomyAPI");
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            File file = new File(dir, "config");
-            if (file.exists()) {
-                file.delete();
-            }
-            file.createNewFile();
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file));
-            fileWriter.write(ConfigHandler.getStringValue());
-            fileWriter.close();
-        } catch (IOException exception) {
-            getLogger().severe("Couldn't disable the EconomyAPI because of an IOException!");
-            exception.printStackTrace();
-        }
+        saveConfigValues();
     }
 
     static Logger getLogger() {
@@ -151,6 +119,50 @@ public class EconomyAPI {
      */
     public static void setMinimumDaysForInterest(int minimumDaysForInterest) {
         ConfigHandler.setMinimumDaysForInterest(minimumDaysForInterest);
+    }
+
+    public static void resetConfigValues() {
+        ConfigHandler.resetConfigValues();
+        saveConfigValues();
+        loadConfigValues();
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void saveConfigValues() {
+        try {
+            File dir = new File("./plugins/EconomyAPI");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            File file = new File(dir, "config");
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file));
+            fileWriter.write(ConfigHandler.getStringValue());
+            fileWriter.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private static void loadConfigValues() {
+        File file = new File("./plugins/EconomyAPI/config");
+        try {
+            if (file.exists()) {
+                BufferedReader fileReader = new BufferedReader(new FileReader(file));
+                String line;
+                StringBuilder builder = new StringBuilder();
+                while ((line = fileReader.readLine()) != null) {
+                    builder.append(line);
+                }
+                ConfigHandler.loadValues(builder.toString());
+            }
+        } catch (IOException exception) {
+            getLogger().severe("Could not load API-specific values! Using default values until new values are provided.");
+            exception.printStackTrace();
+        }
     }
 
 

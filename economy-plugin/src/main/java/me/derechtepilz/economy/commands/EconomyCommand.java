@@ -443,6 +443,7 @@ public class EconomyCommand {
                                 })
                                 .executesPlayer((player, args) -> {
                                     main.getPluginConfig().resetConfig();
+                                    EconomyAPI.resetConfigValues();
                                     player.sendMessage("§7The config has been reset!");
                                 })
                         )
