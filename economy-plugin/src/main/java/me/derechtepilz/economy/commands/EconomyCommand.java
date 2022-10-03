@@ -389,6 +389,51 @@ public class EconomyCommand {
                                         })
                                 )
                         )
+                        .then(new LiteralArgument("startBalance")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                                    }
+                                    return false;
+                                })
+                                .then(new DoubleArgument("startBalance", 0.0)
+                                        .executesPlayer((player, args) -> {
+                                            double startBalance = (double) args[0];
+                                            EconomyAPI.setStartBalance(startBalance);
+                                            player.sendMessage("§7You set the start balance to §6" + startBalance + "§7!");
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("interestRate")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                                    }
+                                    return false;
+                                })
+                                .then(new DoubleArgument("interestRate", 0.0)
+                                        .executesPlayer((player, args) -> {
+                                            double interestRate = (double) args[0];
+                                            EconomyAPI.setInterestRate(interestRate);
+                                            player.sendMessage("§7You set the interest rate to §6" + interestRate + "§7!");
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("minimumDaysForInterest")
+                                .withRequirement(sender -> {
+                                    if (sender instanceof Player player) {
+                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                                    }
+                                    return false;
+                                })
+                                .then(new IntegerArgument("minimumDaysForInterest", 1)
+                                        .executesPlayer((player, args) -> {
+                                            int minimumDaysForInterest = (int) args[0];
+                                            EconomyAPI.setMinimumDaysForInterest(minimumDaysForInterest);
+                                            player.sendMessage("§7You set the minimum days to get interest to §6" + minimumDaysForInterest + "§7!");
+                                        })
+                                )
+                        )
                         .then(new LiteralArgument("reset")
                                 .withRequirement(sender -> {
                                     if (sender instanceof Player player) {
