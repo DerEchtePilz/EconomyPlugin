@@ -4,6 +4,7 @@ import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.database.Database;
+import me.derechtepilz.database.DatabaseTestFramework;
 import me.derechtepilz.economy.coinmanagement.CoinDisplay;
 import me.derechtepilz.economy.coinmanagement.JoinCoinManagement;
 import me.derechtepilz.economy.commands.ConsoleCommands;

@@ -27,8 +27,13 @@ class DatabaseQueryBuilder(private val database: Database) {
         return this
     }
 
+    fun deletePlayer(uuid: UUID): DatabaseQueryBuilder {
+        database.deletePlayer(connection, uuid)
+        return this
+    }
+
     fun commit() {
-        database.connection.commit()
+        connection.commit()
     }
 
 }

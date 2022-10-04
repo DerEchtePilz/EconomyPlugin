@@ -2,7 +2,6 @@ package me.derechtepilz.economy.commands;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
-import me.derechtepilz.database.Database;
 import me.derechtepilz.economy.Main;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.permissionmanagement.Permission;
@@ -10,13 +9,14 @@ import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economycore.EconomyAPI;
 import me.derechtepilz.economycore.exceptions.BalanceException;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.ServerOperator;
 
-import java.sql.Connection;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class EconomyCommand {
@@ -182,7 +182,7 @@ public class EconomyCommand {
                                                         }
                                                         player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
                                                     } catch (BalanceException exception) {
-                                                        player.sendMessage(exception.getMessage());
+                                                        player.sendMessage("§c" + exception.getMessage());
                                                     }
                                                 })
                                         )
@@ -210,7 +210,7 @@ public class EconomyCommand {
                                                         }
                                                         player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
                                                     } catch (BalanceException exception) {
-                                                        player.sendMessage(exception.getMessage());
+                                                        player.sendMessage("§c" + exception.getMessage());
                                                     }
                                                 })
                                         )
@@ -238,7 +238,7 @@ public class EconomyCommand {
                                                         }
                                                         player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
                                                     } catch (BalanceException exception) {
-                                                        player.sendMessage(exception.getMessage());
+                                                        player.sendMessage("§c" + exception.getMessage());
                                                     }
                                                 })
                                         )
@@ -253,7 +253,7 @@ public class EconomyCommand {
                                         balances.sort(Comparator.naturalOrder());
                                         player.sendMessage("§6This is the current baltop list:");
                                         for (int i = 0; i < balances.size() && i <= 9; i++) {
-                                            player.sendMessage("§6" + (i + 1) + ". §7- §a" + playerBalances.get(balances.get(i)));
+                                            player.sendMessage("§6" + (i + 1) + ". §7- §a" + Bukkit.getOfflinePlayer(playerBalances.get(balances.get(i))).getName());
                                         }
                                     });
                                 })

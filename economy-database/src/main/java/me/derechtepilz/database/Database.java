@@ -45,6 +45,17 @@ public class Database {
         }
     }
 
+    public void deletePlayer(Connection connection, UUID uuid) {
+        String sql = "DELETE FROM bankAccounts WHERE uuid = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean isPlayerRegistered(Connection connection, UUID uuid) {
         String sql = "SELECT uuid FROM bankAccounts WHERE uuid = ?";
         try {
@@ -79,6 +90,7 @@ public class Database {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, uuid.toString());
+
             ResultSet resultSet = preparedStatement.executeQuery();
             double balance = 0;
             while (resultSet.next()) {
@@ -172,7 +184,7 @@ public class Database {
             ResultSet resultSet = preparedStatement.executeQuery();
             double startBalance = 0;
             while (resultSet.next()) {
-                startBalance = resultSet.getLong("startBalance");
+                startBalance = resultSet.getDouble("startBalance");
             }
             return startBalance;
         } catch (SQLException e) {

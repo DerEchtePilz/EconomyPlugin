@@ -226,18 +226,15 @@ public class EconomyAPI {
                 long lastInterest = player.getPersistentDataContainer().get(LAST_INTEREST, PersistentDataType.LONG);
                 double startBalance = player.getPersistentDataContainer().get(PLAYER_START_BALANCE, PersistentDataType.DOUBLE);
                 double balance = player.getPersistentDataContainer().get(PLAYER_BALANCE, PersistentDataType.DOUBLE);
-                if (!DATABASE.isPlayerRegistered(DATABASE.getConnection(), player.getUniqueId())) {
-                    new DatabaseQueryBuilder(DATABASE).registerPlayer(player.getUniqueId(), balance, lastInterest, startBalance).commit();
-                    return;
-                }
-                new DatabaseQueryBuilder(DATABASE)
-                        .updateBalance(player.getUniqueId(), balance)
-                        .updateLastInterest(player.getUniqueId(), lastInterest)
-                        .updateStartBalance(player.getUniqueId(), startBalance)
-                        .commit();
+
+                new DatabaseQueryBuilder(DATABASE).registerPlayer(player.getUniqueId(), balance, lastInterest, startBalance).commit();
+
                 player.getPersistentDataContainer().remove(LAST_INTEREST);
                 player.getPersistentDataContainer().remove(PLAYER_START_BALANCE);
-                return;
+            } else {
+                if (!DATABASE.isPlayerRegistered(DATABASE.getConnection(), player.getUniqueId())) {
+                    new DatabaseQueryBuilder(DATABASE).registerPlayer(player.getUniqueId(), 0.0, System.currentTimeMillis(), ConfigHandler.getStartBalance()).commit();
+                }
             }
             player.getPersistentDataContainer().set(PLAYER_BALANCE, PersistentDataType.DOUBLE, DATABASE.getBalance(DATABASE.getConnection(), player.getUniqueId()));
         });
