@@ -120,7 +120,7 @@ public class Database {
     }
 
     public List<Double> getBalances(Connection connection) {
-        String sql = "SELECT uuid FROM bankAccounts";
+        String sql = "SELECT balance FROM bankAccounts";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
