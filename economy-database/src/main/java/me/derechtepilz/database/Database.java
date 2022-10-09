@@ -1,5 +1,6 @@
 package me.derechtepilz.database;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.*;
@@ -10,13 +11,21 @@ public class Database {
     private final Plugin plugin;
     private final Connection connection;
 
+    private final HashMap<UUID, Double> balance = new HashMap<>();
+    private final HashMap<UUID, Long> lastInterest = new HashMap<>();
+    private final HashMap<UUID, Double> startBalance = new HashMap<>();
+
     public Database(Plugin plugin) {
         this.plugin = plugin;
         this.connection = initializeDatabase();
+        if (connection == null) {
+            throw new IllegalStateException("Database connection is null!");
+        }
+        loadEconomyData(connection);
     }
 
     private Connection initializeDatabase() {
-        String url = "jdbc:sqlite:" + plugin.getServer().getWorldContainer().getAbsolutePath() + "/plugins/Economy/EconomyPlugin Database.db";
+        String url = "jdbc:sqlite:" + plugin.getDataFolder() + "/EconomyPlugin Database.db";
         try {
             Connection connection = DriverManager.getConnection(url);
             connection.setAutoCommit(false);
@@ -31,6 +40,62 @@ public class Database {
         return null;
     }
 
+    private void loadEconomyData(Connection connection) {
+        String sql = "SELECT uuid, balance, lastInterest, startBalance FROM bankAccounts";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                balance.put(uuid, resultSet.getDouble("balance"));
+                lastInterest.put(uuid, resultSet.getLong("lastInterest"));
+                startBalance.put(uuid, resultSet.getDouble("startBalance"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveEconomyData() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                String updateBalanceSQL = "UPDATE bankAccounts SET balance = ? WHERE uuid = ?";
+                String updateStartBalanceSQL = "UPDATE bankAccounts SET startBalance = ? WHERE uuid = ?";
+                String updateLastInterestSQL = "UPDATE bankAccounts SET lastInterest = ? WHERE uuid = ?";
+
+                PreparedStatement updateBalance = connection.prepareStatement(updateBalanceSQL);
+                PreparedStatement updateStartBalance = connection.prepareStatement(updateStartBalanceSQL);
+                PreparedStatement updateLastInterest = connection.prepareStatement(updateLastInterestSQL);
+                for (UUID uuid : balance.keySet()) {
+                    if (isPlayerRegistered(connection, uuid)) {
+                        updateBalance.setDouble(1, balance.get(uuid));
+                        updateBalance.setString(2, uuid.toString());
+
+                        updateStartBalance.setDouble(1, startBalance.get(uuid));
+                        updateStartBalance.setString(2, uuid.toString());
+
+                        updateLastInterest.setDouble(1, lastInterest.get(uuid));
+                        updateLastInterest.setString(2, uuid.toString());
+
+                        updateBalance.addBatch();
+                        updateStartBalance.addBatch();
+                        updateLastInterest.addBatch();
+                    } else {
+                        registerPlayer(connection, uuid, balance.get(uuid), lastInterest.get(uuid), startBalance.get(uuid));
+                    }
+                }
+
+                updateBalance.executeBatch();
+                updateStartBalance.executeBatch();
+                updateLastInterest.executeBatch();
+
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void registerPlayer(Connection connection, UUID uuid, double balance, long lastInterest, double startBalance) {
         String sql = "INSERT into bankAccounts(uuid, balance, lastInterest, startBalance) VALUES(?,?,?,?)";
         try {
@@ -39,17 +104,6 @@ public class Database {
             preparedStatement.setDouble(2, balance);
             preparedStatement.setLong(3, lastInterest);
             preparedStatement.setDouble(4, startBalance);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deletePlayer(Connection connection, UUID uuid) {
-        String sql = "DELETE FROM bankAccounts WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -73,124 +127,65 @@ public class Database {
         return false;
     }
 
-    public void updateBalance(Connection connection, UUID uuid, double balance) {
-        String sql = "UPDATE bankAccounts SET balance = ? WHERE uuid = ?";
+    public void registerPlayer(UUID uuid, double balance, long lastInterest, double startBalance) {
+        this.balance.put(uuid, balance);
+        this.startBalance.put(uuid, startBalance);
+        this.lastInterest.put(uuid, lastInterest);
+    }
+
+    public boolean isPlayerRegistered(UUID uuid) {
+        return balance.containsKey(uuid);
+    }
+
+    public void deletePlayer(Connection connection, UUID uuid) {
+        String sql = "DELETE FROM bankAccounts WHERE uuid = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setDouble(1, balance);
-            preparedStatement.setString(2, uuid.toString());
+            preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public double getBalance(Connection connection, UUID uuid) {
-        String sql = "SELECT balance FROM bankAccounts WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, uuid.toString());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            double balance = 0;
-            while (resultSet.next()) {
-                balance = resultSet.getDouble("balance");
-            }
-            return balance;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
+    public void updateBalance(UUID uuid, double balance) {
+        this.balance.put(uuid, balance);
     }
 
-    public Map<Double, UUID> getServerBalances(Connection connection) {
-        String sql = "SELECT uuid, balance FROM bankAccounts";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            Map<Double, UUID> serverBalances = new HashMap<>();
-            while (resultSet.next()) {
-                serverBalances.put(resultSet.getDouble("balance"), UUID.fromString(resultSet.getString("uuid")));
-            }
-            return serverBalances;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new HashMap<>();
+    public void updateLastInterest(UUID uuid, long lastInterest) {
+        this.lastInterest.put(uuid, lastInterest);
     }
 
-    public List<Double> getBalances(Connection connection) {
-        String sql = "SELECT balance FROM bankAccounts";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            List<Double> balances = new ArrayList<>();
-            while (resultSet.next()) {
-                balances.add(resultSet.getDouble("balance"));
-            }
-            return balances;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
+    public void updateStartBalance(UUID uuid, double startBalance) {
+        this.startBalance.put(uuid, startBalance);
     }
 
-    public void updateLastInterest(Connection connection, UUID uuid, long lastInterest) {
-        String sql = "UPDATE bankAccounts SET lastInterest = ? WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, lastInterest);
-            preparedStatement.setString(2, uuid.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public double getBalance(UUID uuid) {
+        return balance.get(uuid);
     }
 
-    public long getLastInterest(Connection connection, UUID uuid) {
-        String sql = "SELECT lastInterest FROM bankAccounts WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, uuid.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            long lastInterest = 0;
-            while (resultSet.next()) {
-                lastInterest = resultSet.getLong("lastInterest");
-            }
-            return lastInterest;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
+    public long getLastInterest(UUID uuid) {
+        return lastInterest.get(uuid);
     }
 
-    public void updateStartBalance(Connection connection, UUID uuid, double startBalance) {
-        String sql = "UPDATE bankAccounts SET startBalance = ? WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setDouble(1, startBalance);
-            preparedStatement.setString(2, uuid.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public double getStartBalance(UUID uuid) {
+        return startBalance.get(uuid);
     }
 
-    public double getStartBalance(Connection connection, UUID uuid) {
-        String sql = "SELECT startBalance FROM bankAccounts WHERE uuid = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, uuid.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            double startBalance = 0;
-            while (resultSet.next()) {
-                startBalance = resultSet.getDouble("startBalance");
-            }
-            return startBalance;
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public Map<Double, UUID> getServerBalances() {
+        Map<Double, UUID> serverBalances = new HashMap<>();
+        for (UUID uuid : balance.keySet()) {
+            serverBalances.put(balance.get(uuid), uuid);
         }
-        return 0;
+        return serverBalances;
+    }
+
+    public List<Double> getBalances() {
+        List<Double> balances = new ArrayList<>();
+        for (UUID uuid : balance.keySet()) {
+            balances.add(balance.get(uuid));
+        }
+        return balances;
     }
 
     public Connection getConnection() {

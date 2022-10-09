@@ -17,10 +17,7 @@ class CoinDisplay(val main: Main) {
         val taskId: Int = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, {
             for (player: Player in Bukkit.getOnlinePlayers()) {
                 val textComponent = TextComponent(
-                    "§aYour balance: §6" + chatFormatter.valueOf(player.persistentDataContainer.get(
-                        EconomyAPI.getPlayerBalance(),
-                        PersistentDataType.DOUBLE
-                    ))
+                    "§aYour balance: §6" + chatFormatter.valueOf(EconomyAPI.getBalance(player))
                 )
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
             }

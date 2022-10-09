@@ -248,8 +248,8 @@ public class EconomyCommand {
                                 .executesPlayer((player, args) -> {
                                     Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                                         player.sendMessage("§7Loading baltop... Please wait!");
-                                        Map<Double, UUID> playerBalances = main.getDatabase().getServerBalances(main.getDatabase().getConnection());
-                                        List<Double> balances = main.getDatabase().getBalances(main.getDatabase().getConnection());
+                                        Map<Double, UUID> playerBalances = main.getDatabase().getServerBalances();
+                                        List<Double> balances = main.getDatabase().getBalances();
                                         balances.sort(Comparator.naturalOrder());
                                         player.sendMessage("§6This is the current baltop list:");
                                         for (int i = 0; i < balances.size() && i <= 9; i++) {

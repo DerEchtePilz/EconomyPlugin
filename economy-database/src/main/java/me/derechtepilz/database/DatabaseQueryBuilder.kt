@@ -8,22 +8,22 @@ class DatabaseQueryBuilder(private val database: Database) {
     private val connection: Connection = database.connection
 
     fun registerPlayer(uuid: UUID, balance: Double, lastInterest: Long, startBalance: Double): DatabaseQueryBuilder {
-        database.registerPlayer(connection, uuid, balance, lastInterest, startBalance)
+        database.registerPlayer(uuid, balance, lastInterest, startBalance)
         return this
     }
 
     fun updateBalance(uuid: UUID, balance: Double): DatabaseQueryBuilder {
-        database.updateBalance(connection, uuid, balance)
+        database.updateBalance(uuid, balance)
         return this
     }
 
     fun updateLastInterest(uuid: UUID, lastInterest: Long): DatabaseQueryBuilder {
-        database.updateLastInterest(connection, uuid, lastInterest)
+        database.updateLastInterest(uuid, lastInterest)
         return this
     }
 
     fun updateStartBalance(uuid: UUID, startBalance: Double): DatabaseQueryBuilder {
-        database.updateStartBalance(connection, uuid, startBalance)
+        database.updateStartBalance(uuid, startBalance)
         return this
     }
 

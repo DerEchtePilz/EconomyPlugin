@@ -24,7 +24,7 @@
     </properties>
 
     <modules>
-        <module>economy-core</module>
+        <module>economy-coinapi</module>
         <module>economy-plugin</module>
         <module>economy-database</module>
     </modules>
