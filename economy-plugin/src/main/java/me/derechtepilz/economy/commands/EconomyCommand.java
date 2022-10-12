@@ -3,11 +3,13 @@ package me.derechtepilz.economy.commands;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.componentapi.ChatComponentAPI;
 import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.permissionmanagement.Permission;
 import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economycore.EconomyAPI;
 import me.derechtepilz.economycore.exceptions.BalanceException;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -262,7 +264,7 @@ public class EconomyCommand {
                 .then(new LiteralArgument("permission")
                         .withRequirement(ServerOperator::isOp)
                         .then(new LiteralArgument("clear")
-                                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                .then(playerArgument
                                         .executesPlayer((player, args) -> {
                                             Permission.clearPermissions((Player) args[0]);
                                             player.sendMessage("§cYou removed every permission from §b" + ((Player) args[0]).getName() + "§c!");
@@ -271,7 +273,7 @@ public class EconomyCommand {
                         )
                         .then(new LiteralArgument("single")
                                 .then(new LiteralArgument("set")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                        .then(playerArgument
                                                 .then(singlePermissionArgument
                                                         .withRequirement(ServerOperator::isOp)
                                                         .executesPlayer((player, args) -> {
@@ -311,7 +313,7 @@ public class EconomyCommand {
                                         )
                                 )
                                 .then(new LiteralArgument("remove")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                        .then(playerArgument
                                                 .then(singlePermissionArgument
                                                         .withRequirement(ServerOperator::isOp)
                                                         .executesPlayer((player, args) -> {
@@ -351,7 +353,7 @@ public class EconomyCommand {
                                         )
                                 )
                                 .then(new LiteralArgument("get")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(info -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                                        .then(playerArgument
                                                 .then(singlePermissionArgument
                                                         .withRequirement(ServerOperator::isOp)
                                                         .executesPlayer((player, args) -> {
@@ -364,6 +366,88 @@ public class EconomyCommand {
                                                         })
                                                 )
                                         )
+                                )
+                        )
+                )
+                .then(new LiteralArgument("friend")
+                        .then(new LiteralArgument("add")
+                                .then(targetArgument
+                                        .executesPlayer((player, args) -> {
+                                            Player target = (Player) args[0];
+                                            if (target.getUniqueId().equals(player.getUniqueId())) {
+                                                player.sendMessage("§7You cannot send a friend request to yourself!");
+                                                new ChatComponentAPI().appendText("§7[Try someone else]")
+                                                        .withClickEvent("/friend add ", ClickEvent.Action.SUGGEST_COMMAND)
+                                                        .sendToPlayer(player);
+                                                return;
+                                            }
+                                            if (main.getFriend().isFriend(player.getUniqueId(), target.getUniqueId())) {
+                                                player.sendMessage("§7You are already friends with §6" + target.getName() + "§7!");
+                                                return;
+                                            }
+                                            // Here the cooldown status should be checked
+                                            main.getFriendRequest().addFriendRequest(player.getUniqueId(), target.getUniqueId());
+                                            new ChatComponentAPI().appendText("§7Accept friend request from §6" + player.getName() + "§7?")
+                                                    .appendTextComponent(new ChatComponentAPI().appendText("§a[YES]").withClickEvent("/friend accept " + player.getName(), ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §aaccept §7this friend request"))
+                                                    .appendTextComponent(new ChatComponentAPI().appendText("§c[NO]").withClickEvent("/friend deny " + player.getName(), ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §cdeny §7this friend request"))
+                                                    .sendToPlayer(target);
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("remove")
+                                .then(targetArgument
+                                        .executesPlayer((player, args) -> {
+                                            Player target = (Player) args[0];
+                                            if (target.getUniqueId().equals(player.getUniqueId())) {
+                                                player.sendMessage("§7You cannot have yourself as a friend!");
+                                                new ChatComponentAPI().appendText("§7[Try someone else]")
+                                                        .withClickEvent("/friend remove ", ClickEvent.Action.SUGGEST_COMMAND)
+                                                        .sendToPlayer(player);
+                                                return;
+                                            }
+                                            if (!main.getFriend().isFriend(player.getUniqueId(), target.getUniqueId())) {
+                                                player.sendMessage("§7You are not friends with §6" + target.getName() + "§7!");
+                                                return;
+                                            }
+                                            main.getFriend().removeFriend(player.getUniqueId(), target.getUniqueId(), false);
+
+                                            player.sendMessage("§7You removed §6" + target.getName() + "§7from your friends list!");
+                                            target.sendMessage("§6" + player.getName() + " §7has removed you from their friends list!");
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("list")
+
+                        )
+                        .then(new LiteralArgument("accept")
+                                .then(targetArgument
+                                        .executesPlayer((player, args) -> {
+                                            Player target = (Player) args[0]; // This is the player who has sent the friend request
+                                            if (!main.getFriendRequest().isFriendRequest(target.getUniqueId(), player.getUniqueId())) {
+                                                player.sendMessage("§7You don't have an incoming friend request from §6" + target.getName() + "§7!");
+                                                return;
+                                            }
+                                            main.getFriendRequest().removeFriendRequest(target.getUniqueId(), player.getUniqueId());
+                                            main.getFriend().addFriend(target.getUniqueId(), player.getUniqueId(), false);
+
+                                            player.sendMessage("§7You are now friends with §6" + target.getName() + "§7!");
+                                            target.sendMessage("§7You are now friends with §6" + player.getName() + "§7!");
+                                        })
+                                )
+                        )
+                        .then(new LiteralArgument("deny")
+                                .then(targetArgument
+                                        .executesPlayer((player, args) -> {
+                                            Player target = (Player) args[0]; // This is the player who has sent the friend request
+                                            if (!main.getFriendRequest().isFriendRequest(target.getUniqueId(), player.getUniqueId())) {
+                                                player.sendMessage("§7You don't have an incoming friend request from §6" + target.getName() + "§7!");
+                                                return;
+                                            }
+                                            main.getFriendRequest().removeFriendRequest(target.getUniqueId(), player.getUniqueId());
+
+                                            player.sendMessage("§7You denied the incoming friend request from §6" + target.getName() + "§7!");
+                                            target.sendMessage("§7You friend request to §6" + player.getName() + " §7was denied!");
+                                        })
                                 )
                         )
                 )
@@ -464,5 +548,6 @@ public class EconomyCommand {
     }
 
     private final ListArgument<String> singlePermissionArgument = new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build();
-
+    private final PlayerArgument playerArgument = (PlayerArgument) new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)));
+    private final PlayerArgument targetArgument = (PlayerArgument) new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)));
 }

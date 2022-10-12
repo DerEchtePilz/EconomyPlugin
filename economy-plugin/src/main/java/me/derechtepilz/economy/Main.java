@@ -1,17 +1,21 @@
 package me.derechtepilz.economy;
 
-import com.google.gson.*;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.derechtepilz.database.Database;
-import me.derechtepilz.database.DatabaseTestFramework;
 import me.derechtepilz.economy.coinmanagement.CoinDisplay;
 import me.derechtepilz.economy.coinmanagement.JoinCoinManagement;
 import me.derechtepilz.economy.commands.ConsoleCommands;
 import me.derechtepilz.economy.commands.EconomyCommand;
+import me.derechtepilz.economy.friendmanagement.FriendRequest;
+import me.derechtepilz.economy.friendmanagement.LoadFriends;
+import me.derechtepilz.economy.friendmanagement.SaveFriends;
+import me.derechtepilz.economy.friendmanagement.Friend;
 import me.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import me.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import me.derechtepilz.economy.itemmanagement.Item;
+import me.derechtepilz.economy.itemmanagement.LoadItem;
+import me.derechtepilz.economy.itemmanagement.SaveItem;
 import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.offers.CancelOfferMenuListener;
@@ -23,7 +27,6 @@ import me.derechtepilz.economy.updatemanagement.UpdateInformation;
 import me.derechtepilz.economy.utility.Config;
 import me.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -33,7 +36,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +87,8 @@ public final class Main extends JavaPlugin {
 
     // Utility classes
     private final Config config = new Config(main);
+    private final SaveItem saveItem = new SaveItem(main);
+    private final LoadItem loadItem = new LoadItem(main);
 
     // Update stuff
     private boolean shouldRegisterUpdateInformation = false;
@@ -94,6 +98,12 @@ public final class Main extends JavaPlugin {
 
     // Database stuff (if I need it)
     private Database database;
+
+    // Friend system stuff
+    private final Friend friend = new Friend();
+    private final FriendRequest friendRequest = new FriendRequest();
+    private final SaveFriends saveFriends = new SaveFriends(main);
+    private final LoadFriends loadFriends = new LoadFriends(main);
 
     @Override
     public void onEnable() {
@@ -106,6 +116,7 @@ public final class Main extends JavaPlugin {
 
         if (!isNewUpdateAvailable) {
             database = EconomyAPI.onEnable(main);
+            loadFriends.loadFriends();
 
             if (isVersionSupported) {
                 CommandAPI.onEnable(main);
@@ -140,12 +151,13 @@ public final class Main extends JavaPlugin {
         }
         if (!isNewUpdateAvailable) {
             EconomyAPI.onLoad();
-            loadItems();
+            loadItem.loadItems();
 
             String version = Bukkit.getBukkitVersion().split("-")[0];
             isVersionSupported = VersionHandler.isVersionSupported(version);
 
             if (isVersionSupported) {
+                getLogger().info("Calling CommandAPI.onLoad()");
                 CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
             }
         }
@@ -154,7 +166,8 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!isNewUpdateAvailable) {
-            saveItems();
+            saveItem.saveItems();
+            saveFriends.saveFriends();
 
             Bukkit.getScheduler().cancelTask(inventoryManagementTaskId);
             Bukkit.getScheduler().cancelTask(coinDisplayTaskId);
@@ -206,98 +219,6 @@ public final class Main extends JavaPlugin {
         return expiredItems;
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
-    private void loadItems() {
-        try {
-            File file = new File("./plugins/Economy");
-            if (!file.exists()) {
-                file.mkdir();
-            }
-            File items = new File(file, "items.json");
-            BufferedReader reader = new BufferedReader(new FileReader(items));
-
-            String line;
-            StringBuilder buildSavedItems = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                buildSavedItems.append(line);
-            }
-
-            JsonObject savedItems = JsonParser.parseString(buildSavedItems.toString()).getAsJsonObject();
-
-            boolean auctionRunning = savedItems.get("auctionRunning").getAsBoolean();
-            inventoryHandler.setTimerRunning(auctionRunning);
-
-            JsonArray runningAuctions = savedItems.get("runningAuctions").getAsJsonArray();
-            JsonArray expiredAuctions = savedItems.get("expiredAuctions").getAsJsonArray();
-
-            for (int i = 0; i < runningAuctions.size(); i++) {
-                JsonObject itemObject = runningAuctions.get(i).getAsJsonObject();
-                Material material = Material.getMaterial(itemObject.get("material").getAsString());
-                int amount = itemObject.get("amount").getAsInt();
-                double price = itemObject.get("price").getAsDouble();
-                UUID seller = UUID.fromString(itemObject.get("seller").getAsString());
-                UUID uuid = UUID.fromString(itemObject.get("uuid").getAsString());
-                int duration = itemObject.get("duration").getAsInt();
-
-                Item item = new Item(main, material, amount, price, seller, uuid, duration);
-                item.register();
-                getLogger().info("Registered auction: " + item);
-            }
-
-            for (int i = 0; i < expiredAuctions.size(); i++) {
-                JsonObject itemObject = expiredAuctions.get(i).getAsJsonObject();
-                Material material = Material.matchMaterial(itemObject.get("material").getAsString());
-                int amount = itemObject.get("amount").getAsInt();
-                UUID seller = UUID.fromString(itemObject.get("seller").getAsString());
-
-                List<ItemStack> expiredItems = (getExpiredItems().containsKey(seller)) ? getExpiredItems().get(seller) : new ArrayList<>();
-                expiredItems.add(new ItemStack(material, amount));
-                getExpiredItems().put(seller, expiredItems);
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings({"ResultOfMethodCallIgnored"})
-    private void saveItems() {
-        try {
-            File file = new File("./plugins/Economy");
-            if (!file.exists()) {
-                file.mkdir();
-            }
-            File items = new File(file, "items.json");
-            FileWriter writer = new FileWriter(items);
-
-            JsonObject auctionsObject = new JsonObject();
-            auctionsObject.addProperty("auctionRunning", inventoryHandler.isTimerRunning());
-
-            JsonArray runningAuctionsArray = new JsonArray();
-            for (UUID uuid : getRegisteredItems().keySet()) {
-                runningAuctionsArray.add(getRegisteredItems().get(uuid).saveItem());
-            }
-            auctionsObject.add("runningAuctions", runningAuctionsArray);
-
-            JsonArray expiredAuctionsArray = new JsonArray();
-            for (UUID uuid : getExpiredItems().keySet()) {
-                for (ItemStack itemStack : getExpiredItems().get(uuid)) {
-                    JsonObject expiredItem = new JsonObject();
-                    expiredItem.addProperty("material", itemStack.getType().name());
-                    expiredItem.addProperty("amount", itemStack.getAmount());
-                    expiredItem.addProperty("seller", String.valueOf(uuid));
-                    expiredAuctionsArray.add(expiredItem);
-                }
-            }
-            auctionsObject.add("expiredAuctions", expiredAuctionsArray);
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            writer.write(gson.toJson(auctionsObject));
-            writer.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
     // Store inventory-management-related methods
     public ItemUpdater getItemUpdater() {
         return itemUpdater;
@@ -327,5 +248,14 @@ public final class Main extends JavaPlugin {
 
     public Database getDatabase() {
         return database;
+    }
+
+    // Store friend system methods
+    public Friend getFriend() {
+        return friend;
+    }
+
+    public FriendRequest getFriendRequest() {
+        return friendRequest;
     }
 }

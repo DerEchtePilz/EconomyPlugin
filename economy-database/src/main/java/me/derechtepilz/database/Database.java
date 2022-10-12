@@ -1,6 +1,5 @@
 package me.derechtepilz.database;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.*;
@@ -29,9 +28,9 @@ public class Database {
         try {
             Connection connection = DriverManager.getConnection(url);
             connection.setAutoCommit(false);
-            String sql = "CREATE TABLE IF NOT EXISTS bankAccounts(uuid text NOT NULL UNIQUE, balance real NOT NULL, lastInterest integer NOT NULL, startBalance real NOT NULL);";
+            String balanceTable = "CREATE TABLE IF NOT EXISTS bankAccounts(uuid text NOT NULL UNIQUE, balance real NOT NULL, lastInterest integer NOT NULL, startBalance real NOT NULL);";
             Statement statement = connection.createStatement();
-            statement.execute(sql);
+            statement.execute(balanceTable);
             connection.commit();
             return connection;
         } catch (SQLException e) {
@@ -57,43 +56,41 @@ public class Database {
     }
 
     public void saveEconomyData() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try {
-                String updateBalanceSQL = "UPDATE bankAccounts SET balance = ? WHERE uuid = ?";
-                String updateStartBalanceSQL = "UPDATE bankAccounts SET startBalance = ? WHERE uuid = ?";
-                String updateLastInterestSQL = "UPDATE bankAccounts SET lastInterest = ? WHERE uuid = ?";
+        try {
+            String updateBalanceSQL = "UPDATE bankAccounts SET balance = ? WHERE uuid = ?";
+            String updateStartBalanceSQL = "UPDATE bankAccounts SET startBalance = ? WHERE uuid = ?";
+            String updateLastInterestSQL = "UPDATE bankAccounts SET lastInterest = ? WHERE uuid = ?";
 
-                PreparedStatement updateBalance = connection.prepareStatement(updateBalanceSQL);
-                PreparedStatement updateStartBalance = connection.prepareStatement(updateStartBalanceSQL);
-                PreparedStatement updateLastInterest = connection.prepareStatement(updateLastInterestSQL);
-                for (UUID uuid : balance.keySet()) {
-                    if (isPlayerRegistered(connection, uuid)) {
-                        updateBalance.setDouble(1, balance.get(uuid));
-                        updateBalance.setString(2, uuid.toString());
+            PreparedStatement updateBalance = connection.prepareStatement(updateBalanceSQL);
+            PreparedStatement updateStartBalance = connection.prepareStatement(updateStartBalanceSQL);
+            PreparedStatement updateLastInterest = connection.prepareStatement(updateLastInterestSQL);
+            for (UUID uuid : balance.keySet()) {
+                if (isPlayerAccountRegistered(connection, uuid)) {
+                    updateBalance.setDouble(1, balance.get(uuid));
+                    updateBalance.setString(2, uuid.toString());
 
-                        updateStartBalance.setDouble(1, startBalance.get(uuid));
-                        updateStartBalance.setString(2, uuid.toString());
+                    updateStartBalance.setDouble(1, startBalance.get(uuid));
+                    updateStartBalance.setString(2, uuid.toString());
 
-                        updateLastInterest.setDouble(1, lastInterest.get(uuid));
-                        updateLastInterest.setString(2, uuid.toString());
+                    updateLastInterest.setDouble(1, lastInterest.get(uuid));
+                    updateLastInterest.setString(2, uuid.toString());
 
-                        updateBalance.addBatch();
-                        updateStartBalance.addBatch();
-                        updateLastInterest.addBatch();
-                    } else {
-                        registerPlayer(connection, uuid, balance.get(uuid), lastInterest.get(uuid), startBalance.get(uuid));
-                    }
+                    updateBalance.addBatch();
+                    updateStartBalance.addBatch();
+                    updateLastInterest.addBatch();
+                } else {
+                    registerPlayer(connection, uuid, balance.get(uuid), lastInterest.get(uuid), startBalance.get(uuid));
                 }
-
-                updateBalance.executeBatch();
-                updateStartBalance.executeBatch();
-                updateLastInterest.executeBatch();
-
-                connection.commit();
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-        });
+
+            updateBalance.executeBatch();
+            updateStartBalance.executeBatch();
+            updateLastInterest.executeBatch();
+
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void registerPlayer(Connection connection, UUID uuid, double balance, long lastInterest, double startBalance) {
@@ -110,7 +107,7 @@ public class Database {
         }
     }
 
-    public boolean isPlayerRegistered(Connection connection, UUID uuid) {
+    public boolean isPlayerAccountRegistered(Connection connection, UUID uuid) {
         String sql = "SELECT uuid FROM bankAccounts WHERE uuid = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -133,7 +130,7 @@ public class Database {
         this.lastInterest.put(uuid, lastInterest);
     }
 
-    public boolean isPlayerRegistered(UUID uuid) {
+    public boolean isPlayerAccountRegistered(UUID uuid) {
         return balance.containsKey(uuid);
     }
 

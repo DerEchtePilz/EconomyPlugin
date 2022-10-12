@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 public class EconomyAPI {
@@ -28,7 +27,7 @@ public class EconomyAPI {
 
     // Stores API-wide fields
     private static Logger LOGGER;
-    private static int DATABASE_AUTOSAVE_TASK;
+    private static @NotNull BukkitTask DATABASE_AUTOSAVE_TASK;
     static Bank BANK = new Bank();
     static Plugin PLUGIN;
     static Database DATABASE;
@@ -84,16 +83,14 @@ public class EconomyAPI {
      * While this can be called everywhere at any time, you should only call this in your plugin's onDisable() method
      */
     public static void onDisable() {
-        Bukkit.getScheduler().cancelTask(DATABASE_AUTOSAVE_TASK);
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, () -> {
-            try {
-                saveConfigValues();
-                DATABASE.saveEconomyData();
-                DATABASE.getConnection().close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        DATABASE_AUTOSAVE_TASK.cancel();
+        try {
+            saveConfigValues();
+            DATABASE.saveEconomyData();
+            DATABASE.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     static Logger getLogger() {
@@ -247,13 +244,13 @@ public class EconomyAPI {
             player.getPersistentDataContainer().remove(LAST_INTEREST);
             player.getPersistentDataContainer().remove(PLAYER_START_BALANCE);
         } else {
-            if (!DATABASE.isPlayerRegistered(player.getUniqueId())) {
+            if (!DATABASE.isPlayerAccountRegistered(player.getUniqueId())) {
                 DATABASE.registerPlayer(player.getUniqueId(), 0.0, System.currentTimeMillis(), ConfigHandler.getStartBalance());
             }
         }
     }
 
     private static void runAutoSaveEconomyData() {
-        DATABASE_AUTOSAVE_TASK = Bukkit.getScheduler().scheduleSyncRepeatingTask(PLUGIN, () -> DATABASE.saveEconomyData(), 0, 12000);
+        DATABASE_AUTOSAVE_TASK = Bukkit.getScheduler().runTaskTimerAsynchronously(PLUGIN, () -> DATABASE.saveEconomyData(), 0, 12000);
     }
 }
