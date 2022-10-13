@@ -399,8 +399,8 @@ public class EconomyCommand {
                                         .executesPlayer((player, args) -> {
                                             Player target = (Player) args[0];
                                             if (target.getUniqueId().equals(player.getUniqueId())) {
-                                                player.sendMessage("§7You cannot have yourself as a friend!");
-                                                new ChatComponentAPI().appendText("§7[Try someone else]")
+                                                player.sendMessage("§7You cannot remove yourself as a friend!");
+                                                new ChatComponentAPI().appendText("§7[Click here to try someone else]")
                                                         .withClickEvent("/friend remove ", ClickEvent.Action.SUGGEST_COMMAND)
                                                         .sendToPlayer(player);
                                                 return;

@@ -14,7 +14,7 @@ class LoadFriends(private val main: Main) {
         val dataFiles: Array<out File> = fileFolder.listFiles() ?: return
         for (file: File in dataFiles) {
             val uuid: String = file.name.replace(".bin", "")
-            val fileInputStream = FileInputStream("$uuid.dat")
+            val fileInputStream = FileInputStream("$uuid.bin")
             val objectInputStream = ObjectInputStream(fileInputStream)
             val any: Any = objectInputStream.readObject()
             main.friend.addFriendList(UUID.fromString(uuid), any as MutableList<UUID>)

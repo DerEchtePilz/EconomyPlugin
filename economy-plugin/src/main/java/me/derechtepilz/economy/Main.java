@@ -70,7 +70,7 @@ public final class Main extends JavaPlugin {
     private final HashMap<UUID, List<ItemStack>> expiredItems = new HashMap<>();
 
     // Initialize command classes
-    private final EconomyCommand economyCommand = new EconomyCommand(main);
+    private EconomyCommand economyCommand;
     private final ConsoleCommands consoleCommands = new ConsoleCommands(main);
 
     // Initialize inventory management classes
@@ -157,9 +157,9 @@ public final class Main extends JavaPlugin {
             isVersionSupported = VersionHandler.isVersionSupported(version);
 
             if (isVersionSupported) {
-                getLogger().info("Calling CommandAPI.onLoad()");
                 CommandAPI.onLoad(new CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"));
             }
+            economyCommand = new EconomyCommand(main);
         }
     }
 
