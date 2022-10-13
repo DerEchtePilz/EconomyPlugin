@@ -116,7 +116,6 @@ public final class Main extends JavaPlugin {
 
         if (!isNewUpdateAvailable) {
             database = EconomyAPI.onEnable(main);
-            loadFriends.loadFriends();
 
             if (isVersionSupported) {
                 CommandAPI.onEnable(main);
@@ -188,6 +187,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new CancelOfferMenuListener(main), this);
         manager.registerEvents(new JoinCoinManagement(main), this);
         manager.registerEvents(expiredOfferMenu, this);
+        manager.registerEvents(loadFriends, this);
 
         if (shouldRegisterUpdateInformation) {
             manager.registerEvents(new UpdateInformation(main), this);
