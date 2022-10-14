@@ -18,7 +18,7 @@ class JoinCoinManagement(private val main: Main) : Listener {
         if (main.earnedCoins.containsKey(player.uniqueId)) {
             val earnedCoins: Double = main.earnedCoins[player.uniqueId]!!
             EconomyAPI.addCoinsToBalance(player, earnedCoins)
-            player.sendMessage("§aYou got §6" + chatFormatter.valueOf(earnedCoins) + " coins §afrom selling items while you were offline!")
+            player.sendMessage("§aYou got §6${chatFormatter.valueOf(earnedCoins)} coins §afrom selling items while you were offline!")
         }
     }
 
