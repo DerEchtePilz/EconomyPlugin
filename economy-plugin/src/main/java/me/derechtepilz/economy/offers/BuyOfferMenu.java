@@ -78,6 +78,7 @@ public class BuyOfferMenu {
         }
 
         if (offers.size() == 0) {
+            if (!inventoryPages.containsKey(player.getUniqueId())) return;
             if (inventoryPages.get(player.getUniqueId()).size() >= 1) {
                 inventoryPages.get(player.getUniqueId()).clear();
             }

@@ -3,558 +3,234 @@ package me.derechtepilz.economy.commands;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import me.derechtepilz.economy.Main;
-import me.derechtepilz.economy.componentapi.ChatComponentAPI;
-import me.derechtepilz.economy.itemmanagement.Item;
 import me.derechtepilz.economy.permissionmanagement.Permission;
-import me.derechtepilz.economy.utility.DataHandler;
-import me.derechtepilz.economycore.EconomyAPI;
-import me.derechtepilz.economycore.exceptions.BalanceException;
-import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.ServerOperator;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import static dev.jorel.commandapi.arguments.LiteralArgument.of;
 
-@SuppressWarnings("unchecked")
 public class EconomyCommand {
 
-    private final Main main;
+    private final EconomyCommandExecution commandExecution;
 
     public EconomyCommand(Main main) {
-        this.main = main;
+        commandExecution = new EconomyCommandExecution(main);
     }
 
     public void register() {
         new CommandTree("economy")
-                .then(new LiteralArgument("offers")
-                        .then(new LiteralArgument("buy")
-                                .executesPlayer((player, args) -> {
-                                    if (!main.getInventoryHandler().isTimerRunning()) {
-                                        player.sendMessage("§cThe auctions are currently paused. Try again later!");
-                                        return;
-                                    }
-                                    DataHandler.setBuyMenuData(player);
-                                    player.sendMessage("§aYou opened the buy menu!");
-                                })
-                                .then(new ItemStackArgument("filter")
-                                        .executesPlayer((player, args) -> {
-                                            if (!main.getInventoryHandler().isTimerRunning()) {
-                                                player.sendMessage("§cThe auctions are currently paused. Try again later!");
-                                                return;
-                                            }
-                                            ItemStack filter = (ItemStack) args[0];
-                                            DataHandler.setBuyMenuData(player, filter);
-                                            player.sendMessage("§aYou opened the buy menu!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("create")
-                                .then(new ItemStackArgument("item")
-                                        .then(new IntegerArgument("amount", 1)
-                                                .then(new DoubleArgument("price", 1)
-                                                        .then(new IntegerArgument("hours", 0)
-                                                                .then(new IntegerArgument("minutes", 0)
-                                                                        .then(new IntegerArgument("seconds", 0)
-                                                                                .executesPlayer((player, args) -> {
-                                                                                    ItemStack item = (ItemStack) args[0];
-                                                                                    int amount = (int) args[1];
-                                                                                    double price = (double) args[2];
-                                                                                    int duration = (int) args[3] * 60 * 60 + (int) args[4] * 60 + (int) args[5];
-                                                                                    item.setAmount(amount);
-
-                                                                                    for (int i = 0; i < player.getInventory().getSize(); i++) {
-                                                                                        if (player.getInventory().getItem(i) == null) {
-                                                                                            continue;
-                                                                                        }
-                                                                                        ItemStack currentItem = player.getInventory().getItem(i);
-                                                                                        assert currentItem != null;
-                                                                                        if (currentItem.isSimilar(item)) {
-                                                                                            if (currentItem.getAmount() >= amount) {
-                                                                                                Item offer = new Item(main, item.getType(), amount, price, player.getUniqueId(), duration);
-                                                                                                offer.register();
-
-                                                                                                ItemStack updatedItem = currentItem;
-                                                                                                updatedItem.setAmount(updatedItem.getAmount() - item.getAmount());
-                                                                                                player.getInventory().setItem(i, updatedItem);
-
-                                                                                                player.sendMessage("§aYou created a new offer for §6" + amount + " §aitems of type §6minecraft:" + item.getType().name().toLowerCase() + "§a! It will last §6" + duration + " §aseconds!");
-                                                                                            } else {
-                                                                                                player.sendMessage("§cYou have to few items of type §6minecraft:" + item.getType().name().toLowerCase() + " §cin your inventory to offer §6" + amount + " §citems!");
-                                                                                            }
-                                                                                            return;
-                                                                                        }
-                                                                                    }
-                                                                                    player.sendMessage("§cYou do not have the specified item in your inventory.");
-                                                                                })
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                        .then(new LiteralArgument("cancel")
-                                .executesPlayer((player, args) -> {
-                                    if (!main.getInventoryHandler().isTimerRunning()) {
-                                        player.sendMessage("§cThe auctions are currently paused. Try again later!");
-                                        return;
-                                    }
-                                    boolean canOpenCancelMenu = main.getOfferingPlayerUuids().contains(player.getUniqueId());
-                                    if (!canOpenCancelMenu) {
-                                        player.sendMessage("§cDidn't open cancel menu because you didn't auction an item!");
-                                        return;
-                                    }
-                                    DataHandler.setCancelMenuData(player);
-                                    player.sendMessage("§aYou opened the cancel menu!");
-                                })
-                        )
-                        .then(new LiteralArgument("claim")
-                                .executesPlayer((player, args) -> {
-                                    if (!main.getExpiredItems().containsKey(player.getUniqueId())) {
-                                        player.sendMessage("§cYou cannot claim any items back because no expired auction could be found that you created!");
-                                        return;
-                                    }
-                                    int expiredItems = main.getExpiredItems().get(player.getUniqueId()).size();
-                                    int freeSlots = main.getExpiredOfferMenu().getFreeSlots(player);
-                                    if (freeSlots == 0) {
-                                        player.sendMessage("§cPlease make sure you have at least §6" + expiredItems + " §cslots free!");
-                                        return;
-                                    }
-                                    main.getExpiredOfferMenu().openInventory(player);
-                                })
-                        )
-                        .then(new LiteralArgument("pause")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .executesPlayer((player, args) -> {
-                                    if (!main.getInventoryHandler().isTimerRunning()) {
-                                        player.sendMessage("§cThe auctions are already paused!");
-                                        return;
-                                    }
-                                    main.getInventoryHandler().setTimerRunning(false);
-                                    Bukkit.broadcastMessage("§cThe auctions are now paused!");
-                                })
-                        )
-                        .then(new LiteralArgument("resume")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .executesPlayer((player, args) -> {
-                                    if (main.getInventoryHandler().isTimerRunning()) {
-                                        player.sendMessage("§cThe auctions are already running!");
-                                        return;
-                                    }
-                                    main.getInventoryHandler().setTimerRunning(true);
-                                    Bukkit.broadcastMessage("§aThe auctions are now running!");
-                                })
-                        )
+            .then(of("auction")
+                .then(of("buy")
+                    .executesPlayer(commandExecution::buyAuction)
+                    .then(new ItemStackArgument("filter")
+                        .executesPlayer(commandExecution::buyAuctionWithFilter)
+                    )
                 )
-                .then(new LiteralArgument("coins")
-                        .then(new LiteralArgument("give")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.GIVE_COINS) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new PlayerArgument("target")
-                                        .then(new DoubleArgument("amount", 0)
-                                                .executesPlayer((player, args) -> {
-                                                    try {
-                                                        Player target = (Player) args[0];
-                                                        double amount = (double) args[1];
-                                                        boolean success = EconomyAPI.addCoinsToBalance(target, amount);
-
-                                                        if (success) {
-                                                            player.sendMessage("§aYou gave §b" + target.getName() + " §6" + amount + " §acoins!");
-                                                            target.sendMessage("§aYou were given §6" + amount + " §acoins!");
-                                                            return;
-                                                        }
-                                                        player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
-                                                    } catch (BalanceException exception) {
-                                                        player.sendMessage("§c" + exception.getMessage());
-                                                    }
-                                                })
+                .then(of("create")
+                    .then(new ItemStackArgument("item")
+                        .then(new IntegerArgument("amount", 1)
+                            .then(new DoubleArgument("price", 1)
+                                .then(new IntegerArgument("hours", 0)
+                                    .then(new IntegerArgument("minutes", 0)
+                                        .then(new IntegerArgument("seconds", 0)
+                                            .executesPlayer(commandExecution::createAuction)
                                         )
+                                    )
                                 )
+                            )
                         )
-                        .then(new LiteralArgument("take")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.TAKE_COINS) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new PlayerArgument("target")
-                                        .then(new DoubleArgument("amount", 0)
-                                                .executesPlayer((player, args) -> {
-                                                    try {
-                                                        Player target = (Player) args[0];
-                                                        double amount = (double) args[1];
-                                                        boolean success = EconomyAPI.removeCoinsFromBalance(target, amount);
-
-                                                        if (success) {
-                                                            player.sendMessage("§aYou took §6" + amount + " §acoins from §b" + target.getName() + "§a!");
-                                                            target.sendMessage("§aYou have been taken §6" + amount + " §acoins!");
-                                                            return;
-                                                        }
-                                                        player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
-                                                    } catch (BalanceException exception) {
-                                                        player.sendMessage("§c" + exception.getMessage());
-                                                    }
-                                                })
-                                        )
-                                )
-                        )
-                        .then(new LiteralArgument("set")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.SET_COINS) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new PlayerArgument("target")
-                                        .then(new DoubleArgument("amount", 0)
-                                                .executesPlayer((player, args) -> {
-                                                    try {
-                                                        Player target = (Player) args[0];
-                                                        double amount = (double) args[1];
-                                                        boolean success = EconomyAPI.setBalance(target, amount);
-
-                                                        if (success) {
-                                                            player.sendMessage("§aYou set §b" + target.getName() + "§a's balance to §6" + amount + " §acoins!");
-                                                            target.sendMessage("§aYour balance has been set to §6" + amount + " §acoins!");
-                                                            return;
-                                                        }
-                                                        player.sendMessage("§cSomething went wrong! Maybe tell §b" + target.getName() + " §cto re-join the server!");
-                                                    } catch (BalanceException exception) {
-                                                        player.sendMessage("§c" + exception.getMessage());
-                                                    }
-                                                })
-                                        )
-                                )
-                        )
-                        .then(new LiteralArgument("baltop")
-                                .executesPlayer((player, args) -> {
-                                    Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                                        player.sendMessage("§7Loading baltop... Please wait!");
-                                        Map<Double, UUID> playerBalances = main.getDatabase().getServerBalances();
-                                        List<Double> balances = main.getDatabase().getBalances();
-                                        balances.sort(Comparator.naturalOrder());
-                                        player.sendMessage("§6This is the current baltop list:");
-                                        for (int i = 0; i < balances.size() && i <= 9; i++) {
-                                            player.sendMessage("§6" + (i + 1) + ". §7- §a" + Bukkit.getOfflinePlayer(playerBalances.get(balances.get(i))).getName());
-                                        }
-                                    });
-                                })
-                        )
+                    )
                 )
-                .then(new LiteralArgument("permission")
-                        .withRequirement(ServerOperator::isOp)
-                        .then(new LiteralArgument("clear")
-                                .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                        .executesPlayer((player, args) -> {
-                                            Permission.clearPermissions((Player) args[0]);
-                                            player.sendMessage("§cYou removed every permission from §b" + ((Player) args[0]).getName() + "§c!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("single")
-                                .then(new LiteralArgument("set")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                                .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
-                                                        .withRequirement(ServerOperator::isOp)
-                                                        .executesPlayer((player, args) -> {
-                                                            Player target = (Player) args[0];
-                                                            List<String> permissions = (List<String>) args[1];
-                                                            for (String permissionName : permissions) {
-                                                                Permission permissionToAssign = null;
-                                                                for (Permission permission : Permission.values()) {
-                                                                    if (permission.getPermission().equals(permissionName)) {
-                                                                        permissionToAssign = permission;
-                                                                    }
-                                                                }
-                                                                if (permissionToAssign == null) {
-                                                                    player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
-                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                        continue;
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                if (Permission.hasPermission(target, permissionToAssign)) {
-                                                                    player.sendMessage("§cThe player §b" + target.getName() + " §calready has the permission §6" + permissionName + "§c!");
-                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                        continue;
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                Permission.addPermission(target, permissionToAssign);
-                                                                if (target.equals(player)) {
-                                                                    player.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
-                                                                } else {
-                                                                    target.sendMessage("§aYou have got the permission §6" + permissionToAssign.getPermission() + "§a!");
-                                                                    player.sendMessage("§aSUCCESS! The permission §6" + permissionToAssign.getPermission() + " &awas given to §b" + target.getName() + "§a!");
-                                                                }
-                                                            }
-                                                        })
-                                                )
-                                        )
-                                )
-                                .then(new LiteralArgument("remove")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                                .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
-                                                        .withRequirement(ServerOperator::isOp)
-                                                        .executesPlayer((player, args) -> {
-                                                            Player target = (Player) args[0];
-                                                            List<String> permissions = (List<String>) args[1];
-                                                            for (String permissionName : permissions) {
-                                                                Permission permissionToRemove = null;
-                                                                for (Permission permission : Permission.values()) {
-                                                                    if (permission.getPermission().equals(permissionName)) {
-                                                                        permissionToRemove = permission;
-                                                                    }
-                                                                }
-                                                                if (permissionToRemove == null) {
-                                                                    player.sendMessage("§cThe permission §6" + permissionName + " §cwas not found!");
-                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                        continue;
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                if (!Permission.hasPermission(target, permissionToRemove)) {
-                                                                    player.sendMessage("§cThe player §b" + target.getName() + " §cdoes not have the permission §6" + permissionName + "§c!");
-                                                                    if (permissions.indexOf(permissionName) != permissions.size() - 1) {
-                                                                        continue;
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                Permission.removePermission(player, permissionToRemove);
-                                                                if (target.equals(player)) {
-                                                                    player.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
-                                                                } else {
-                                                                    target.sendMessage("§cYou have been taken the permission §6" + permissionToRemove.getPermission() + "§c!");
-                                                                    player.sendMessage("§cThe permission §6" + permissionToRemove.getPermission() + " §cwas taken from §b" + target.getName() + "§c!");
-                                                                }
-                                                            }
-                                                        })
-                                                )
-                                        )
-                                )
-                                .then(new LiteralArgument("get")
-                                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                                .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
-                                                        .withRequirement(ServerOperator::isOp)
-                                                        .executesPlayer((player, args) -> {
-                                                            Player target = (Player) args[0];
-                                                            String[] permissions = Permission.getPermissions(target);
-                                                            player.sendMessage("§b" + target.getName() + " §ahas the following permissions:");
-                                                            for (String permission : permissions) {
-                                                                player.sendMessage("§6- §a" + permission);
-                                                            }
-                                                        })
-                                                )
-                                        )
-                                )
-                        )
+                .then(of("cancel")
+                    .executesPlayer(commandExecution::cancelAuction)
                 )
-                .then(new LiteralArgument("friend")
-                        .then(new LiteralArgument("add")
-                                .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                        .executesPlayer((player, args) -> {
-                                            Player target = (Player) args[0];
-                                            if (target.getUniqueId().equals(player.getUniqueId())) {
-                                                player.sendMessage("§cYou cannot use this command on yourself!");
-                                                new ChatComponentAPI().appendText("§7[Click here to try someone else]")
-                                                        .withClickEvent("/economy friend add ", ClickEvent.Action.SUGGEST_COMMAND)
-                                                        .sendToPlayer(player);
-                                                return;
-                                            }
-                                            if (main.getFriend().isFriend(player.getUniqueId(), target.getUniqueId())) {
-                                                player.sendMessage("§7You are already friends with §6" + target.getName() + "§7!");
-                                                return;
-                                            }
-                                            // Here the cooldown status should be checked
-                                            main.getFriendRequest().addFriendRequest(player.getUniqueId(), target.getUniqueId());
-                                            new ChatComponentAPI().appendText("§7Accept friend request from §6" + player.getName() + "§7?")
-                                                    .appendTextComponent(new ChatComponentAPI().appendText("§a[YES]").withClickEvent("/friend accept " + player.getName(), ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §aaccept §7this friend request"))
-                                                    .appendTextComponent(new ChatComponentAPI().appendText("§c[NO]").withClickEvent("/friend deny " + player.getName(), ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §cdeny §7this friend request"))
-                                                    .sendToPlayer(target);
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("remove")
-                                .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                        .executesPlayer((player, args) -> {
-                                            Player target = (Player) args[0];
-                                            if (target.getUniqueId().equals(player.getUniqueId())) {
-                                                player.sendMessage("§cYou cannot use this command on yourself!");
-                                                new ChatComponentAPI().appendText("§7[Click here to try someone else]")
-                                                        .withClickEvent("/economy friend remove ", ClickEvent.Action.SUGGEST_COMMAND)
-                                                        .sendToPlayer(player);
-                                                return;
-                                            }
-                                            if (!main.getFriend().isFriend(player.getUniqueId(), target.getUniqueId())) {
-                                                player.sendMessage("§7You are not friends with §6" + target.getName() + "§7!");
-                                                return;
-                                            }
-                                            main.getFriend().removeFriend(player.getUniqueId(), target.getUniqueId(), false);
-
-                                            player.sendMessage("§7You removed §6" + target.getName() + "§7from your friends list!");
-                                            target.sendMessage("§6" + player.getName() + " §7has removed you from their friends list!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("accept")
-                                .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                        .executesPlayer((player, args) -> {
-                                            Player target = (Player) args[0]; // This is the player who has sent the friend request
-                                            if (player.getUniqueId().equals(target.getUniqueId())) {
-                                                player.sendMessage("§cYou cannot use this command on yourself!");
-                                                new ChatComponentAPI().appendText("§7[Click here to try someone else!]")
-                                                        .withClickEvent("/economy friend accept ", ClickEvent.Action.SUGGEST_COMMAND)
-                                                        .sendToPlayer(player);
-                                                return;
-                                            }
-                                            if (!main.getFriendRequest().isFriendRequest(target.getUniqueId(), player.getUniqueId())) {
-                                                player.sendMessage("§7You don't have an incoming friend request from §6" + target.getName() + "§7!");
-                                                return;
-                                            }
-                                            main.getFriendRequest().removeFriendRequest(target.getUniqueId(), player.getUniqueId());
-                                            main.getFriend().addFriend(target.getUniqueId(), player.getUniqueId(), false);
-
-                                            player.sendMessage("§7You are now friends with §6" + target.getName() + "§7!");
-                                            target.sendMessage("§7You are now friends with §6" + player.getName() + "§7!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("deny")
-                                .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
-                                        .executesPlayer((player, args) -> {
-                                            Player target = (Player) args[0]; // This is the player who has sent the friend request
-                                            if (player.getUniqueId().equals(target.getUniqueId())) {
-                                                player.sendMessage("§cYou cannot use this command on yourself!");
-                                                new ChatComponentAPI().appendText("§7[Click here to try someone else!]")
-                                                        .withClickEvent("/economy friend deny ", ClickEvent.Action.SUGGEST_COMMAND)
-                                                        .sendToPlayer(player);
-                                                return;
-                                            }
-                                            if (!main.getFriendRequest().isFriendRequest(target.getUniqueId(), player.getUniqueId())) {
-                                                player.sendMessage("§7You don't have an incoming friend request from §6" + target.getName() + "§7!");
-                                                return;
-                                            }
-                                            main.getFriendRequest().removeFriendRequest(target.getUniqueId(), player.getUniqueId());
-
-                                            player.sendMessage("§7You denied the incoming friend request from §6" + target.getName() + "§7!");
-                                            target.sendMessage("§7You friend request to §6" + player.getName() + " §7was denied!");
-                                        })
-                                )
-                        )
+                .then(of("claim")
+                    .executesPlayer(commandExecution::claimAuction)
                 )
-                .then(new LiteralArgument("config")
-                        .then(new LiteralArgument("allowDirectDownloads")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new BooleanArgument("allowDirectDownloads")
-                                        .executesPlayer((player, args) -> {
-                                            boolean allowDirectDownloads = (boolean) args[0];
-                                            main.getPluginConfig().set("allowDirectDownloads", String.valueOf(allowDirectDownloads));
-
-                                            player.sendMessage("§7You just set §6allowDirectDownloads §7to §6" + allowDirectDownloads + "§7!");
-                                            if (allowDirectDownloads) {
-                                                player.sendMessage("§7If a new update is available, the plugin will be automatically updated!");
-                                                return;
-                                            }
-                                            player.sendMessage("§7If a new update is available, you will have to download it yourself!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("startBalance")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new DoubleArgument("startBalance", 0.0)
-                                        .executesPlayer((player, args) -> {
-                                            double startBalance = (double) args[0];
-                                            EconomyAPI.setStartBalance(startBalance);
-                                            player.sendMessage("§7You set the start balance to §6" + startBalance + "§7!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("interestRate")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new DoubleArgument("interestRate", 0.0)
-                                        .executesPlayer((player, args) -> {
-                                            double interestRate = (double) args[0];
-                                            EconomyAPI.setInterestRate(interestRate);
-                                            player.sendMessage("§7You set the interest rate to §6" + interestRate + "§7!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("minimumDaysForInterest")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .then(new IntegerArgument("minimumDaysForInterest", 1)
-                                        .executesPlayer((player, args) -> {
-                                            int minimumDaysForInterest = (int) args[0];
-                                            EconomyAPI.setMinimumDaysForInterest(minimumDaysForInterest);
-                                            player.sendMessage("§7You set the minimum days to get interest to §6" + minimumDaysForInterest + "§7!");
-                                        })
-                                )
-                        )
-                        .then(new LiteralArgument("reset")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .executesPlayer((player, args) -> {
-                                    main.getPluginConfig().resetConfig();
-                                    EconomyAPI.resetConfigValues();
-                                    player.sendMessage("§7The config has been reset!");
-                                })
-                        )
-                        .then(new LiteralArgument("reload")
-                                .withRequirement(sender -> {
-                                    if (sender instanceof Player player) {
-                                        return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
-                                    }
-                                    return false;
-                                })
-                                .executesPlayer((player, args) -> {
-                                    main.getPluginConfig().reloadConfig();
-                                    player.sendMessage("§7The config has been reloaded!");
-                                })
-                        )
+                .then(of("pause")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .executesPlayer(commandExecution::pauseAuction)
                 )
-                .register();
+                .then(of("resume")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.PAUSE_RESUME_AUCTIONS) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .executesPlayer(commandExecution::resumeAuction)
+                )
+            )
+            .then(of("coins")
+                .then(of("give")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.GIVE_COINS) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new PlayerArgument("target")
+                        .then(new DoubleArgument("amount", 0)
+                            .executesPlayer(commandExecution::giveCoins)
+                        )
+                    )
+                )
+                .then(of("take")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.TAKE_COINS) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new PlayerArgument("target")
+                        .then(new DoubleArgument("amount", 0)
+                            .executesPlayer(commandExecution::takeCoins)
+                        )
+                    )
+                )
+                .then(of("set")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.SET_COINS) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new PlayerArgument("target")
+                        .then(new DoubleArgument("amount", 0)
+                            .executesPlayer(commandExecution::setCoins)
+                        )
+                    )
+                )
+                .then(of("baltop")
+                    .executesPlayer(commandExecution::balTop)
+                )
+            )
+            .then(of("permission")
+                .withRequirement(ServerOperator::isOp)
+                .then(of("clear")
+                    .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                        .executesPlayer(commandExecution::clearPermissions)
+                    )
+                )
+                .then(of("single")
+                    .then(of("set")
+                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                            .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
+                                .withRequirement(ServerOperator::isOp)
+                                .executesPlayer(commandExecution::setSinglePermission)
+                            )
+                        )
+                    )
+                    .then(of("remove")
+                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                            .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
+                                .withRequirement(ServerOperator::isOp)
+                                .executesPlayer(commandExecution::removeSinglePermission)
+                            )
+                        )
+                    )
+                    .then(of("get")
+                        .then(new PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                            .then(new ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().build()
+                                .withRequirement(ServerOperator::isOp)
+                                .executesPlayer(commandExecution::getSinglePermission)
+                            )
+                        )
+                    )
+                )
+            )
+            .then(of("friend")
+                .then(of("add")
+                    .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                        .executesPlayer(commandExecution::addFriend)
+                    )
+                )
+                .then(of("remove")
+                    .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                        .executesPlayer(commandExecution::removeFriend)
+                    )
+                )
+                .then(of("accept")
+                    .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                        .executesPlayer(commandExecution::acceptFriend)
+                    )
+                )
+                .then(of("deny")
+                    .then(new PlayerArgument("target").replaceSuggestions(ArgumentSuggestions.strings(suggestionInfo -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)))
+                        .executesPlayer(commandExecution::denyFriend)
+                    )
+                )
+            )
+            .then(of("config")
+                .then(of("allowDirectDownloads")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new BooleanArgument("allowDirectDownloads")
+                        .executesPlayer(commandExecution::allowDirectDownloads)
+                    )
+                )
+                .then(of("startBalance")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new DoubleArgument("startBalance", 0.0)
+                        .executesPlayer(commandExecution::startBalance)
+                    )
+                )
+                .then(of("interestRate")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new DoubleArgument("interestRate", 0.0)
+                        .executesPlayer(commandExecution::interestRate)
+                    )
+                )
+                .then(of("minimumDaysForInterest")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.MODIFY_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .then(new IntegerArgument("minimumDaysForInterest", 1)
+                        .executesPlayer(commandExecution::minimumDaysForInterest)
+                    )
+                )
+                .then(of("reset")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .executesPlayer(commandExecution::resetConfig)
+                )
+                .then(of("reload")
+                    .withRequirement(sender -> {
+                        if (sender instanceof Player player) {
+                            return Permission.hasPermission(player, Permission.RESET_CONFIG) || player.isOp();
+                        }
+                        return false;
+                    })
+                    .executesPlayer(commandExecution::reloadConfig)
+                )
+            )
+            .register();
     }
 }

@@ -1,19 +1,17 @@
 package me.derechtepilz.economy.itemmanagement;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import me.derechtepilz.economy.Main;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class LoadItem {
 
@@ -23,7 +21,7 @@ public class LoadItem {
         this.main = main;
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions", "unchecked"})
     public void loadItems() {
         try {
             File file = new File("./plugins/Economy");
@@ -49,6 +47,7 @@ public class LoadItem {
 
             for (int i = 0; i < runningAuctions.size(); i++) {
                 JsonObject itemObject = runningAuctions.get(i).getAsJsonObject();
+
                 Material material = Material.getMaterial(itemObject.get("material").getAsString());
                 int amount = itemObject.get("amount").getAsInt();
                 double price = itemObject.get("price").getAsDouble();
@@ -56,7 +55,15 @@ public class LoadItem {
                 UUID uuid = UUID.fromString(itemObject.get("uuid").getAsString());
                 int duration = itemObject.get("duration").getAsInt();
 
-                Item item = new Item(main, material, amount, price, seller, uuid, duration);
+                String displayName = itemObject.get("displayName").getAsString();
+                int damage = itemObject.get("damage").getAsInt();
+                int customModelData = itemObject.get("customModelData").getAsInt();
+
+                JsonElement enchantmentsElement = itemObject.get("enchantments");
+                Gson gson = new Gson();
+                Map<String, Integer> rawEnchantments = gson.fromJson(enchantmentsElement, Map.class);
+
+                Item item = new Item(main, material, amount, price, seller, uuid, duration, displayName, convertEnchantments(rawEnchantments), damage, customModelData);
                 item.register();
                 main.getLogger().info("Registered auction: " + item);
             }
@@ -74,6 +81,15 @@ public class LoadItem {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private Map<Enchantment, Integer> convertEnchantments(Map<String, Integer> rawEnchantments) {
+        Map<Enchantment, Integer> enchantments = new HashMap<>();
+        for (String enchantmentName : rawEnchantments.keySet()) {
+            Enchantment enchantment = new EnchantmentWrapper(enchantmentName);
+            enchantments.put(enchantment, Integer.valueOf(String.valueOf(rawEnchantments.get(enchantmentName)).split("\\.")[0]));
+        }
+        return enchantments;
     }
 
 }

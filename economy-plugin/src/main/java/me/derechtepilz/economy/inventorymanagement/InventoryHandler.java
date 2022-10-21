@@ -6,12 +6,8 @@ import me.derechtepilz.economy.offers.CancelOfferMenu;
 import me.derechtepilz.economy.utility.DataHandler;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.List;
 
 public class InventoryHandler {
 

@@ -1,6 +1,7 @@
 package me.derechtepilz.economy.utility;
 
 import me.derechtepilz.economy.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 
 public class NamespacedKeys {
@@ -19,5 +20,9 @@ public class NamespacedKeys {
     public static final NamespacedKey ITEM_PRICE = new NamespacedKey(Main.getPlugin(Main.class), "itemPrice");
     public static final NamespacedKey ITEM_SELLER = new NamespacedKey(Main.getPlugin(Main.class), "itemSeller");
     public static final NamespacedKey ITEM_UUID = new NamespacedKey(Main.getPlugin(Main.class), "itemUuid");
+
+    public static void sayHi(String name) {
+        Bukkit.broadcastMessage("Hi, " + name + "!");
+    }
 
 }

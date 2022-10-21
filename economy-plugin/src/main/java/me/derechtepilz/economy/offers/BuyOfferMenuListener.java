@@ -60,8 +60,6 @@ public class BuyOfferMenuListener implements Listener {
             if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
                 return;
             }
-            if (item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
-                return;
             UUID itemUuid = UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING));
             OfflinePlayer seller = Bukkit.getOfflinePlayer(UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ITEM_SELLER, PersistentDataType.STRING)));
 
@@ -79,7 +77,7 @@ public class BuyOfferMenuListener implements Listener {
                 potentialCustomers.put(itemUuid, new ArrayList<>(List.of(player.getUniqueId())));
             }
 
-            Bukkit.getScheduler().runTaskLater(Main.getPlugin(Main.class), () -> {
+            Bukkit.getScheduler().runTaskLater(main, () -> {
                 if (potentialCustomers.get(itemUuid).size() > 1) {
                     potentialCustomers.get(itemUuid).forEach(customer -> Bukkit.getPlayer(customer).sendMessage("§cCould not process purchase because there were too many interested customer!"));
                     potentialCustomers.remove(itemUuid);
@@ -114,7 +112,12 @@ public class BuyOfferMenuListener implements Listener {
                 }
 
                 // Give item to customer
-                player.getInventory().addItem(new ItemStack(item.getType(), item.getAmount()));
+                player.getInventory().addItem(main.getRegisteredItems().get(itemUuid).getBoughtItem());
+
+                // Unregister item
+                main.getOfferingPlayerUuids().remove(seller.getUniqueId());
+                main.getRegisteredItems().remove(itemUuid);
+                main.getRegisteredItemUuids().remove(itemUuid);
 
                 potentialCustomers.remove(itemUuid);
             }, 5);

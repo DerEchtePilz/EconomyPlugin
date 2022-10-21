@@ -37,11 +37,12 @@ class CancelOfferMenuListener(private val main: Main) : Listener {
             }
             if (item.itemMeta?.persistentDataContainer?.has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING) == false) return
             val itemUuid: UUID = UUID.fromString(item.itemMeta?.persistentDataContainer?.get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
+
+            player.inventory.addItem(main.registeredItems[itemUuid]!!.boughtItem)
+
             main.registeredItems.remove(itemUuid)
             main.registeredItemUuids.remove(itemUuid)
             main.offeringPlayerUuids.remove(player.uniqueId)
-
-            player.inventory.addItem(ItemStack(item.type, item.amount))
         }
     }
 

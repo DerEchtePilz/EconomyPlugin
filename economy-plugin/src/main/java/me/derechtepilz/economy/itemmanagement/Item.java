@@ -1,20 +1,23 @@
 package me.derechtepilz.economy.itemmanagement;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.derechtepilz.economy.Main;
+import me.derechtepilz.economy.utility.ItemBuilder;
 import me.derechtepilz.economy.utility.NamespacedKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class Item {
 
+    // General item and auction infos
     private final Main main;
     private final Material material;
     private final int amount;
@@ -23,7 +26,13 @@ public class Item {
     private final UUID uuid;
     public int duration;
 
-    public Item(Main main, Material material, int amount, double price, UUID seller, int duration) {
+    // Item meta infos
+    private final String displayName;
+    private final Map<Enchantment, Integer> enchantments;
+    private final int damage;
+    private final int customModelData;
+
+    public Item(Main main, Material material, int amount, double price, UUID seller, int duration, String displayName, Map<Enchantment, Integer> enchantments, int damage, int customModelData) {
         this.main = main;
         this.material = material;
         this.amount = amount;
@@ -31,9 +40,13 @@ public class Item {
         this.seller = seller;
         this.duration = duration;
         this.uuid = UUID.randomUUID();
+        this.displayName = displayName;
+        this.enchantments = enchantments;
+        this.damage = damage;
+        this.customModelData = customModelData;
     }
 
-    public Item(Main main, Material material, int amount, double price, UUID seller, UUID uuid, int duration) {
+    public Item(Main main, Material material, int amount, double price, UUID seller, UUID uuid, int duration, String displayName, Map<Enchantment, Integer> enchantments, int damage, int customModelData) {
         this.main = main;
         this.material = material;
         this.amount = amount;
@@ -41,29 +54,33 @@ public class Item {
         this.seller = seller;
         this.duration = duration;
         this.uuid = uuid;
+        this.displayName = displayName;
+        this.enchantments = enchantments;
+        this.damage = damage;
+        this.customModelData = customModelData;
     }
 
     public void register() {
         main.getRegisteredItemUuids().add(uuid);
         main.getOfferingPlayerUuids().add(seller);
-        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
+        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration, displayName, enchantments, damage, customModelData));
     }
 
     public ItemStack getItemStack() {
-        ItemStack itemStack = new ItemStack(material, amount);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_PRICE, PersistentDataType.DOUBLE, price);
-        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_SELLER, PersistentDataType.STRING, String.valueOf(seller));
-        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, String.valueOf(uuid));
-
         List<String> lore = new ArrayList<>();
         lore.add("§6Seller: §a" + Bukkit.getOfflinePlayer(seller).getName());
         lore.add("§6Price: §a" + price);
         lore.add("§6Expires in: §a" + convertSecondsToTime(duration));
 
-        itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return new ItemBuilder(material).setAmount(amount).setDescription(lore).setName(displayName).setDamage(damage).setEnchantments(enchantments).setCustomModelData(customModelData)
+            .setData(NamespacedKeys.ITEM_PRICE, PersistentDataType.DOUBLE, price)
+            .setData(NamespacedKeys.ITEM_SELLER, PersistentDataType.STRING, String.valueOf(seller))
+            .setData(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, String.valueOf(uuid))
+            .build();
+    }
+
+    public ItemStack getBoughtItem() {
+        return new ItemBuilder(material).setAmount(amount).setName(displayName).setDamage(damage).setEnchantments(enchantments).setCustomModelData(customModelData).build();
     }
 
     public void decreaseDurationAndUpdate() {
@@ -72,13 +89,13 @@ public class Item {
             main.getRegisteredItemUuids().remove(uuid);
 
             List<ItemStack> expiredItems = (main.getExpiredItems().containsKey(seller)) ? main.getExpiredItems().get(seller) : new ArrayList<>();
-            expiredItems.add(new ItemStack(material, amount));
+            expiredItems.add(new ItemBuilder(material).setName(displayName).setAmount(amount).setEnchantments(enchantments).setDamage(damage).setCustomModelData(customModelData).build());
             main.getExpiredItems().put(seller, expiredItems);
 
             return;
         }
         duration -= 1;
-        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration));
+        main.getRegisteredItems().put(uuid, new Item(main, material, amount, price, seller, uuid, duration, displayName, enchantments, damage, customModelData));
     }
 
     private String convertSecondsToTime(int duration) {
@@ -100,19 +117,36 @@ public class Item {
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public JsonObject saveItem() {
         JsonObject item = new JsonObject();
         item.addProperty("material", material.name());
         item.addProperty("amount", amount);
+        item.addProperty("displayName", displayName);
         item.addProperty("price", price);
         item.addProperty("seller", seller.toString());
         item.addProperty("uuid", uuid.toString());
         item.addProperty("duration", duration);
+        item.addProperty("damage", damage);
+        item.addProperty("customModelData", customModelData);
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<HashMap<String, Integer>>(){}.getType();
+
+        item.add("enchantments", gson.toJsonTree(convertEnchantments(), type));
         return item;
     }
 
     public UUID getSeller() {
         return seller;
+    }
+
+    private TreeMap<String, Integer> convertEnchantments() {
+        TreeMap<String, Integer> readyForJsonMap = new TreeMap<>();
+        for (Enchantment enchantment : enchantments.keySet()) {
+            readyForJsonMap.put(enchantment.getKey().getKey(), enchantments.get(enchantment));
+        }
+        return readyForJsonMap;
     }
 
     @Override
