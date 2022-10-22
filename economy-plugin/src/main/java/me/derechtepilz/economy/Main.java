@@ -20,6 +20,8 @@ import me.derechtepilz.economy.offers.BuyOfferMenuListener;
 import me.derechtepilz.economy.offers.CancelOfferMenuListener;
 import me.derechtepilz.economy.offers.ExpiredOfferMenu;
 import me.derechtepilz.economy.permissionmanagement.Permission;
+import me.derechtepilz.economy.tests.inventory.InventoryTest;
+import me.derechtepilz.economy.tests.inventory.InventoryTestCommand;
 import me.derechtepilz.economy.updatemanagement.UpdateChecker;
 import me.derechtepilz.economy.updatemanagement.UpdateDownload;
 import me.derechtepilz.economy.updatemanagement.UpdateInformation;
@@ -45,6 +47,8 @@ import static org.fusesource.jansi.Ansi.*;
 
 public final class Main extends JavaPlugin {
 
+	private final boolean isDevelopment = true;
+
 	private boolean isVersionSupported;
 	private final Main main = this;
 	private String updatedPluginName = "";
@@ -61,6 +65,9 @@ public final class Main extends JavaPlugin {
 		}
 		return logger;
 	}
+
+	// Tests
+	private InventoryTest inventoryTest;
 
 	// Store item-related fields
 	private final List<UUID> registeredItemUuids = new ArrayList<>();
@@ -115,11 +122,12 @@ public final class Main extends JavaPlugin {
 		if (!isNewUpdateAvailable) {
 			database = EconomyAPI.onEnable(main);
 
+			inventoryTest = new InventoryTest(main);
+
 			if (isVersionSupported) {
 				CommandAPI.onEnable(main);
 				commandRegistration();
 			}
-
 			listenerRegistration();
 			inventoryManagementTaskId = inventoryHandler.updateOffersAndInventory();
 			coinDisplayTaskId = coinDisplay.displayCoins();
@@ -177,6 +185,10 @@ public final class Main extends JavaPlugin {
 	private void commandRegistration() {
 		economyCommand.register();
 		consoleCommands.register();
+
+		if (isDevelopment) {
+			new InventoryTestCommand(main).register();
+		}
 	}
 
 	private void listenerRegistration() {
@@ -192,12 +204,21 @@ public final class Main extends JavaPlugin {
 			shouldRegisterUpdateInformation = false;
 		}
 
+		if (isDevelopment) {
+			manager.registerEvents(inventoryTest, this);
+		}
+
 		manager.registerEvents(new Listener() {
 			@EventHandler
 			public void onJoin(PlayerJoinEvent event) {
 				Permission.updatePermissions(event.getPlayer());
 			}
 		}, this);
+	}
+
+	// Test
+	public InventoryTest getInventoryTest() {
+		return inventoryTest;
 	}
 
 	// Store item-related methods
