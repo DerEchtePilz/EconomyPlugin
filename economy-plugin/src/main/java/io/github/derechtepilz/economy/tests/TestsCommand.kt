@@ -1,4 +1,4 @@
-package io.github.derechtepilz.economy.tests.inventory
+package io.github.derechtepilz.economy.tests
 
 import dev.jorel.commandapi.CommandTree
 import dev.jorel.commandapi.arguments.IntegerArgument
@@ -7,7 +7,7 @@ import io.github.derechtepilz.economy.Main
 
 import dev.jorel.commandapi.arguments.LiteralArgument.of
 
-class InventoryTestCommand(main: Main) {
+class TestsCommand(main: Main) {
 
     private val inventoryTest = main.inventoryTest
 

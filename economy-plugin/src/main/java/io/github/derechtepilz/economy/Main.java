@@ -2,8 +2,10 @@ package io.github.derechtepilz.economy;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import io.github.derechtepilz.database.Database;
 import io.github.derechtepilz.economy.coinmanagement.CoinDisplay;
 import io.github.derechtepilz.economy.coinmanagement.JoinCoinManagement;
+import io.github.derechtepilz.economy.commands.ConsoleCommands;
 import io.github.derechtepilz.economy.commands.EconomyCommand;
 import io.github.derechtepilz.economy.friendmanagement.Friend;
 import io.github.derechtepilz.economy.friendmanagement.FriendRequest;
@@ -12,20 +14,18 @@ import io.github.derechtepilz.economy.friendmanagement.SaveFriends;
 import io.github.derechtepilz.economy.inventorymanagement.InventoryHandler;
 import io.github.derechtepilz.economy.inventorymanagement.ItemUpdater;
 import io.github.derechtepilz.economy.itemmanagement.Item;
+import io.github.derechtepilz.economy.itemmanagement.LoadItem;
+import io.github.derechtepilz.economy.itemmanagement.SaveItem;
+import io.github.derechtepilz.economy.offers.BuyOfferMenuListener;
 import io.github.derechtepilz.economy.offers.CancelOfferMenuListener;
 import io.github.derechtepilz.economy.offers.ExpiredOfferMenu;
 import io.github.derechtepilz.economy.permissionmanagement.Permission;
+import io.github.derechtepilz.economy.tests.TestsCommand;
 import io.github.derechtepilz.economy.tests.inventory.InventoryTest;
-import io.github.derechtepilz.economy.tests.inventory.InventoryTestCommand;
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker;
 import io.github.derechtepilz.economy.updatemanagement.UpdateDownload;
 import io.github.derechtepilz.economy.updatemanagement.UpdateInformation;
 import io.github.derechtepilz.economy.utility.Config;
-import io.github.derechtepilz.database.Database;
-import io.github.derechtepilz.economy.commands.ConsoleCommands;
-import io.github.derechtepilz.economy.itemmanagement.LoadItem;
-import io.github.derechtepilz.economy.itemmanagement.SaveItem;
-import io.github.derechtepilz.economy.offers.BuyOfferMenuListener;
 import io.github.derechtepilz.economycore.EconomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -36,14 +36,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public final class Main extends JavaPlugin {
 
@@ -189,7 +189,7 @@ public final class Main extends JavaPlugin {
         consoleCommands.register();
 
         if (isDevelopment) {
-            new InventoryTestCommand(main).register();
+            new TestsCommand(main).register();
         }
     }
 
