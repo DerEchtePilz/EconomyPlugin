@@ -40,7 +40,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>dev.jorel.commandapi</pattern>
-                                    <shadedPattern>me.derechtepilz.economy.commandapi</shadedPattern>
+                                    <shadedPattern>io.github.derechtepilz.economy.commandapi</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

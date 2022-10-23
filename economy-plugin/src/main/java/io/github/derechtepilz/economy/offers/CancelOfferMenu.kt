@@ -2,6 +2,8 @@ package io.github.derechtepilz.economy.offers
 
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.inventorymanagement.InventoryUtility
+import io.github.derechtepilz.economy.itemmanagement.Item
+import io.github.derechtepilz.economy.utility.DataHandler
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -28,7 +30,7 @@ class CancelOfferMenu(private val main: Main) {
         }
         cancelMenu!!.contents = playerOffers[player.uniqueId]!![page]
 
-        if (_root_ide_package_.io.github.derechtepilz.economy.utility.DataHandler.canInventoryOpen(player)) {
+        if (DataHandler.canInventoryOpen(player)) {
             if (player.openInventory.title == "Cancel your offers") {
                 player.openInventory.topInventory.contents = playerOffers[player.uniqueId]!![page]
                 return
@@ -40,7 +42,7 @@ class CancelOfferMenu(private val main: Main) {
     private fun preparePlayerItems(player: Player) {
         val offers: MutableList<ItemStack> = mutableListOf()
         for (uuid in main.registeredItems.keys) {
-            val item: _root_ide_package_.io.github.derechtepilz.economy.itemmanagement.Item = main.registeredItems[uuid] ?: continue
+            val item: Item = main.registeredItems[uuid] ?: continue
             if (!(item.seller.equals(player.uniqueId))) {
                 continue
             }

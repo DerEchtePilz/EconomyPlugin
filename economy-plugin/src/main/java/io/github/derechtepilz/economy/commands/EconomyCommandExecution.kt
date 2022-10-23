@@ -2,7 +2,9 @@ package io.github.derechtepilz.economy.commands
 
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.componentapi.ChatComponentAPI
+import io.github.derechtepilz.economy.itemmanagement.Item
 import io.github.derechtepilz.economy.permissionmanagement.Permission
+import io.github.derechtepilz.economy.utility.DataHandler
 import io.github.derechtepilz.economycore.EconomyAPI
 import io.github.derechtepilz.economycore.exceptions.BalanceException
 import net.md_5.bungee.api.chat.ClickEvent
@@ -19,7 +21,7 @@ class EconomyCommandExecution(private val main: Main) {
             player.sendMessage("§cThe auctions are currently paused. Try again later!")
             return
         }
-        _root_ide_package_.io.github.derechtepilz.economy.utility.DataHandler.setBuyMenuData(player)
+        DataHandler.setBuyMenuData(player)
         player.sendMessage("§aYou opened the buy menu!")
     }
 
@@ -29,7 +31,7 @@ class EconomyCommandExecution(private val main: Main) {
             return
         }
         val filter = args[0] as ItemStack
-        _root_ide_package_.io.github.derechtepilz.economy.utility.DataHandler.setBuyMenuData(player, filter)
+        DataHandler.setBuyMenuData(player, filter)
         player.sendMessage("§aYou opened the buy menu!")
     }
 
@@ -61,18 +63,7 @@ class EconomyCommandExecution(private val main: Main) {
 
             if (currentItem.type == item.type) {
                 if (currentItem.amount >= amount) {
-                    val offer = _root_ide_package_.io.github.derechtepilz.economy.itemmanagement.Item(
-                        main,
-                        item.type,
-                        amount,
-                        price,
-                        player.uniqueId,
-                        duration,
-                        meta.displayName,
-                        meta.enchants,
-                        itemDamage,
-                        customModelData
-                    )
+                    val offer = Item(main, item.type, amount, price, player.uniqueId, duration, meta.displayName, meta.enchants, itemDamage, customModelData)
                     offer.register()
                     currentItem.amount = currentItem.amount - item.amount
                     player.inventory.setItem(i, currentItem)
@@ -98,7 +89,7 @@ class EconomyCommandExecution(private val main: Main) {
             player.sendMessage("§cDidn't open cancel menu because you didn't auction an item!")
             return
         }
-        _root_ide_package_.io.github.derechtepilz.economy.utility.DataHandler.setCancelMenuData(player)
+        DataHandler.setCancelMenuData(player)
         player.sendMessage("§aYou opened the cancel menu!")
     }
 
