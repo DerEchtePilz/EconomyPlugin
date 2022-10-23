@@ -104,7 +104,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.derechtepilz</groupId>
+            <groupId>io.github.derechtepilz</groupId>
             <artifactId>economy-database</artifactId>
             <version>1.0.0</version>
         </dependency>
