@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>me.derechtepilz</groupId>
+        <groupId>io.github.derechtepilz</groupId>
         <artifactId>economy</artifactId>
-        <version>3.0.1</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>economy-coinapi</artifactId>

@@ -47,7 +47,7 @@ import static org.fusesource.jansi.Ansi.*;
 
 public final class Main extends JavaPlugin {
 
-    private final boolean isDevelopment = true;
+    private final boolean isDevelopment = false;
 
     private boolean isVersionSupported;
     private final Main main = this;
@@ -122,7 +122,9 @@ public final class Main extends JavaPlugin {
         if (!isNewUpdateAvailable) {
             database = EconomyAPI.onEnable(main);
 
-            inventoryTest = new InventoryTest(main);
+            if (isDevelopment) {
+                inventoryTest = new InventoryTest(main);
+            }
 
             if (isVersionSupported) {
                 CommandAPI.onEnable(main);
