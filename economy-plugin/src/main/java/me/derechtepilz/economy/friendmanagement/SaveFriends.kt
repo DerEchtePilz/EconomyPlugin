@@ -8,18 +8,18 @@ import java.util.*
 
 class SaveFriends(private val main: Main) {
 
-	fun saveFriends() {
-		val dir = File("./plugins/Economy/Friends")
-		if (!dir.exists()) {
-			dir.mkdir()
-		}
-		for (uuid: UUID in main.friend.getFriends().keys) {
-			val fileOutputStream = FileOutputStream("$uuid.bin")
-			val objectOutputStream = ObjectOutputStream(fileOutputStream)
-			objectOutputStream.writeObject(main.friend.getFriends()[uuid])
-			objectOutputStream.close()
-		}
-	}
+    fun saveFriends() {
+        val dir = File("./plugins/Economy/Friends")
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+        for (uuid: UUID in main.friend.getFriends().keys) {
+            val fileOutputStream = FileOutputStream("$uuid.bin")
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.writeObject(main.friend.getFriends()[uuid])
+            objectOutputStream.close()
+        }
+    }
 
 
 }

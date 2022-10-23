@@ -9,22 +9,22 @@ import org.bukkit.entity.Player;
 
 public class ConsoleCommands {
 
-	private final Main main;
+    private final Main main;
 
-	public ConsoleCommands(Main main) {
-		this.main = main;
-	}
+    public ConsoleCommands(Main main) {
+        this.main = main;
+    }
 
-	public void register() {
-		new CommandTree("sudo")
-			.then(new LiteralArgument("removeInventoryData")
-				.then(new PlayerArgument("player")
-					.executesConsole((console, args) -> {
-						Player player = (Player) args[0];
-						player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_PAGE);
-						player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_TYPE);
-					})))
-			.register();
-	}
+    public void register() {
+        new CommandTree("sudo")
+            .then(new LiteralArgument("removeInventoryData")
+                .then(new PlayerArgument("player")
+                    .executesConsole((console, args) -> {
+                        Player player = (Player) args[0];
+                        player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_PAGE);
+                        player.getPersistentDataContainer().remove(NamespacedKeys.INVENTORY_TYPE);
+                    })))
+            .register();
+    }
 
 }

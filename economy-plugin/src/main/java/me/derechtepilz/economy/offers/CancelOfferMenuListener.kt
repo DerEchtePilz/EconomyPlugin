@@ -15,43 +15,43 @@ import java.util.UUID
 
 class CancelOfferMenuListener(private val main: Main) : Listener {
 
-	@EventHandler
-	fun onClick(event: InventoryClickEvent) {
-		if (event.view.title == "Cancel your offers") {
-			event.isCancelled = true
-			val player: Player = event.whoClicked as Player
+    @EventHandler
+    fun onClick(event: InventoryClickEvent) {
+        if (event.view.title == "Cancel your offers") {
+            event.isCancelled = true
+            val player: Player = event.whoClicked as Player
 
-			if (event.currentItem == null) return
-			val item: ItemStack = event.currentItem!!
-			if (item == StandardInventoryItems.MENU_CLOSE) {
-				player.closeInventory()
-				return
-			}
-			if (item == StandardInventoryItems.ARROW_PREVIOUS) {
-				DataHandler.updateMenuPage(player, DataHandler.getCurrentPage(player) - 1)
-				return
-			}
-			if (item == StandardInventoryItems.ARROW_NEXT) {
-				DataHandler.updateMenuPage(player, DataHandler.getCurrentPage(player) + 1)
-				return
-			}
-			if (item.itemMeta?.persistentDataContainer?.has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING) == false) return
-			val itemUuid: UUID = UUID.fromString(item.itemMeta?.persistentDataContainer?.get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
+            if (event.currentItem == null) return
+            val item: ItemStack = event.currentItem!!
+            if (item == StandardInventoryItems.MENU_CLOSE) {
+                player.closeInventory()
+                return
+            }
+            if (item == StandardInventoryItems.ARROW_PREVIOUS) {
+                DataHandler.updateMenuPage(player, DataHandler.getCurrentPage(player) - 1)
+                return
+            }
+            if (item == StandardInventoryItems.ARROW_NEXT) {
+                DataHandler.updateMenuPage(player, DataHandler.getCurrentPage(player) + 1)
+                return
+            }
+            if (item.itemMeta?.persistentDataContainer?.has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING) == false) return
+            val itemUuid: UUID = UUID.fromString(item.itemMeta?.persistentDataContainer?.get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING))
 
-			player.inventory.addItem(main.registeredItems[itemUuid]!!.boughtItem)
+            player.inventory.addItem(main.registeredItems[itemUuid]!!.boughtItem)
 
-			main.registeredItems.remove(itemUuid)
-			main.registeredItemUuids.remove(itemUuid)
-			main.offeringPlayerUuids.remove(player.uniqueId)
-		}
-	}
+            main.registeredItems.remove(itemUuid)
+            main.registeredItemUuids.remove(itemUuid)
+            main.offeringPlayerUuids.remove(player.uniqueId)
+        }
+    }
 
-	@EventHandler
-	fun onClose(event: InventoryCloseEvent) {
-		val player = event.player as Player
-		if (event.view.title == "Cancel your offers") {
-			DataHandler.removeMenuData(player)
-		}
-	}
+    @EventHandler
+    fun onClose(event: InventoryCloseEvent) {
+        val player = event.player as Player
+        if (event.view.title == "Cancel your offers") {
+            DataHandler.removeMenuData(player)
+        }
+    }
 
 }

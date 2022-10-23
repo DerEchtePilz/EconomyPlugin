@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface ChangeMessage {
 
-	String changeMessage();
+    String changeMessage();
 
 }
