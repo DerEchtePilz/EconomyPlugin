@@ -4,6 +4,7 @@ import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.componentapi.ChatComponentAPI
 import io.github.derechtepilz.economy.itemmanagement.Item
 import io.github.derechtepilz.economy.permissionmanagement.Permission
+import io.github.derechtepilz.economy.permissionmanagement.PermissionGroup
 import io.github.derechtepilz.economy.utility.DataHandler
 import io.github.derechtepilz.economycore.EconomyAPI
 import io.github.derechtepilz.economycore.exceptions.BalanceException
@@ -267,7 +268,68 @@ class EconomyCommandExecution(private val main: Main) {
     fun setPermissionGroup(player: Player, args: Array<Any>) {
         val target = args[0] as Player
         val permissionGroups = args[1] as List<String>
+        for (group in permissionGroups) {
+            if (!PermissionGroup.exists(group)) {
+                player.sendMessage("§cThe permission group §6$group §cwas not found!")
+                return
+            }
+            if (PermissionGroup.hasPermissionGroup(target, group)) {
+                player.sendMessage("§cThe player §b${target.name} §calready has the permission group §6$group§c!")
+                return
+            }
+            PermissionGroup.setPermissionGroup(target, group)
+            if (target == player) {
+                player.sendMessage("§cYou have been given the permission §6$group§c!")
+            } else {
+                target.sendMessage("§cYou have been given the permission §6$group§c!")
+                player.sendMessage("§cThe permission §6$group §cwas given to §b${target.name}§c!")
+            }
+        }
+    }
 
+    @Suppress("UNCHECKED_CAST")
+    fun removePermissionGroup(player: Player, args: Array<Any>) {
+        val target = args[0] as Player
+        val permissionGroups = args[1] as List<String>
+        for (group in permissionGroups) {
+            if (!PermissionGroup.exists(group)) {
+                player.sendMessage("§cThe permission group §6$group §cwas not found!")
+                return
+            }
+            if (!PermissionGroup.hasPermissionGroup(target, group)) {
+                player.sendMessage("§cThe player §b${target.name} §cdoes not have the permission group §6$group§c!")
+                return
+            }
+            PermissionGroup.removePermissionGroup(target, group)
+            if (target == player) {
+                player.sendMessage("§cYou have been taken the permission §6$group§c!")
+            } else {
+                target.sendMessage("§cYou have been taken the permission §6$group§c!")
+                player.sendMessage("§cThe permission §6$group §cwas taken from §b${target.name}§c!")
+            }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun registerPermissionGroup(player: Player, args: Array<Any>) {
+        val groupName = args[0] as String
+        val permissions = args[1] as MutableList<String>
+        if (PermissionGroup.exists(groupName)) {
+            player.sendMessage("§cThe permission group §6$groupName §calready exists! Please delete it if you want to re-create it!")
+            return
+        }
+        PermissionGroup.registerPermissionGroup(groupName, permissions)
+        player.sendMessage("§aThe permission group §6$groupName §awas created successfully!")
+    }
+
+    fun deletePermissionGroup(player: Player, args: Array<Any>) {
+        val groupName = args[0] as String
+        if (!PermissionGroup.exists(groupName)) {
+            player.sendMessage("§cThe permission group §6$groupName §cdoes not exist! Please create it first if you want to delete it!")
+            return
+        }
+        PermissionGroup.deletePermissionGroup(groupName)
+        player.sendMessage("§cThe permission group §6$groupName §cwas deleted successfully!")
     }
 
     fun getSinglePermission(player: Player, args: Array<Any>) {

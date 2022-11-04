@@ -1,20 +1,16 @@
 package io.github.derechtepilz.economy.commands
 
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
-import dev.jorel.commandapi.arguments.EntitySelector
 import dev.jorel.commandapi.arguments.ListArgumentBuilder
 import dev.jorel.commandapi.arguments.LiteralArgument.of
 import dev.jorel.commandapi.arguments.PlayerArgument
 import dev.jorel.commandapi.arguments.StringArgument
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.permissionmanagement.Permission
-import io.github.derechtepilz.economy.permissionmanagement.Permission.Companion.getPermissions
-import io.github.derechtepilz.economy.permissionmanagement.Permission.Companion.hasPermission
 import io.github.derechtepilz.economy.permissionmanagement.PermissionGroup
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.util.function.Supplier
 
 class EconomyCommand(main: Main) {
     private val commandExecution: EconomyCommandExecution = EconomyCommandExecution(main)
@@ -59,19 +55,19 @@ class EconomyCommand(main: Main) {
                         commandExecution.claimAuction(player, args)
                     }
                 }
-                requirement(of("pause"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
+                requirement(of("pause"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.pauseAuction(player, args)
                     }
                 }
-                requirement(of("resume"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
+                requirement(of("resume"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.resumeAuction(player, args)
                     }
                 }
             }
             literalArgument("coins") {
-                requirement(of("give"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.GIVE_COINS) || sender.isOp }) {
+                requirement(of("give"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.GIVE_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -80,7 +76,7 @@ class EconomyCommand(main: Main) {
                         }
                     }
                 }
-                requirement(of("take"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.TAKE_COINS) || sender.isOp }) {
+                requirement(of("take"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.TAKE_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -89,7 +85,7 @@ class EconomyCommand(main: Main) {
                         }
                     }
                 }
-                requirement(of("set"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.SET_COINS) || sender.isOp }) {
+                requirement(of("set"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.SET_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -115,7 +111,7 @@ class EconomyCommand(main: Main) {
                 literalArgument("single") {
                     literalArgument("set") {
                         argument(PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings{ Bukkit.getOnlinePlayers().stream().map { obj: Player -> obj.name }.toList().toTypedArray() })) {
-                            argument(ListArgumentBuilder<String>("permission", ",").allowDuplicates(false).withList(getPermissions()).withStringMapper().buildGreedy()) {
+                            argument(ListArgumentBuilder<String>("permission", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().buildGreedy()) {
                                 playerExecutor { player, args ->
                                     commandExecution.setSinglePermission(player, args)
                                 }
@@ -124,7 +120,7 @@ class EconomyCommand(main: Main) {
                     }
                     literalArgument("remove") {
                         argument(PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings{ Bukkit.getOnlinePlayers().stream().map { obj: Player -> obj.name }.toList().toTypedArray() })) {
-                            argument(ListArgumentBuilder<String>("permission", ",").allowDuplicates(false).withList(getPermissions()).withStringMapper().buildGreedy()) {
+                            argument(ListArgumentBuilder<String>("permission", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().buildGreedy()) {
                                 playerExecutor { player, args ->
                                     commandExecution.removeSinglePermission(player, args)
                                 }
@@ -137,7 +133,7 @@ class EconomyCommand(main: Main) {
                         argument(PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings { Bukkit.getOnlinePlayers().stream().map { obj: Player -> obj.name }.toList().toTypedArray() })) {
                             argument(ListArgumentBuilder<String>("permissionGroup", ",").allowDuplicates(false).withList(PermissionGroup.getPermissionGroups()).withStringMapper().buildGreedy()) {
                                 playerExecutor { player, args ->
-                                    // TODO: Implement setting a group for a player
+                                    commandExecution.setPermissionGroup(player, args)
                                 }
                             }
                         }
@@ -146,7 +142,7 @@ class EconomyCommand(main: Main) {
                         argument(PlayerArgument("player").replaceSuggestions(ArgumentSuggestions.strings { Bukkit.getOnlinePlayers().stream().map { obj: Player -> obj.name }.toList().toTypedArray() })) {
                             argument(ListArgumentBuilder<String>("permissionGroup", ",").allowDuplicates(false).withList(PermissionGroup.getPermissionGroups()).withStringMapper().buildGreedy()) {
                                 playerExecutor { player, args ->
-                                    // TODO: Implement removing a group for a player
+                                    commandExecution.removePermissionGroup(player, args)
                                 }
                             }
                         }
@@ -155,7 +151,7 @@ class EconomyCommand(main: Main) {
                         stringArgument("name") {
                             argument(ListArgumentBuilder<String>("permissions", ",").allowDuplicates(false).withList(Permission.getPermissions()).withStringMapper().buildGreedy()) {
                                 playerExecutor { player, args ->
-                                    // TODO: Implement registering a permission group
+                                    commandExecution.registerPermissionGroup(player, args)
                                 }
                             }
                         }
@@ -163,7 +159,7 @@ class EconomyCommand(main: Main) {
                     literalArgument("delete") {
                         argument(StringArgument("permissionGroup").replaceSuggestions(ArgumentSuggestions.strings { PermissionGroup.getPermissionGroups().toTypedArray() })) {
                             playerExecutor { player, args ->
-                                // TODO: Implement deleting a permission group
+                                commandExecution.deletePermissionGroup(player, args)
                             }
                         }
                     }
@@ -207,40 +203,40 @@ class EconomyCommand(main: Main) {
                 }
             }
             literalArgument("config") {
-                requirement(of("allowDirectDownloads"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("allowDirectDownloads"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     booleanArgument("allowDirectDownloads") {
                         playerExecutor { player, args ->
                             commandExecution.allowDirectDownloads(player, args)
                         }
                     }
                 }
-                requirement(of("startBalance"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("startBalance"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     doubleArgument("startBalance", 0.0) {
                         playerExecutor { player, args ->
                             commandExecution.startBalance(player, args)
                         }
                     }
                 }
-                requirement(of("interestRate"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("interestRate"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     doubleArgument("interestRate", 0.0) {
                         playerExecutor { player, args ->
                             commandExecution.interestRate(player, args)
                         }
                     }
                 }
-                requirement(of("minimumDaysForInterest"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("minimumDaysForInterest"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     integerArgument("minimumDaysForInterest", 1) {
                         playerExecutor { player, args ->
                             commandExecution.minimumDaysForInterest(player, args)
                         }
                     }
                 }
-                requirement(of("reset"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
+                requirement(of("reset"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.resetConfig(player, args)
                     }
                 }
-                requirement(of("reload"), { sender: CommandSender -> (sender is Player) && hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
+                requirement(of("reload"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.reloadConfig(player, args)
                     }
