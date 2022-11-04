@@ -20,6 +20,7 @@ import io.github.derechtepilz.economy.offers.BuyOfferMenuListener;
 import io.github.derechtepilz.economy.offers.CancelOfferMenuListener;
 import io.github.derechtepilz.economy.offers.ExpiredOfferMenu;
 import io.github.derechtepilz.economy.permissionmanagement.Permission;
+import io.github.derechtepilz.economy.permissionmanagement.PermissionGroup;
 import io.github.derechtepilz.economy.tests.TestsCommand;
 import io.github.derechtepilz.economy.tests.inventory.InventoryTest;
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker;
@@ -47,7 +48,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public final class Main extends JavaPlugin {
 
-    private final boolean isDevelopment = false;
+    private final boolean isDevelopment = true;
 
     private boolean isVersionSupported;
     private final Main main = this;
@@ -159,6 +160,7 @@ public final class Main extends JavaPlugin {
         if (!isNewUpdateAvailable) {
             EconomyAPI.onLoad();
             loadItem.loadItems();
+            PermissionGroup.INSTANCE.loadPermissionGroups();
 
             String version = Bukkit.getBukkitVersion().split("-")[0];
             isVersionSupported = VersionHandler.isVersionSupported(version);
@@ -175,6 +177,7 @@ public final class Main extends JavaPlugin {
         if (!isNewUpdateAvailable) {
             saveItem.saveItems();
             saveFriends.saveFriends();
+            PermissionGroup.INSTANCE.savePermissionGroups();
 
             Bukkit.getScheduler().cancelTask(inventoryManagementTaskId);
             Bukkit.getScheduler().cancelTask(coinDisplayTaskId);

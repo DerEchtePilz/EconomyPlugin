@@ -4,3 +4,4 @@ main: io.github.derechtepilz.economy.Main
 api-version: 1.13
 authors: [ DerEchtePilz ]
 description: This plugin allows you to sell items!
+database: true

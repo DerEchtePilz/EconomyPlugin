@@ -263,6 +263,13 @@ class EconomyCommandExecution(private val main: Main) {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun setPermissionGroup(player: Player, args: Array<Any>) {
+        val target = args[0] as Player
+        val permissionGroups = args[1] as List<String>
+
+    }
+
     fun getSinglePermission(player: Player, args: Array<Any>) {
         val target = args[0] as Player
         val permissions = Permission.getPermissions(target)
