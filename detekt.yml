@@ -1,0 +1,2 @@
+ForbiddenComment:
+  allowedPatterns: '// TODO'
