@@ -93,6 +93,12 @@ public class Database {
         }
     }
 
+    public void registerPlayer(UUID uuid, double balance, long lastInterest, double startBalance) {
+        this.balance.put(uuid, balance);
+        this.startBalance.put(uuid, startBalance);
+        this.lastInterest.put(uuid, lastInterest);
+    }
+
     public void registerPlayer(Connection connection, UUID uuid, double balance, long lastInterest, double startBalance) {
         String sql = "INSERT into bankAccounts(uuid, balance, lastInterest, startBalance) VALUES(?,?,?,?)";
         try {
@@ -105,6 +111,10 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isPlayerAccountRegistered(UUID uuid) {
+        return balance.containsKey(uuid);
     }
 
     public boolean isPlayerAccountRegistered(Connection connection, UUID uuid) {
@@ -122,16 +132,6 @@ public class Database {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public void registerPlayer(UUID uuid, double balance, long lastInterest, double startBalance) {
-        this.balance.put(uuid, balance);
-        this.startBalance.put(uuid, startBalance);
-        this.lastInterest.put(uuid, lastInterest);
-    }
-
-    public boolean isPlayerAccountRegistered(UUID uuid) {
-        return balance.containsKey(uuid);
     }
 
     public void deletePlayer(Connection connection, UUID uuid) {
