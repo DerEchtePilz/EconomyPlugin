@@ -231,12 +231,12 @@ class EconomyCommand(main: Main) {
                         }
                     }
                 }
-                requirement(of("reset"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
+                requirement(of("reset"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.resetConfig(player, args)
                     }
                 }
-                requirement(of("reload"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
+                requirement(of("reload"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.RESET_CONFIG) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.reloadConfig(player, args)
                     }

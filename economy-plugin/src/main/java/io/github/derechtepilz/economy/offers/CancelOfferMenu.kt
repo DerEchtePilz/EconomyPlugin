@@ -43,7 +43,7 @@ class CancelOfferMenu(private val main: Main) {
         val offers: MutableList<ItemStack> = mutableListOf()
         for (uuid in main.registeredItems.keys) {
             val item: Item = main.registeredItems[uuid] ?: continue
-            if (!(item.seller.equals(player.uniqueId))) {
+            if (!item.seller.equals(player.uniqueId)) {
                 continue
             }
             offers.add(item.itemStack)
