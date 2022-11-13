@@ -55,19 +55,19 @@ class EconomyCommand(main: Main) {
                         commandExecution.claimAuction(player, args)
                     }
                 }
-                requirement(of("pause"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
+                requirement(of("pause"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.pauseAuction(player, args)
                     }
                 }
-                requirement(of("resume"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
+                requirement(of("resume"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.PAUSE_RESUME_AUCTIONS) || sender.isOp }) {
                     playerExecutor { player, args ->
                         commandExecution.resumeAuction(player, args)
                     }
                 }
             }
             literalArgument("coins") {
-                requirement(of("give"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.GIVE_COINS) || sender.isOp }) {
+                requirement(of("give"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.GIVE_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -76,7 +76,7 @@ class EconomyCommand(main: Main) {
                         }
                     }
                 }
-                requirement(of("take"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.TAKE_COINS) || sender.isOp }) {
+                requirement(of("take"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.TAKE_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -85,7 +85,7 @@ class EconomyCommand(main: Main) {
                         }
                     }
                 }
-                requirement(of("set"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.SET_COINS) || sender.isOp }) {
+                requirement(of("set"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.SET_COINS) || sender.isOp }) {
                     playerArgument("target") {
                         doubleArgument("amount", 0.0) {
                             playerExecutor { player, args ->
@@ -203,28 +203,28 @@ class EconomyCommand(main: Main) {
                 }
             }
             literalArgument("config") {
-                requirement(of("allowDirectDownloads"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("allowDirectDownloads"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     booleanArgument("allowDirectDownloads") {
                         playerExecutor { player, args ->
                             commandExecution.allowDirectDownloads(player, args)
                         }
                     }
                 }
-                requirement(of("startBalance"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("startBalance"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     doubleArgument("startBalance", 0.0) {
                         playerExecutor { player, args ->
                             commandExecution.startBalance(player, args)
                         }
                     }
                 }
-                requirement(of("interestRate"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("interestRate"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     doubleArgument("interestRate", 0.0) {
                         playerExecutor { player, args ->
                             commandExecution.interestRate(player, args)
                         }
                     }
                 }
-                requirement(of("minimumDaysForInterest"), { sender: CommandSender -> (sender is Player) && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
+                requirement(of("minimumDaysForInterest"), { sender: CommandSender -> sender is Player && Permission.hasPermission(sender, Permission.MODIFY_CONFIG) || sender.isOp }) {
                     integerArgument("minimumDaysForInterest", 1) {
                         playerExecutor { player, args ->
                             commandExecution.minimumDaysForInterest(player, args)
