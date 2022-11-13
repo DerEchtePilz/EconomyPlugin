@@ -354,11 +354,11 @@ class EconomyCommandExecution(private val main: Main) {
             player.sendMessage("§7You are already friends with §6" + target.name + "§7!")
             return
         }
-        // Here the cooldown status should be checked
+        //TODO: Here the cooldown status should be checked
         main.friendRequest.addFriendRequest(player.uniqueId, target.uniqueId)
         ChatComponentAPI().appendText("§7Accept friend request from §6" + player.name + "§7?")
-            .appendTextComponent(ChatComponentAPI().appendText("§a[YES]").withClickEvent("/friend accept " + player.name, ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §aaccept §7this friend request"))
-            .appendTextComponent(ChatComponentAPI().appendText("§c[NO]").withClickEvent("/friend deny " + player.name, ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §cdeny §7this friend request"))
+            .appendTextComponent(ChatComponentAPI().appendText("§a[YES]").withClickEvent("/economy friend accept " + player.name, ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §aaccept §7this friend request"))
+            .appendTextComponent(ChatComponentAPI().appendText("§c[NO]").withClickEvent("/economy friend deny " + player.name, ClickEvent.Action.RUN_COMMAND).showTextOnHover("§7By clicking this you are going to §cdeny §7this friend request"))
             .sendToPlayer(target)
     }
 

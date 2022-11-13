@@ -1,5 +1,6 @@
 # EconomyPlugin v3.1.0
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
+[![CodeFactor](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/badge/master)](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/overview/master)
 
 ## Table of contents
 - [Information](#information)
