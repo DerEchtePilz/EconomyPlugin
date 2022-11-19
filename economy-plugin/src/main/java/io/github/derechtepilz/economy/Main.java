@@ -23,6 +23,7 @@ import io.github.derechtepilz.economy.permissionmanagement.Permission;
 import io.github.derechtepilz.economy.permissionmanagement.PermissionGroup;
 import io.github.derechtepilz.economy.tests.TestsCommand;
 import io.github.derechtepilz.economy.tests.inventory.InventoryTest;
+import io.github.derechtepilz.economy.tradesystem.Trade;
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker;
 import io.github.derechtepilz.economy.updatemanagement.UpdateDownload;
 import io.github.derechtepilz.economy.updatemanagement.UpdateInformation;
@@ -110,6 +111,9 @@ public final class Main extends JavaPlugin {
     private final FriendRequest friendRequest = new FriendRequest();
     private final SaveFriends saveFriends = new SaveFriends(main);
     private final LoadFriends loadFriends = new LoadFriends(main);
+
+    // Trade system stuff
+    private final HashMap<UUID, Trade> trades = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -277,5 +281,10 @@ public final class Main extends JavaPlugin {
 
     public FriendRequest getFriendRequest() {
         return friendRequest;
+    }
+
+    // Store trade system stuff
+    public HashMap<UUID, Trade> getTrades() {
+        return trades;
     }
 }

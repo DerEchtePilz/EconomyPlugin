@@ -10,7 +10,37 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 
-class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: JavaPlugin) {
+class InventoryAPI {
+
+    private lateinit var inventoryLayout: CharArray
+    private lateinit var plugin: JavaPlugin
+
+    constructor(inventoryLayout: CharArray, plugin: JavaPlugin) {
+        this.inventoryLayout = inventoryLayout
+        this.plugin = plugin
+    }
+
+    constructor(inventory: MutableMap<Int, Inventory>) {
+        wasInventoryCreated = true
+        Companion.inventory = inventory
+    }
+
+    constructor(inventory: Array<ItemStack>, title: String) {
+        if (inventory.size > 54) throw InventoryModificationException("This constructor only supports one inventory page!")
+        if (inventory.size < 8) throw InventoryLayoutException("The given inventory contents are not applicable to an inventory! The given size is '${inventory.size}', should be at least '9'!")
+        if (inventory.size % 9 != 0) throw InventoryLayoutException("The given inventory contents are not applicable to an inventory! The given size is '${inventory.size}', should be a multiple of '9'!")
+        wasInventoryCreated = true
+        val menu: Inventory = Bukkit.createInventory(null, inventory.size, title)
+        menu.contents = inventory
+        Companion.inventory = mutableMapOf(Pair(0, menu))
+    }
+
+    companion object {
+        @JvmStatic
+        private var wasInventoryCreated = false
+
+        private var inventory: MutableMap<Int, Inventory>? = null
+    }
 
     fun verifyInventoryLayout(): InventoryConfiguration {
         if (inventoryLayout.size < 8) throw InventoryLayoutException("The given inventory layout is not applicable to an inventory! The given size is '${inventoryLayout.size}', should be at least '9'!")
@@ -19,9 +49,35 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
         return InventoryConfiguration(inventoryLayout, plugin)
     }
 
+    fun updateItem(position: Char, itemStack: ItemStack): MutableMap<Int, Inventory> {
+        if (!wasInventoryCreated) {
+            throw InventoryModificationException("You have create an inventory first before you try to modify it!")
+        }
+        if (inventory == null) {
+            throw InventoryModificationException("The inventory created previously has not been set correctly! Modification impossible!")
+        }
+        if (!inventoryLayout.contains(position)) throw InventoryLayoutException("This inventory layout does not contain a character '$position'! Please choose another one!")
+        val updatedInventory: MutableMap<Int, Inventory> = inventory!!
+        for (i in updatedInventory.keys) {
+            val inventoryToUpdate: Inventory = updatedInventory[i]!!
+            for (char in inventoryLayout.indices) {
+                if (inventoryLayout[char] != position) continue
+                inventoryToUpdate.setItem(char, itemStack)
+            }
+            updatedInventory[i] = inventoryToUpdate
+        }
+        inventory = updatedInventory
+        return updatedInventory
+    }
+
+    fun getInventory(): MutableMap<Int, Inventory> {
+        if (inventory == null) throw InventoryModificationException("This inventory has not been created yet!")
+        return inventory!!
+    }
+
     class InventoryConfiguration constructor(private val inventoryLayout: CharArray, private val plugin: JavaPlugin) {
 
-        fun setItemsPerPage(itemCount: Int, inventoryContents: Array<ItemStack>): InventoryPagination {
+        fun setItemsPerPage(itemCount: Int, inventoryContents: Array<ItemStack?>): InventoryPagination {
             if (itemCount > 45) throw InventoryLayoutException("An inventory cannot have more than 45 items per page, you wanted '$itemCount'!")
             if (itemCount >= inventoryLayout.size) throw InventoryLayoutException("You specified '$itemCount' items per inventory page! However, this is not possible for your inventory layout which takes '${inventoryLayout.size}' slots! Please make sure the items per page are '9' items fewer than your inventory layout is large!")
             val pageItemCount = if (itemCount % 9 != 0) {
@@ -46,7 +102,7 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
             return InventoryPagination(inventoryLayout, pages, itemCount, inventoryContents, inventories, plugin)
         }
 
-        class InventoryPagination constructor(private val inventoryLayout: CharArray, private val pages: Int, private val itemCount: Int, private val inventoryContents: Array<ItemStack>, private val inventories: MutableMap<Int, MutableList<ItemStack?>>, private val plugin: JavaPlugin) {
+        class InventoryPagination constructor(private val inventoryLayout: CharArray, private val pages: Int, private val itemCount: Int, private val inventoryContents: Array<ItemStack?>, private val inventories: MutableMap<Int, MutableList<ItemStack?>>, private val plugin: JavaPlugin) {
 
             private var closeItem = false
             private var previousPageItem = false
@@ -108,15 +164,11 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
             }
 
             fun finishPagination(): InventoryLayoutFinished {
-                if (!closeItem) throw InventoryLayoutException(
-                    "Your inventory does not contain an item to close it!"
-                )
-                if (!previousPageItem) throw InventoryLayoutException(
-                    "Your inventory does not contain an item to switch to the previous page!"
-                )
-                if (!nextPageItem) throw InventoryLayoutException(
-                    "Your inventory does not contain an item to switch to the next page!"
-                )
+                if (!closeItem) throw InventoryLayoutException("Your inventory does not contain an item to close it!")
+                if (pages > 1) {
+                    if (!previousPageItem) throw InventoryLayoutException("Your inventory does not contain an item to switch to the previous page!")
+                    if (!nextPageItem) throw InventoryLayoutException("Your inventory does not contain an item to switch to the next page!")
+                }
 
                 val pluginManager: PluginManager = Bukkit.getPluginManager()
                 pluginManager.registerEvents(object : Listener {
@@ -142,7 +194,7 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
                 return appearances
             }
 
-            class InventoryLayoutFinished constructor(private val inventoryLayout: CharArray, private val pages: Int, private val itemsPerPage: Int, private val inventoryContents: Array<ItemStack>, private val inventories: MutableMap<Int, MutableList<ItemStack?>>) {
+            class InventoryLayoutFinished constructor(private val inventoryLayout: CharArray, private val pages: Int, private val itemsPerPage: Int, private val inventoryContents: Array<ItemStack?>, private val inventories: MutableMap<Int, MutableList<ItemStack?>>) {
 
                 private lateinit var fillerItemStack: ItemStack
                 private var shouldFillEmptySlots = true
@@ -169,6 +221,25 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
                         inventories[i] = inventoryPage
                     }
                     fillerItem = true
+                    return this
+                }
+
+                fun setAdditionalItem(position: Char, itemStack: ItemStack): InventoryLayoutFinished {
+                    if (!inventoryLayout.contains(position)) throw InventoryLayoutException("This inventory layout does not contain a character '$position'! Please choose another one!")
+                    for (i in 0 until pages) {
+                        val inventoryPage: MutableList<ItemStack?> = if (inventories.containsKey(i)) {
+                            inventories[i]!!
+                        } else {
+                            mutableListOf()
+                        }
+                        for (j in 0 until inventoryPage.size) {
+                            if (inventoryLayout[j] != position) {
+                                continue
+                            }
+                            inventoryPage[j] = itemStack
+                        }
+                        inventories[i] = inventoryPage
+                    }
                     return this
                 }
 
@@ -226,6 +297,10 @@ class InventoryAPI(private val inventoryLayout: CharArray, private val plugin: J
                         inventory.contents = inventories[i]!!.toTypedArray()
                         inventoryMap[i] = inventory
                     }
+
+                    wasInventoryCreated = true
+                    Companion.inventory = inventoryMap
+
                     return inventoryMap
                 }
 
