@@ -12,7 +12,7 @@ object ItemListGenerator {
     )
 
     @JvmStatic
-    fun generateItemList(size: Int): Array<ItemStack> {
+    fun generateItemList(size: Int): Array<ItemStack?> {
         val itemList: MutableList<ItemStack> = mutableListOf()
         for (i in 0 until size) {
             val stringBuilder: StringBuilder = StringBuilder()
