@@ -165,6 +165,10 @@ class Trade(private val main: Main, private val tradeInitiator: Player, private 
         return -1
     }
 
+    private fun resortInventory(itemStack: ItemStack, inventoryContents: Array<ItemStack?>, tradeSlots: IntArray) {
+
+    }
+
     private fun cancelTrade() {
         tradeInitiator.inventory.addItem(*itemsForTarget.toTypedArray())
         tradeTarget.inventory.addItem(*itemsForPlayer.toTypedArray())
