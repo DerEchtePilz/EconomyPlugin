@@ -98,14 +98,14 @@ class Trade(private val main: Main, private val tradeInitiator: Player, private 
         itemsForTarget.add(itemStack)
     }
 
-    fun removeItemFromTradeInitiator(itemStack: ItemStack) {
+    fun removeItemFromTradeInitiator(slot: Int) {
         // This method should do this:
         // 1. Inventory of trade initiator: remove the items from the right-hand side
         // 2. Inventory of trade target: remove the items from the left-hand side
         itemsForPlayer.remove(itemStack)
     }
 
-    fun removeItemFromTradeTarget(itemStack: ItemStack) {
+    fun removeItemFromTradeTarget(slot: Int) {
         // This method should do this:
         // 1. Inventory of trade initiator: remove the items from the left-hand side
         // 2. Inventory of trade target: remove the items from the hand-hand side
@@ -163,6 +163,11 @@ class Trade(private val main: Main, private val tradeInitiator: Player, private 
             return i
         }
         return -1
+    }
+
+
+    private fun resortInventory(itemStack: ItemStack, inventoryContents: Array<ItemStack?>, tradeSlots: IntArray) {
+
     }
 
     private fun cancelTrade() {
