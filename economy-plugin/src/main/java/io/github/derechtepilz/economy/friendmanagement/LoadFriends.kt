@@ -12,20 +12,20 @@ import java.util.*
 
 class LoadFriends(private val main: Main) : Listener {
 
-    @EventHandler
-    fun onJoin(event: PlayerJoinEvent) {
-        val player: Player = event.player
-        loadFriends(player.uniqueId)
-    }
+	@EventHandler
+	fun onJoin(event: PlayerJoinEvent) {
+		val player: Player = event.player
+		loadFriends(player.uniqueId)
+	}
 
-    @Suppress("UNCHECKED_CAST")
-    fun loadFriends(uuid: UUID) {
-        val friends = File("./plugins/Economy/Friends/$uuid.bin")
-        if (!friends.exists()) return
-        val fileInputStream = FileInputStream(friends)
-        val objectInputStream = ObjectInputStream(fileInputStream)
-        val any: Any = objectInputStream.readObject()
-        main.friend.addFriendList(uuid, any as MutableList<UUID>)
-    }
+	@Suppress("UNCHECKED_CAST")
+	fun loadFriends(uuid: UUID) {
+		val friends = File("./plugins/Economy/Friends/$uuid.bin")
+		if (!friends.exists()) return
+		val fileInputStream = FileInputStream(friends)
+		val objectInputStream = ObjectInputStream(fileInputStream)
+		val any: Any = objectInputStream.readObject()
+		main.friend.addFriendList(uuid, any as MutableList<UUID>)
+	}
 
 }

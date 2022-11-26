@@ -6,8 +6,8 @@ import java.util.logging.Logger
 
 @Suppress("ProtectedInFinal")
 internal class EconomyPluginLogger protected constructor() : Logger("EconomyPlugin", null) {
-    init {
-        parent = Bukkit.getLogger().parent
-        level = Level.ALL
-    }
+	init {
+		parent = Bukkit.getLogger().parent
+		level = Level.ALL
+	}
 }

@@ -127,79 +127,79 @@ fun CommandAPICommand.nativeExecutor(native: (NativeProxyCommandSender, Array<An
 
 class CommandAPICommandExecution {
 
-    private var any: ((CommandSender, Array<Any>) -> Unit)? = null
-    private var player: ((Player, Array<Any>) -> Unit)? = null
-    private var console: ((ConsoleCommandSender, Array<Any>) -> Unit)? = null
-    private var block: ((BlockCommandSender, Array<Any>) -> Unit)? = null
-    private var proxy: ((ProxiedCommandSender, Array<Any>) -> Unit)? = null
-    private var native: ((NativeProxyCommandSender, Array<Any>) -> Unit)? = null
+	private var any: ((CommandSender, Array<Any>) -> Unit)? = null
+	private var player: ((Player, Array<Any>) -> Unit)? = null
+	private var console: ((ConsoleCommandSender, Array<Any>) -> Unit)? = null
+	private var block: ((BlockCommandSender, Array<Any>) -> Unit)? = null
+	private var proxy: ((ProxiedCommandSender, Array<Any>) -> Unit)? = null
+	private var native: ((NativeProxyCommandSender, Array<Any>) -> Unit)? = null
 
-    fun any(any: (CommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.any = any
-        return this
-    }
+	fun any(any: (CommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.any = any
+		return this
+	}
 
-    fun player(player: (Player, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.player = player
-        return this
-    }
+	fun player(player: (Player, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.player = player
+		return this
+	}
 
-    fun console(console: (ConsoleCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.console = console
-        return this
-    }
+	fun console(console: (ConsoleCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.console = console
+		return this
+	}
 
-    fun block(block: (BlockCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.block = block
-        return this
-    }
+	fun block(block: (BlockCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.block = block
+		return this
+	}
 
-    fun proxy(proxy: (ProxiedCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.proxy = proxy
-        return this
-    }
+	fun proxy(proxy: (ProxiedCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.proxy = proxy
+		return this
+	}
 
-    fun native(native: (NativeProxyCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
-        this.native = native
-        return this
-    }
+	fun native(native: (NativeProxyCommandSender, Array<Any>) -> Unit): CommandAPICommandExecution {
+		this.native = native
+		return this
+	}
 
-    fun executes(command: CommandAPICommand) {
-        if (any != null) {
-            command.executes(CommandExecutor { sender, args ->
-                any?.invoke(sender, args)
-            })
-            return
-        }
-        if (player != null) {
-            command.executesPlayer(PlayerCommandExecutor { player, args ->
-                this.player?.invoke(player, args)
-            })
-            return
-        }
-        if (console != null) {
-            command.executesConsole(ConsoleCommandExecutor { console, args ->
-                this.console?.invoke(console, args)
-            })
-            return
-        }
-        if (block != null) {
-            command.executesCommandBlock(CommandBlockCommandExecutor { block, args ->
-                this.block?.invoke(block, args)
-            })
-            return
-        }
-        if (proxy != null) {
-            command.executesProxy(ProxyCommandExecutor { proxy, args ->
-                this.proxy?.invoke(proxy, args)
-            })
-            return
-        }
-        if (native != null) {
-            command.executesNative(NativeCommandExecutor { native, args ->
-                this.native?.invoke(native, args)
-            })
-            return
-        }
-    }
+	fun executes(command: CommandAPICommand) {
+		if (any != null) {
+			command.executes(CommandExecutor { sender, args ->
+				any?.invoke(sender, args)
+			})
+			return
+		}
+		if (player != null) {
+			command.executesPlayer(PlayerCommandExecutor { player, args ->
+				this.player?.invoke(player, args)
+			})
+			return
+		}
+		if (console != null) {
+			command.executesConsole(ConsoleCommandExecutor { console, args ->
+				this.console?.invoke(console, args)
+			})
+			return
+		}
+		if (block != null) {
+			command.executesCommandBlock(CommandBlockCommandExecutor { block, args ->
+				this.block?.invoke(block, args)
+			})
+			return
+		}
+		if (proxy != null) {
+			command.executesProxy(ProxyCommandExecutor { proxy, args ->
+				this.proxy?.invoke(proxy, args)
+			})
+			return
+		}
+		if (native != null) {
+			command.executesNative(NativeCommandExecutor { native, args ->
+				this.native?.invoke(native, args)
+			})
+			return
+		}
+	}
 }

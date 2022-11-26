@@ -10,18 +10,18 @@ import org.bukkit.entity.Player
 
 class CoinDisplay(val main: Main) {
 
-    private val chatFormatter: ChatFormatter = ChatFormatter()
+	private val chatFormatter: ChatFormatter = ChatFormatter()
 
-    fun displayCoins(): Int {
-        val taskId: Int = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, {
-            for (player: Player in Bukkit.getOnlinePlayers()) {
-                val textComponent = TextComponent(
-                    "§aYour balance: §6" + chatFormatter.valueOf(EconomyAPI.getBalance(player))
-                )
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
-            }
-        }, 20, 20)
-        return taskId;
-    }
+	fun displayCoins(): Int {
+		val taskId: Int = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, {
+			for (player: Player in Bukkit.getOnlinePlayers()) {
+				val textComponent = TextComponent(
+					"§aYour balance: §6" + chatFormatter.valueOf(EconomyAPI.getBalance(player))
+				)
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
+			}
+		}, 20, 20)
+		return taskId;
+	}
 
 }
