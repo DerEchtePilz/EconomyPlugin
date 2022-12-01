@@ -100,11 +100,38 @@ class Trade(private val main: Main, private val tradeInitiator: Player, private 
 		itemsForTarget.add(itemStack)
 	}
 
+	/**
+	 * This method is called when the trade target removes an item from the current trade
+	 *
+	 * @param slot the slot the trade target has clicked
+	 */
 	fun removeItemFromTradeInitiator(slot: Int) {
 		// This method should do this:
 		// 1. Inventory of trade initiator: remove the items from the right-hand side
 		// 2. Inventory of trade target: remove the items from the left-hand side
-		// itemsForPlayer.remove(slot)
+
+		// Check if the correct inventory was clicked
+		if (itemsForTargetDisplaySlots.contains(slot)) tradeTarget.sendMessage("&cYou cannot remove items you did not add!")
+
+		// Update inventory of trade initiator
+		var slotToClear = 0
+		for (i in itemsForInitiatorDisplaySlots.indices) {
+			if (i == slot) {
+				slotToClear = i
+			}
+		}
+		itemsForPlayer.removeAt(slotToClear)
+		for (index in itemsForInitiatorDisplaySlots.indices) {
+			if (itemsForPlayer.size > index) {
+				initiatorInventoryContents[index] = itemsForPlayer[index]
+				continue
+			}
+			initiatorInventoryContents[index] = null
+		}
+		tradeInitiator.openInventory.topInventory.contents = initiatorInventoryContents
+
+		// Update inventory of trade target
+
 	}
 
 	fun removeItemFromTradeTarget(slot: Int) {
@@ -165,11 +192,6 @@ class Trade(private val main: Main, private val tradeInitiator: Player, private 
 			return i
 		}
 		return -1
-	}
-
-
-	private fun resortInventory(itemStack: ItemStack, inventoryContents: Array<ItemStack?>, tradeSlots: IntArray) {
-
 	}
 
 	private fun cancelTrade() {
