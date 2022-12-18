@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot.version>1.19-R0.1-SNAPSHOT</spigot.version>
         <paper.version>1.19-R0.1-SNAPSHOT</paper.version>
-        <commandapi.version>8.6.0-SNAPSHOT</commandapi.version>
+        <commandapi.version>9.0.0-SNAPSHOT</commandapi.version>
         <mojang.authlib.version>1.5.21</mojang.authlib.version>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
