@@ -5,3 +5,21 @@ api-version: 1.13
 authors: [ DerEchtePilz ]
 description: This plugin allows you to sell items!
 database: true
+permissions:
+    economy.*:
+        description: Gives a player full access over the EconomyPlugin!
+        default: false
+        children:
+            - economy.auction
+    economy.auction:
+        description: Gives a player full access to the auction system!
+        default: false
+        children:
+            - economy.auction.create
+            - economy.auction.manage
+    economy.auction.create:
+        description: Gives a player the ability to only create auctions!
+        default: false
+    economy.auction.manage:
+        description: Gives a player the ability to modify all auctions, regardless of who created them!
+        default: false
