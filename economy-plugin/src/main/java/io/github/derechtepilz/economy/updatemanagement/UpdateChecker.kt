@@ -4,7 +4,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import io.github.derechtepilz.economy.Main
-import io.github.derechtepilz.economy.utility.APIRequest
 import java.io.File
 
 class UpdateChecker(private val main: Main) {

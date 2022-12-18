@@ -3,7 +3,6 @@ package io.github.derechtepilz.economy.updatemanagement
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import io.github.derechtepilz.economy.Main
-import io.github.derechtepilz.economy.utility.APIRequest
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.File
