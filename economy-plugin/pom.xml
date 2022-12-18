@@ -137,6 +137,10 @@
             <id>oss.sonatype.org-snapshot</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
     </repositories>
 
     <dependencies>
@@ -157,24 +161,24 @@
             <version>1.0.0</version>
         </dependency>
 		<dependency>
-			<groupId>io.github.derechtepilz</groupId>
-			<artifactId>pilzapi</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<groupId>com.github.DerEchtePilz</groupId>
+			<artifactId>PilzAPI</artifactId>
+			<version>dev~dev-246ba28e0b-1</version>
 		</dependency>
-        <dependency>
+		<dependency>
             <groupId>dev.jorel</groupId>
-            <artifactId>commandapi-bukkit-core</artifactId>
+            <artifactId>commandapi-core</artifactId>
             <version>${commandapi.version}</version>
 			<scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>dev.jorel</groupId>
-			<artifactId>commandapi-bukkit-shade</artifactId>
+			<artifactId>commandapi-shade</artifactId>
 			<version>${commandapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>dev.jorel</groupId>
-			<artifactId>commandapi-kotlin-bukkit</artifactId>
+			<artifactId>commandapi-kotlin</artifactId>
 			<version>${commandapi.version}</version>
 		</dependency>
         <dependency>
