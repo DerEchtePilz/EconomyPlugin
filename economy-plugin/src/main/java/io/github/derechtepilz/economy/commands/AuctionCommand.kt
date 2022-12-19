@@ -9,7 +9,10 @@ class AuctionCommand(private val main: Main) {
 	fun register() {
 		commandTree("auction") {
 			literalArgument("create") {
-
+				withPermission("economy.auction.create")
+			}
+			literalArgument("modify") {
+				withPermission("economy.auction.modify")
 			}
 		}
 	}

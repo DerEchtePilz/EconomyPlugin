@@ -3,6 +3,9 @@ package io.github.derechtepilz.economy
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import io.github.derechtepilz.database.Database
+import io.github.derechtepilz.economy.commands.AuctionCommand
+import io.github.derechtepilz.economy.commands.BalanceCommand
+import io.github.derechtepilz.economy.commands.FriendCommand
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker
 import io.github.derechtepilz.economy.updatemanagement.UpdateDownload
 import io.github.derechtepilz.economy.updatemanagement.UpdateInformation
@@ -10,7 +13,6 @@ import io.github.derechtepilz.economycore.EconomyAPI
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.fusesource.jansi.Ansi
-import java.util.*
 import java.util.logging.Logger
 
 class Main : JavaPlugin() {
@@ -95,6 +97,9 @@ class Main : JavaPlugin() {
 	private fun commandRegistration() {
 		if (isDevelopment) {
 		}
+		AuctionCommand(main).register()
+		BalanceCommand(main).register()
+		FriendCommand(main).register()
 	}
 
 	private fun listenerRegistration() {

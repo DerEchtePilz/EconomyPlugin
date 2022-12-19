@@ -163,7 +163,7 @@
 		<dependency>
 			<groupId>com.github.DerEchtePilz</groupId>
 			<artifactId>PilzAPI</artifactId>
-			<version>dev~dev-246ba28e0b-1</version>
+			<version>f2010b971d</version>
 		</dependency>
 		<dependency>
             <groupId>dev.jorel</groupId>
