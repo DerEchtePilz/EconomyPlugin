@@ -16,12 +16,17 @@ import org.fusesource.jansi.Ansi
 import java.util.logging.Logger
 
 class Main : JavaPlugin() {
+
 	private val isDevelopment = true
 	private var isVersionSupported = false
+
 	private val main = this
+
 	private var updatedPluginName = ""
+
 	private val inventoryManagementTaskId = 0
 	private val coinDisplayTaskId = 0
+	
 	private var logger: Logger? = null
 
 	override fun getLogger(): Logger {
