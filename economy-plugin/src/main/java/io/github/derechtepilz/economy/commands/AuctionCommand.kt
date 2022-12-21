@@ -1,5 +1,7 @@
 package io.github.derechtepilz.economy.commands
 
+import dev.jorel.commandapi.arguments.LiteralArgument.of
+import dev.jorel.commandapi.kotlindsl.argument
 import dev.jorel.commandapi.kotlindsl.commandTree
 import dev.jorel.commandapi.kotlindsl.literalArgument
 import io.github.derechtepilz.economy.Main
@@ -8,11 +10,11 @@ class AuctionCommand(private val main: Main) {
 
 	fun register() {
 		commandTree("auction") {
-			literalArgument("create") {
-				withPermission("economy.auction.create")
+			argument(of("create").withPermission("economy.auction.create")) {
+
 			}
-			literalArgument("modify") {
-				withPermission("economy.auction.modify")
+			argument(of("modify").withPermission("economy.auction.modify")) {
+
 			}
 		}
 	}
