@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 
 class PermissionCommand(private val main: Main) {
 
-	private val commandExecution: CommandExecution = main.executeCommand
+	private val commandExecution: CommandExecution = main.commandExecution
 
 	fun register() {
 		commandTree("permission") {
@@ -26,7 +26,7 @@ class PermissionCommand(private val main: Main) {
 				playerArgument("target") {
 					listArgument("permissions") {
 						playerExecutor { player, args ->
-
+							commandExecution.setPermission(player, args)
 						}
 					}
 				}
@@ -34,7 +34,7 @@ class PermissionCommand(private val main: Main) {
 			literalArgument("get") {
 				playerArgument("target") {
 					playerExecutor { player, args ->
-
+						commandExecution.getPermission(player, args)
 					}
 				}
 			}
@@ -42,7 +42,7 @@ class PermissionCommand(private val main: Main) {
 				playerArgument("target") {
 					listArgument("permissions") {
 						playerExecutor { player, args ->
-
+							commandExecution.removePermission(player, args)
 						}
 					}
 				}

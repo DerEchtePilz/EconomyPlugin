@@ -10,8 +10,14 @@ import io.github.derechtepilz.economy.updatemanagement.UpdateInformation
 import io.github.derechtepilz.economy.utils.SuggestionProvider
 import io.github.derechtepilz.economycore.EconomyAPI
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.permissions.PermissionAttachment
 import org.bukkit.plugin.java.JavaPlugin
 import org.fusesource.jansi.Ansi
+import java.util.*
 import java.util.logging.Logger
 
 class Main : JavaPlugin() {
@@ -35,15 +41,17 @@ class Main : JavaPlugin() {
 		return logger!!
 	}
 
+	// Permissions
+	val permissions: MutableMap<UUID, PermissionAttachment> = mutableMapOf()
+
 	// Commands
-	private val commandExecution = CommandExecution(main)
+	val suggestionProvider: SuggestionProvider = SuggestionProvider(main)
+	val commandExecution = CommandExecution(main)
+
 	private val auctionCommand = AuctionCommand(main)
 	private val balanceCommand = BalanceCommand(main)
 	private val friendCommand = FriendCommand(main)
 	private val permissionCommand = PermissionCommand(main)
-
-	// Suggestions
-	private val suggestions: SuggestionProvider = SuggestionProvider(main)
 
 	// Update stuff
 	private var shouldRegisterUpdateInformation = false
@@ -97,6 +105,15 @@ class Main : JavaPlugin() {
 				CommandAPI.onLoad(CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"))
 			}
 		}
+
+		val setupPlayer: Listener = object : Listener {
+			@EventHandler
+			fun onJoin(event: PlayerJoinEvent) {
+				val player: Player = event.player
+				permissions[player.uniqueId] = player.addAttachment(main)
+			}
+		}
+		Bukkit.getPluginManager().registerEvents(setupPlayer, this)
 	}
 
 	override fun onDisable() {
@@ -126,8 +143,5 @@ class Main : JavaPlugin() {
 		if (isDevelopment) {
 		}
 	}
-
-	val suggestionProvider get() = suggestions
-	val executeCommand get() = commandExecution
 
 }
