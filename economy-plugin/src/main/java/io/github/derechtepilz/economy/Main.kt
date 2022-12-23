@@ -3,12 +3,11 @@ package io.github.derechtepilz.economy
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import io.github.derechtepilz.database.Database
-import io.github.derechtepilz.economy.commands.AuctionCommand
-import io.github.derechtepilz.economy.commands.BalanceCommand
-import io.github.derechtepilz.economy.commands.FriendCommand
+import io.github.derechtepilz.economy.commands.*
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker
 import io.github.derechtepilz.economy.updatemanagement.UpdateDownload
 import io.github.derechtepilz.economy.updatemanagement.UpdateInformation
+import io.github.derechtepilz.economy.utils.SuggestionProvider
 import io.github.derechtepilz.economycore.EconomyAPI
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -35,6 +34,16 @@ class Main : JavaPlugin() {
 		}
 		return logger!!
 	}
+
+	// Commands
+	private val commandExecution = CommandExecution(main)
+	private val auctionCommand = AuctionCommand(main)
+	private val balanceCommand = BalanceCommand(main)
+	private val friendCommand = FriendCommand(main)
+	private val permissionCommand = PermissionCommand(main)
+
+	// Suggestions
+	private val suggestions: SuggestionProvider = SuggestionProvider(main)
 
 	// Update stuff
 	private var shouldRegisterUpdateInformation = false
@@ -102,9 +111,10 @@ class Main : JavaPlugin() {
 	private fun commandRegistration() {
 		if (isDevelopment) {
 		}
-		AuctionCommand(main).register()
-		BalanceCommand(main).register()
-		FriendCommand(main).register()
+		auctionCommand.register()
+		balanceCommand.register()
+		friendCommand.register()
+		permissionCommand.register()
 	}
 
 	private fun listenerRegistration() {
@@ -116,4 +126,8 @@ class Main : JavaPlugin() {
 		if (isDevelopment) {
 		}
 	}
+
+	val suggestionProvider get() = suggestions
+	val executeCommand get() = commandExecution
+
 }
