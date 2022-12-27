@@ -1,6 +1,8 @@
 package io.github.derechtepilz.economy.utils
 
 import io.github.derechtepilz.economy.Main
+import io.github.derechtepilz.economy.utils.SuggestionProvider.SuggestionType.PERMISSION
+import io.github.derechtepilz.economy.utils.SuggestionProvider.SuggestionType.PLAYER
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
@@ -9,7 +11,7 @@ class SuggestionProvider(private val main: Main) {
 
 	fun provideSuggestions(suggestionType: SuggestionType): Array<String> {
 		return when (suggestionType) {
-			SuggestionType.PERMISSION -> {
+			PERMISSION -> {
 				val permissions: MutableList<Permission> = main.description.permissions
 				val economyPermissions: MutableList<String> = mutableListOf()
 				permissions.forEach { permission ->
@@ -19,7 +21,7 @@ class SuggestionProvider(private val main: Main) {
 				}
 				economyPermissions.toTypedArray()
 			}
-			SuggestionType.PLAYER -> {
+			PLAYER -> {
 				Bukkit.getOnlinePlayers().stream().map { player: Player -> player.name }.toList().toTypedArray()
 			}
 		}

@@ -1,0 +1,38 @@
+{
+  "main.on_load.command_missing_executor": {
+    "en_en": "You cannot execute this command!",
+    "de_de": "Du kannst diesen Befehl nicht ausführen!"
+  },
+  "command_execution.set_permission.player": {
+    "en_en": "§7You granted §6%1 §7the permission §6%2§7!",
+    "de_de": "§7Du hast §6%1 §7die Berechtigung §6%2 §7gegeben!"
+  },
+  "command_execution.set_permission.target": {
+    "en_en": "§7You have got the permission §6%1§7!",
+    "de_de": "§7Du hast die Berechtigung §6%1 §7bekommen!"
+  },
+  "command_execution.get_permission.intro": {
+    "en_en": "§6%1 §7has the following permissions:",
+    "de_de": "§6%1 §hat die folgenden Berechtigungen:"
+  },
+  "command_execution.get_permission.permission": {
+    "en_en": "§6- §7%1",
+    "de_de": "§6- §7%1"
+  },
+  "command_execution.get_permission.description": {
+    "en_en": "§6\t -> Description: §7%1",
+    "de_de": "§6\t -> Beschreibung: §7%1"
+  },
+  "command_execution.remove_permission.player": {
+    "en_en": "§7You removed the permission §6%1 §7from §6%2§7!",
+    "de_de": "§7Du hast §6%2 §7die Berechtigung §6%1 §7weggenommen!"
+  },
+  "command_execution.remove_permission.target": {
+    "en_en": "§7The permission §6%1 §7has been removed from you!",
+    "de_de": "§7Dir wurde die Berechtigung §6%1 §7weggenommen!"
+  },
+  "update_information.on_join.inform_admins": {
+    "en_en": "§bThere is a new update available for the EconomyPlugin! Please download the latest version at §ehttps:/github.com/DerEchtePilz/EconomyPlugin/releases/latest",
+    "de_de": "§bEin neues Update für das EconomyPlugin is verfügbar! Bitte lade die neueste Version hier herunter: §ehttps:/github.com/DerEchtePilz/EconomyPlugin/releases/latest"
+  }
+}

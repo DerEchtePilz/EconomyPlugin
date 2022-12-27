@@ -2,11 +2,12 @@ package io.github.derechtepilz.economy.commands
 
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.utils.PermissionHandler
+import io.github.derechtepilz.economy.utils.TranslatableComponent
+import io.github.derechtepilz.economy.utils.sendMessage
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionAttachment
-import java.security.Permissions
 
 class CommandExecution(private val main: Main) {
 
@@ -31,8 +32,8 @@ class CommandExecution(private val main: Main) {
 				continue
 			}
 			permissionAttachment.setPermission(permission, true)
-			target.sendMessage("§7You have got the permission §6${permission.name}§7!")
-			player.sendMessage("§7You granted §6${target.name} §7the permission §6${permission.name}§7!")
+			target.sendMessage(TranslatableComponent("command_execution.set_permission.target", permission.name))
+			player.sendMessage(TranslatableComponent("command_execution.set_permission.player", target.name, permission.name))
 		}
 	}
 
@@ -50,10 +51,10 @@ class CommandExecution(private val main: Main) {
 			permissions[permission.name] = permission.description
 		}
 
-		player.sendMessage("§6${target.name} §7has the following permissions:")
+		player.sendMessage(TranslatableComponent("command_execution.get_permission.intro", target.name))
 		for (permission in permissionAttachment.permissions.keys) {
-			player.sendMessage("§6- §7${permission}")
-			player.sendMessage("§6\t -> Description: §7${permissions[permission]}")
+			player.sendMessage(TranslatableComponent("command_execution.get_permission.permission", permission))
+			player.sendMessage(TranslatableComponent("command_execution.get_permission.description", permissions[permission]!!))
 		}
 	}
 
@@ -78,8 +79,8 @@ class CommandExecution(private val main: Main) {
 				continue
 			}
 			permissionAttachment.unsetPermission(permission)
-			target.sendMessage("§7The permission §6${permission.name} §7has been removed from you!")
-			player.sendMessage("§7You removed the permission §6${permission.name} §7from §6${target.name}§7!")
+			target.sendMessage(TranslatableComponent("command_execution.remove_permission.target", permission.name))
+			player.sendMessage(TranslatableComponent("command_execution.remove_permission.player", permission.name, target.name))
 		}
 	}
 

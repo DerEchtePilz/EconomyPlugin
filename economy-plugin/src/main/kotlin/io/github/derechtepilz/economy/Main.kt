@@ -7,7 +7,10 @@ import io.github.derechtepilz.economy.commands.*
 import io.github.derechtepilz.economy.updatemanagement.UpdateChecker
 import io.github.derechtepilz.economy.updatemanagement.UpdateDownload
 import io.github.derechtepilz.economy.updatemanagement.UpdateInformation
+import io.github.derechtepilz.economy.utils.Config
+import io.github.derechtepilz.economy.utils.LanguageManager
 import io.github.derechtepilz.economy.utils.SuggestionProvider
+import io.github.derechtepilz.economy.utils.TranslatableComponent
 import io.github.derechtepilz.economycore.EconomyAPI
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -25,7 +28,10 @@ class Main : JavaPlugin() {
 	private val isDevelopment = true
 	private var isVersionSupported = false
 
-	private val main = this
+	companion object {
+		@JvmStatic
+		lateinit var main: Main
+	}
 
 	private var updatedPluginName = ""
 
@@ -41,23 +47,27 @@ class Main : JavaPlugin() {
 		return logger!!
 	}
 
+	lateinit var languageManager: LanguageManager
+	lateinit var language: LanguageManager.Language
+	lateinit var config: Config
+
 	// Permissions
 	val permissions: MutableMap<UUID, PermissionAttachment> = mutableMapOf()
 
 	// Commands
-	val suggestionProvider: SuggestionProvider = SuggestionProvider(main)
-	val commandExecution = CommandExecution(main)
+	lateinit var suggestionProvider: SuggestionProvider
+	lateinit var commandExecution: CommandExecution
 
-	private val auctionCommand = AuctionCommand(main)
-	private val balanceCommand = BalanceCommand(main)
-	private val friendCommand = FriendCommand(main)
-	private val permissionCommand = PermissionCommand(main)
+	private lateinit var auctionCommand: AuctionCommand
+	private lateinit var balanceCommand: BalanceCommand
+	private lateinit var friendCommand: FriendCommand
+	private lateinit var permissionCommand: PermissionCommand
 
 	// Update stuff
 	private var shouldRegisterUpdateInformation = false
 	private var isNewUpdateAvailable = false
-	private val updateDownload = UpdateDownload(main)
-	private val updateChecker = UpdateChecker(main)
+	private lateinit var updateDownload: UpdateDownload
+	private lateinit var updateChecker: UpdateChecker
 
 	// Database stuff (if I need it)
 	private var database: Database? = null
@@ -82,13 +92,42 @@ class Main : JavaPlugin() {
 			}
 			listenerRegistration()
 
+			val setupPlayer: Listener = object : Listener {
+				@EventHandler
+				fun onJoin(event: PlayerJoinEvent) {
+					val player: Player = event.player
+					permissions[player.uniqueId] = player.addAttachment(main)
+				}
+			}
+			Bukkit.getPluginManager().registerEvents(setupPlayer, this)
+
 			getLogger().info(Ansi.ansi().fgGreen().a("You are on version ").fgYellow().a("v" + description.version).toString())
 		}
 	}
 
 	override fun onLoad() {
-		isNewUpdateAvailable = UpdateChecker(main).isUpdateAvailable()
-		val isDirectDownload = false
+		main = this
+
+		config = Config(main)
+		languageManager = LanguageManager(main)
+
+		languageManager.init()
+		config.loadConfig()
+		language = LanguageManager.Language.valueOf(config.get("language")!!)
+
+		suggestionProvider = SuggestionProvider(main)
+		commandExecution = CommandExecution(main)
+
+		auctionCommand = AuctionCommand(main)
+		balanceCommand = BalanceCommand(main)
+		friendCommand = FriendCommand(main)
+		permissionCommand = PermissionCommand(main)
+
+		updateDownload = UpdateDownload(main)
+		updateChecker = UpdateChecker(main)
+
+		isNewUpdateAvailable = updateChecker.isUpdateAvailable()
+		val isDirectDownload = java.lang.Boolean.parseBoolean(config.get("allowDirectDownloads"))
 		if (isNewUpdateAvailable && !isDirectDownload) {
 			getLogger().info(Ansi.ansi().fgYellow().a("There is a new update available for the EconomyPlugin! Please download the latest version at https:/github.com/DerEchtePilz/EconomyPlugin/releases/latest").toString())
 			shouldRegisterUpdateInformation = true
@@ -102,18 +141,9 @@ class Main : JavaPlugin() {
 			val version = Bukkit.getBukkitVersion().split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
 			isVersionSupported = VersionHandler.isVersionSupported(version)
 			if (isVersionSupported) {
-				CommandAPI.onLoad(CommandAPIConfig().missingExecutorImplementationMessage("You cannot execute this command!"))
+				CommandAPI.onLoad(CommandAPIConfig().missingExecutorImplementationMessage(TranslatableComponent("main.on_load.command_missing_executor").toMessage()))
 			}
 		}
-
-		val setupPlayer: Listener = object : Listener {
-			@EventHandler
-			fun onJoin(event: PlayerJoinEvent) {
-				val player: Player = event.player
-				permissions[player.uniqueId] = player.addAttachment(main)
-			}
-		}
-		Bukkit.getPluginManager().registerEvents(setupPlayer, this)
 	}
 
 	override fun onDisable() {
