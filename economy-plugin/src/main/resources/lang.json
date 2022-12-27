@@ -32,7 +32,7 @@
     "de_de": "§7Dir wurde die Berechtigung §6%1 §7weggenommen!"
   },
   "update_information.on_join.inform_admins": {
-    "en_en": "§bThere is a new update available for the EconomyPlugin! Please download the latest version at §ehttps:/github.com/DerEchtePilz/EconomyPlugin/releases/latest",
-    "de_de": "§bEin neues Update für das EconomyPlugin is verfügbar! Bitte lade die neueste Version hier herunter: §ehttps:/github.com/DerEchtePilz/EconomyPlugin/releases/latest"
+    "en_en": "§bThere is a new update available for the EconomyPlugin! Please download the latest version at §ehttps://github.com/DerEchtePilz/EconomyPlugin/releases/latest",
+    "de_de": "§bEin neues Update für das EconomyPlugin is verfügbar! Bitte lade die neueste Version hier herunter: §ehttps://github.com/DerEchtePilz/EconomyPlugin/releases/latest"
   }
 }
