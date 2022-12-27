@@ -60,6 +60,7 @@ class Main : JavaPlugin() {
 
 	private lateinit var auctionCommand: AuctionCommand
 	private lateinit var balanceCommand: BalanceCommand
+	private lateinit var configCommand: ConfigCommand
 	private lateinit var friendCommand: FriendCommand
 	private lateinit var permissionCommand: PermissionCommand
 
@@ -120,6 +121,7 @@ class Main : JavaPlugin() {
 
 		auctionCommand = AuctionCommand(main)
 		balanceCommand = BalanceCommand(main)
+		configCommand = ConfigCommand(main)
 		friendCommand = FriendCommand(main)
 		permissionCommand = PermissionCommand(main)
 
@@ -160,6 +162,7 @@ class Main : JavaPlugin() {
 		}
 		auctionCommand.register()
 		balanceCommand.register()
+		configCommand.register()
 		friendCommand.register()
 		permissionCommand.register()
 	}

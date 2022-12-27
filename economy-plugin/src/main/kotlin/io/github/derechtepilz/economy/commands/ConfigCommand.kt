@@ -9,35 +9,29 @@ import io.github.derechtepilz.economy.utils.hasAnyPermission
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class BalanceCommand(private val main: Main) {
+class ConfigCommand(private val main: Main) {
 
 	fun register() {
-		commandTree("balance") {
+		commandTree("config") {
 			withRequirement { sender: CommandSender ->
 				sender.hasAnyPermission(
-					Permission("economy.coin"),
-					Permission("economy.coin.baltop"),
-					Permission("economy.coin.manage.set"),
-					Permission("economy.coin.manage.add"),
-					Permission("economy.coin.manage.remove")
+					Permission("economy.config"),
+					Permission("economy.config.modify"),
+					Permission("economy.config.reset"),
+					Permission("economy.config.reload")
 				)
 			}
-			argument(of("baltop").withPermission("economy.coin.baltop")) {
+			argument(of("set").withPermission("economy.config.modify")) {
 				playerExecutor { player, args ->
 
 				}
 			}
-			argument(of("set").withPermission("economy.coin.manage.set")) {
+			argument(of("reset").withPermission("economy.config.reset")) {
 				playerExecutor { player, args ->
 
 				}
 			}
-			argument(of("add").withPermission("economy.coin.manage.add")) {
-				playerExecutor { player, args ->
-
-				}
-			}
-			argument(of("remove").withPermission("economy.coin.manage.remove")) {
+			argument(of("reload").withPermission("economy.config.reload")) {
 				playerExecutor { player, args ->
 
 				}

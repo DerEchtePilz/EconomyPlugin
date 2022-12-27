@@ -8,8 +8,8 @@
     "de_de": "§7Du hast §6%1 §7die Berechtigung §6%2 §7gegeben!"
   },
   "command_execution.set_permission.target": {
-    "en_en": "§7You have got the permission §6%1§7!",
-    "de_de": "§7Du hast die Berechtigung §6%1 §7bekommen!"
+    "en_en": "§7You have not got the permission §6%1§7!",
+    "de_de": "§7Du hast jetzt die Berechtigung §6%1§7!"
   },
   "command_execution.get_permission.intro": {
     "en_en": "§6%1 §7has the following permissions:",
@@ -20,8 +20,8 @@
     "de_de": "§6- §7%1"
   },
   "command_execution.get_permission.description": {
-    "en_en": "§6\t -> Description: §7%1",
-    "de_de": "§6\t -> Beschreibung: §7%1"
+    "en_en": "§6     -> Description: §7%1",
+    "de_de": "§6     -> Beschreibung: §7%1"
   },
   "command_execution.remove_permission.player": {
     "en_en": "§7You removed the permission §6%1 §7from §6%2§7!",
