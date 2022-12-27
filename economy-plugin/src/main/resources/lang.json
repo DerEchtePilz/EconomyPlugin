@@ -8,7 +8,7 @@
     "de_de": "§7Du hast §6%1 §7die Berechtigung §6%2 §7gegeben!"
   },
   "command_execution.set_permission.target": {
-    "en_en": "§7You have not got the permission §6%1§7!",
+    "en_en": "§7You have now got the permission §6%1§7!",
     "de_de": "§7Du hast jetzt die Berechtigung §6%1§7!"
   },
   "command_execution.get_permission.intro": {
