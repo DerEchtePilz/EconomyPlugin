@@ -1,5 +1,9 @@
 root = true
 
-[*.{kt,java,xml}]
+[*.{kt,java}]
 indent_style = tab
+indent_size = 4
+
+[*.xml]
+indent_style = space
 indent_size = 4
