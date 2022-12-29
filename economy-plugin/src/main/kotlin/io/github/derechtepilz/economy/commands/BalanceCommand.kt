@@ -1,15 +1,15 @@
 package io.github.derechtepilz.economy.commands
 
 import dev.jorel.commandapi.arguments.LiteralArgument.of
-import dev.jorel.commandapi.kotlindsl.argument
-import dev.jorel.commandapi.kotlindsl.commandTree
-import dev.jorel.commandapi.kotlindsl.playerExecutor
+import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.utils.hasAnyPermission
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class BalanceCommand(private val main: Main) {
+class BalanceCommand(main: Main) {
+
+	private val commandExecution: CommandExecution = main.commandExecution
 
 	fun register() {
 		commandTree("balance") {
@@ -24,22 +24,34 @@ class BalanceCommand(private val main: Main) {
 			}
 			argument(of("baltop").withPermission("economy.coin.baltop")) {
 				playerExecutor { player, args ->
-
+					commandExecution.baltop(player, args)
 				}
 			}
 			argument(of("set").withPermission("economy.coin.manage.set")) {
-				playerExecutor { player, args ->
-
+				playerArgument("target") {
+					doubleArgument("amount") {
+						playerExecutor { player, args ->
+							commandExecution.setCoins(player, args)
+						}
+					}
 				}
 			}
 			argument(of("add").withPermission("economy.coin.manage.add")) {
-				playerExecutor { player, args ->
-
+				playerArgument("target") {
+					doubleArgument("amount") {
+						playerExecutor { player, args ->
+							commandExecution.addCoins(player, args)
+						}
+					}
 				}
 			}
 			argument(of("remove").withPermission("economy.coin.manage.remove")) {
-				playerExecutor { player, args ->
-
+				playerArgument("target") {
+					doubleArgument("amount") {
+						playerExecutor { player, args ->
+							commandExecution.removeCoins(player, args)
+						}
+					}
 				}
 			}
 		}

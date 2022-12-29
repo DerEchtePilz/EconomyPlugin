@@ -11,6 +11,70 @@ import org.bukkit.permissions.PermissionAttachment
 
 class CommandExecution(private val main: Main) {
 
+	fun createAuction(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun modifyAuction(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun baltop(sender: CommandSender, args: Array<Any>) {
+		
+	}
+
+	fun setCoins(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun addCoins(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun removeCoins(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun setAllowDirectDownloads(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun setLanguage(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun resetConfig(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun reloadConfig(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun addFriend(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun removeFriend(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun acceptFriend(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun denyFriend(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun addFriendToPlayer(sender: CommandSender, args: Array<Any>) {
+
+	}
+
+	fun removeFriendFromPlayer(sender: CommandSender, args: Array<Any>) {
+
+	}
+
 	@Suppress("UNCHECKED_CAST")
 	fun setPermission(sender: CommandSender, args: Array<Any>) {
 		val player: Player = sender as Player
