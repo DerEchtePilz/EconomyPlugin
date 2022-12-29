@@ -1,13 +1,17 @@
 package io.github.derechtepilz.economy.commands
 
+import dev.jorel.commandapi.ArgumentTree
+import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.LiteralArgument.of
+import dev.jorel.commandapi.arguments.PlayerArgument
 import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.economy.Main
+import io.github.derechtepilz.economy.utils.SuggestionProvider
 import io.github.derechtepilz.economy.utils.hasAnyPermission
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class FriendCommand(main: Main) {
+class FriendCommand(private val main: Main) {
 
 	private val commandExecution: CommandExecution = main.commandExecution
 
@@ -63,5 +67,8 @@ class FriendCommand(main: Main) {
 			}
 		}
 	}
+
+	private inline fun ArgumentTree.playerArgument(nodeName: String, block: ArgumentTree.() -> Unit = {}): ArgumentTree =
+		argument(PlayerArgument(nodeName).replaceSuggestions(ArgumentSuggestions.strings { main.suggestionProvider.provideSuggestions(SuggestionProvider.SuggestionType.PLAYER) }), block)
 
 }

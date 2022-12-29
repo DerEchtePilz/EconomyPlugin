@@ -3,6 +3,7 @@ package io.github.derechtepilz.economy.utils
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.utils.SuggestionProvider.SuggestionType.PERMISSION
 import io.github.derechtepilz.economy.utils.SuggestionProvider.SuggestionType.PLAYER
+import io.github.derechtepilz.economy.utils.SuggestionProvider.SuggestionType.LANGUAGE
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
@@ -24,12 +25,16 @@ class SuggestionProvider(private val main: Main) {
 			PLAYER -> {
 				Bukkit.getOnlinePlayers().stream().map { player: Player -> player.name }.toList().toTypedArray()
 			}
+			LANGUAGE -> {
+				LanguageManager.Language.values().map { language: LanguageManager.Language -> language.name.lowercase() }.toTypedArray()
+			}
 		}
 	}
 
 	enum class SuggestionType {
 		PERMISSION,
-		PLAYER
+		PLAYER,
+		LANGUAGE
 	}
 
 }

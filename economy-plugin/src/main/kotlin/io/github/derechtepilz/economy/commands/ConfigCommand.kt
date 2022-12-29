@@ -1,16 +1,20 @@
 package io.github.derechtepilz.economy.commands
 
+import dev.jorel.commandapi.ArgumentTree
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
+import dev.jorel.commandapi.arguments.CommandArgument
 import dev.jorel.commandapi.arguments.LiteralArgument.of
+import dev.jorel.commandapi.arguments.PlayerArgument
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.economy.Main
 import io.github.derechtepilz.economy.utils.LanguageManager
+import io.github.derechtepilz.economy.utils.SuggestionProvider
 import io.github.derechtepilz.economy.utils.hasAnyPermission
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ConfigCommand(main: Main) {
+class ConfigCommand(private val main: Main) {
 
 	private val commandExecution: CommandExecution = main.commandExecution
 
@@ -33,7 +37,7 @@ class ConfigCommand(main: Main) {
 					}
 				}
 				literalArgument("language") {
-					argument(StringArgument("language").replaceSuggestions(ArgumentSuggestions.strings { LanguageManager.Language.values().map { language: LanguageManager.Language -> language.name.lowercase() }.toTypedArray() })) {
+					languageArgument("language") {
 						playerExecutor { player, args ->
 							commandExecution.setLanguage(player, args)
 						}
@@ -52,5 +56,10 @@ class ConfigCommand(main: Main) {
 			}
 		}
 	}
+
+	private inline fun ArgumentTree.languageArgument(nodeName: String, block: ArgumentTree.() -> Unit = {}): ArgumentTree =
+		argument(StringArgument(nodeName).replaceSuggestions(
+			ArgumentSuggestions.strings { main.suggestionProvider.provideSuggestions(SuggestionProvider.SuggestionType.LANGUAGE) }
+		), block)
 
 }
