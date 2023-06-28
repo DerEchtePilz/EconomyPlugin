@@ -1,17 +1,20 @@
-# EconomyPlugin v3.0.0
+# EconomyPlugin v3.1.0
 [![Join us on Discord](https://img.shields.io/discord/962686449038282753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Q7RRjdmERB)
+[![CodeFactor master](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/badge/master)](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/overview/master)
+[![CodeFactor dev/dev](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/badge/dev/dev)](https://www.codefactor.io/repository/github/derechtepilz/economyplugin/overview/dev/dev)
 
 ## Table of contents
 - [Information](#information)
 - [Changelogs](#changelogs)
 - [What is planned for the future](#what-is-planned-for-the-future)
-- [Unfinished features](#unfinished-features-in-v300)
+- [Unfinished features](#unfinished-features-in-v310)
 - [Frameworks used](#frameworks-used)
 
 ## Information
 The EconomyPlugin is a plugin for Minecraft! It provides these features:
 - Selling items
 - Buying items
+- A friend system
 - A custom permission system
 
 ## Changelogs
@@ -24,6 +27,43 @@ The EconomyPlugin is a plugin for Minecraft! It provides these features:
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td valign="top"><b>3.1.0</b></td>
+      <td valign="top">1.13 - 1.19.2</td>
+      <td valign="top">
+        <p>Plugin Changes</p>
+        <ul>
+            <li>Made it possible to modify the interest rate, the minimum required days for interest and the start balance</li>
+            <li>Added command: <code>/economy coins <b>baltop</b></code></li>
+            <li>Changed <code>offers</code> subcommand to <code>auction</code></li>
+            <li>Made it possible to sell items with meta on it (e.g. Enchantments, damaged items) without that data being lost <i>(an actual new feature that hasn't been seen before in this plugin!!)</i></li>
+        </ul>
+        <p>Re-added features</p>
+        <ul>
+            <li>Added the friend system</li>
+        </ul>
+        <p>Technical Changes</p>
+        <ul>
+            <li>Moved balances from PersistantDataContainers to a database</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+            <li>Fixed a bug where the customer would get the earned coins if the seller was online</li>
+            <li>Removed debug messages that were left over from 3.0.0 testing</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>3.0.1</b></td>
+      <td valign="top">1.13 - 1.19.2</td>
+      <td valign="top">
+        <p>Bug Fixes</p>
+        <ul>
+            <li>Fixed the update system -> now checks for the correct version and throws no errors</li>
+            <li>Nothing else :) Will continue with more 2.0.0 features when I have the time</li>
+        </ul>
+      </td>
+    </tr>
     <tr>
       <td valign="top"><b>3.0.0</b></td>
       <td valign="top">1.13 - 1.19.2</td>
@@ -116,11 +156,16 @@ The EconomyPlugin is a plugin for Minecraft! It provides these features:
 </table>
 
 ## What is planned for the future?
-- Unsure, but definitely want to bring back most (but not all) 2.0.0 features
+After being almost finished with re-adding version 2.0.0 features, I do not have a specific roadmap.
 
-## Unfinished features in v3.0.0
+The only missing 2.0.0 feature are permission groups, which are planned to be added in version 3.2.0.
+
+In [this](#unfinished-features-in-v310) section it is stated, that auction system enhancements are missing. I do plan to add some, but I do not really have an idea yet, which is why I will put them in 3.2.0 as well.
+
+Furthermore, I want to utilize my new InventoryAPI I have made which could allow for faster inventory changes in the future. Inventories affected from this would be the auction menu and the cancel menu.
+
+## Unfinished features in v3.1.0
 - The auction system enhancements
-- Not yet implemented: the friend system
 
 ## Frameworks used
 - [CommandAPI](https://github.com/JorelAli/CommandAPI) by [@JorelAli](https://jorel.dev/)

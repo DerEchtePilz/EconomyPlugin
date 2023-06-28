@@ -1,6 +1,75 @@
 name: Economy
 version: '${project.version}'
-main: me.derechtepilz.economy.Main
+main: io.github.derechtepilz.economy.Main
 api-version: 1.13
 authors: [ DerEchtePilz ]
 description: This plugin allows you to sell items!
+database: true
+permissions:
+  economy.*:
+    description: Gives a player full access over the EconomyPlugin!
+    default: false
+    children:
+      economy.auction:
+        description: Gives a player full access to the auction system!
+        default: false
+        children:
+          economy.auction.create:
+            description: Gives a player the ability to create auctions!
+            default: false
+          economy.auction.manage:
+            description: Gives a player the ability to modify all auctions, regardless of who created them!
+            default: false
+      economy.coin:
+        description: Gives a player full access to the coin system!
+        default: false
+        children:
+          economy.coin.baltop:
+            description: Gives a player access to the coin leaderboard!
+            default: false
+          economy.coin.manage:
+            description: Gives a player the ability to manage the balance of players!
+            default: false
+            children:
+              economy.coin.manage.set:
+                description: Gives a player the ability to set the balance of a player!
+                default: false
+              economy.coin.manage.add:
+                description: Gives a player the ability to add coins to the balance of a player!
+                default: false
+              economy.coin.manage.remove:
+                description: Gives a player the ability to remove coins from the balance of a player!
+                default: false
+      economy.friend:
+        description: Gives a player full access to the friend system!
+        default: false
+        children:
+          economy.friend.add:
+            description: Gives a player the ability to add players to their friend list!
+            default: true
+          economy.friend.remove:
+            description: Gives a player the ability to remove players from their friend list!
+            default: true
+          economy.friend.manage:
+            description: Gives a player the ability to manage the friends of players!
+            default: false
+            children:
+              economy.friend.manage.add:
+                description: Gives a player the ability to add a player to the friend list of a player!
+                default: false
+              economy.friend.manage.remove:
+                description: Gives a player the ability to remove a player from a friend list of a player!
+                default: false
+      economy.config:
+        description: Gives a player full access to the config system!
+        default: false
+        children:
+          economy.config.modify:
+            description: Gives a player the ability to modify config values!
+            default: false
+          economy.config.reset:
+            description: Gives a player the ability to reset the config!
+            default: false
+          economy.config.reload:
+            description: Gives a player the ability to reload the config!
+            default: false

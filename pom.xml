@@ -4,26 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.derechtepilz</groupId>
+    <groupId>io.github.derechtepilz</groupId>
     <artifactId>economy</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <packaging>pom</packaging>
+
+    <name>Economy</name>
 
     <properties>
         <java.version>16</java.version>
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.7.21</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot.version>1.19-R0.1-SNAPSHOT</spigot.version>
         <paper.version>1.19-R0.1-SNAPSHOT</paper.version>
-        <commandapi.version>8.5.1</commandapi.version>
+        <commandapi.version>8.7.1</commandapi.version>
         <mojang.authlib.version>1.5.21</mojang.authlib.version>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
     <modules>
-        <module>economy-core</module>
+        <module>economy-coinapi</module>
         <module>economy-plugin</module>
+        <module>economy-database</module>
     </modules>
 
 </project>
